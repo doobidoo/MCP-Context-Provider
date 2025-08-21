@@ -5,6 +5,36 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-08-21
+
+### Fixed
+- **Issue #1**: DXT Package Installation Not Working as Documented
+  - Removed references to non-existent `dxt install` command
+  - Fixed bundled dependencies compatibility issues with Python 3.13+
+  - Added proper virtual environment-based installation approach
+
+### Added
+- **Automated Installation Scripts**: Cross-platform installation automation
+  - `install.sh`: Unix/Linux/macOS automated installer with error handling
+  - `install.bat`: Windows automated installer with proper path handling
+- **Installation Verification**: `verify_install.py` script for comprehensive installation checks
+- **Quick Start Guide**: `QUICKSTART.md` with step-by-step installation instructions
+- **Enhanced Documentation**: 
+  - Updated README.md with accurate installation methods
+  - Added platform-specific installation instructions
+  - Improved troubleshooting documentation
+
+### Changed
+- **Installation Process**: Now uses virtual environment approach instead of bundled dependencies
+- **Documentation Structure**: Reorganized installation options with automated scripts as primary method
+- **DXT Package Usage**: Updated to use `dxt unpack` instead of non-existent `dxt install`
+
+### Technical Improvements
+- **Error Handling**: Comprehensive error detection and reporting in installation scripts
+- **Cross-Platform Support**: Proper path handling for Windows, macOS, and Linux
+- **Installation Verification**: Automated checks for Python version, dependencies, and configuration
+- **User Experience**: Clear progress indicators and helpful error messages
+
 ## [1.1.0] - 2025-01-08
 
 ### Added
@@ -74,10 +104,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v1.2.0**: Fixed DXT installation issues and added automated installation scripts
 - **v1.1.0**: Added DXT package distribution and enhanced installation options
 - **v1.0.0**: Initial release with core MCP server and context system
 
 ## Upgrade Notes
+
+### From 1.1.0 to 1.2.0
+- **Breaking Change**: DXT bundled dependencies no longer recommended due to Python 3.13+ compatibility
+- **Migration**: Use new automated installation scripts or manual virtual environment setup
+- **Benefits**: More reliable installation across different Python versions and Linux distributions
+- **No Context Changes**: All existing context files and server functionality remain identical
 
 ### From 1.0.0 to 1.1.0
 - **Existing Users**: Can continue using manual installation method
