@@ -1,17 +1,31 @@
 # MCP Context Provider
 
+<div align="center">
+  <img src="assets/MCP-CONTEXT-PROVIDER.png" alt="MCP Context Provider Architecture" width="600"/>
+  
+  *The stable, glowing orb at the center represents the persistent context that survives across chat sessions. The flowing data streams show how ongoing conversations connect to and draw from this stable core of information, preventing context loss.*
+</div>
+
 A static MCP (Model Context Protocol) server that provides AI models with persistent tool context, preventing context loss between chat sessions. This server automatically loads and injects tool-specific rules, syntax preferences, and best practices at Claude Desktop startup.
 
 ## Overview
 
-The Context Provider eliminates the need to re-establish context in each new chat session by:
+The Context Provider acts as a **persistent neural core** for your AI interactions, eliminating the need to re-establish context in each new chat session by:
 
-- 🔄 **Persistent Context**: Rules and preferences survive across Claude Desktop restarts
-- ⚡ **Automatic Injection**: Context is loaded once at startup and available to all tools
-- 🎯 **Tool-Specific**: Each tool gets its own context rules and syntax preferences  
-- 🔧 **Auto-Corrections**: Automatic syntax transformations (e.g., Markdown → DokuWiki)
-- 📈 **Scalable**: Easy to add new tools and context rules
-- 🏢 **Enterprise-Ready**: Version-controlled context management
+- 🔄 **Persistent Context**: Like the stable orb in the visualization, rules and preferences survive across Claude Desktop restarts
+- ⚡ **Automatic Injection**: Context flows seamlessly into every conversation, just as the data streams connect to the central core
+- 🎯 **Tool-Specific**: Each tool gets its own context rules and syntax preferences, creating specialized knowledge pathways
+- 🔧 **Auto-Corrections**: Automatic syntax transformations (e.g., Markdown → DokuWiki) ensure consistency across all interactions
+- 📈 **Scalable**: Easy to add new tools and context rules, expanding the knowledge network
+- 🏢 **Enterprise-Ready**: Version-controlled context management provides organizational stability
+
+## The Neural Network Metaphor
+
+Just like the image depicts, your MCP Context Provider functions as:
+- **Central Orb**: The stable, persistent context core that maintains consistency
+- **Neural Pathways**: Tool-specific context rules that create specialized knowledge channels  
+- **Data Streams**: Individual chat sessions that flow through and benefit from the persistent context
+- **Network Stability**: Prevents the ephemeral nature of conversations from losing important contextual information
 
 ## Quick Start
 
