@@ -14,14 +14,95 @@ Common issues and solutions for the MCP Context Provider.
 
 ## Installation Issues
 
+### DXT Package Installation
+
+**Problem**: `dxt: command not found` or `error: unknown command 'install'`
+
+**Symptoms**: 
+- `dxt install` command doesn't exist
+- Error: "unknown command 'install'" when running `dxt install mcp-context-provider-1.1.0.dxt`
+
+**Root Cause**: The DXT CLI doesn't have an `install` command. Available commands are: `init`, `validate`, `clean`, `pack`, `unpack`, `sign`, `verify`, `info`, `unsign`.
+
+**Solution**:
+```bash
+# Method 1: Use automated installation script (recommended)
+curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.sh | bash
+
+# Method 2: Manual DXT unpack + virtual environment
+# 1. Install DXT CLI
+npm install -g @anthropic-ai/dxt
+
+# 2. Download and unpack
+wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.1.0.dxt
+dxt unpack mcp-context-provider-1.1.0.dxt ~/mcp-context-provider
+
+# 3. Set up virtual environment
+cd ~/mcp-context-provider
+python -m venv venv
+source venv/bin/activate
+pip install mcp>=1.9.4
+```
+
+### Bundled Dependencies Issues
+
+**Problem**: Bundled Python dependencies in DXT package don't work
+
+**Symptoms**:
+- ImportError when using bundled dependencies from `server/lib/`
+- `jsonschema`, `pydantic`, or other dependency import failures
+- Works with fresh pip install but not with DXT package
+
+**Root Cause**: Python 3.13+ compatibility issues with bundled packages, or incomplete dependency bundling.
+
+**Solution**:
+```bash
+# Always use virtual environment approach instead of bundled deps
+cd ~/mcp-context-provider
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# OR
+venv\Scripts\activate     # Windows
+
+# Install fresh dependencies
+pip install mcp>=1.9.4
+
+# Update Claude Desktop config to use venv Python
+# Use: /path/to/mcp-context-provider/venv/bin/python
+```
+
+### Modern Linux Restrictions
+
+**Problem**: `error: externally-managed-environment` when installing packages
+
+**Symptoms**:
+- Pip refuses to install packages globally on Arch/Manjaro/Ubuntu 23+
+- Error: "This environment is externally managed"
+
+**Solution**:
+```bash
+# NEVER use --break-system-packages (dangerous)
+# Always use virtual environment instead:
+
+python -m venv venv
+source venv/bin/activate
+pip install mcp>=1.9.4
+
+# Virtual environment isolates packages safely
+```
+
 ### Python Dependencies
 
 **Problem**: `ModuleNotFoundError: No module named 'mcp'`
 
 **Solution**:
 ```bash
-# Install MCP package
-pip install mcp
+# Activate virtual environment first
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
+
+# Then install MCP package
+pip install mcp>=1.9.4
 
 # Verify installation
 python -c "import mcp; print('MCP installed successfully')"
@@ -34,11 +115,28 @@ python -c "import mcp; print('MCP installed successfully')"
 # Check Python version (requires 3.8+)
 python --version
 
-# Use virtual environment
+# Use virtual environment for isolation
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
-pip install mcp
+pip install mcp>=1.9.4
+```
+
+### Installation Verification
+
+**Problem**: Unsure if installation completed correctly
+
+**Solution**:
+```bash
+# Run the verification script
+cd ~/mcp-context-provider
+python verify_install.py
+
+# Should show:
+# ✓ Python version: 3.x.x
+# ✓ MCP package installed
+# ✓ Contexts directory found
+# ✓ Server loads successfully
 ```
 
 ### File Permissions

@@ -29,43 +29,95 @@ Just like the image depicts, your MCP Context Provider functions as:
 
 ## Quick Start
 
-### Option 1: DXT Installation (Recommended)
+### Option 1: Automated Installation (Recommended)
 
-The easiest way to install the MCP Context Provider is using the Desktop Extension (DXT) format:
+The easiest way to install MCP Context Provider is using the provided installation scripts:
+
+**Unix/Linux/macOS:**
+```bash
+# Download the DXT package
+wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.1.0.dxt
+
+# Run the installation script
+curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.sh | bash
+```
+
+**Windows:**
+```powershell
+# Download and run the Windows installer
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.bat" -OutFile "install.bat"
+.\install.bat
+```
+
+The installation script automatically:
+- Unpacks the DXT extension
+- Creates a Python virtual environment
+- Installs all required dependencies
+- Configures Claude Desktop settings
+
+### Option 2: Manual Installation from DXT
 
 ```bash
 # Install DXT CLI (if not already installed)
 npm install -g @anthropic-ai/dxt
 
-# Download and install the extension
-# Replace with the actual download URL when published
-dxt install mcp-context-provider-1.0.0.dxt
+# Download the DXT package
+wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.1.0.dxt
+
+# Unpack the extension to your desired location
+dxt unpack mcp-context-provider-1.1.0.dxt ~/mcp-context-provider
+
+# Navigate to the installation directory
+cd ~/mcp-context-provider
+
+# Create and activate a Python virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install mcp>=1.9.4
 ```
 
-The DXT installation automatically:
-- Downloads and installs all Python dependencies
-- Sets up the proper directory structure
-- Configures Claude Desktop MCP server settings
-
-### Option 2: Manual Installation
+### Option 3: Installation from Source
 
 ```bash
 # Clone the repository
 git clone https://github.com/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 
+# Create and activate a Python virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install dependencies
-pip install mcp>=1.9.4
+pip install -r requirements.txt
 ```
 
 ### 2. Configuration
 
-**Note**: If you used DXT installation, configuration is handled automatically. The following steps are only needed for manual installation.
+Update your Claude Desktop configuration file:
 
-Update your Claude Desktop configuration file with the correct path:
+**Configuration File Location**: 
+- **Linux/Mac**: `~/.config/claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
-**Location**: `~/.config/claude/claude_desktop_config.json` (Linux/Mac) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows)
+**For Virtual Environment Installation (Recommended):**
+```json
+{
+  "mcpServers": {
+    "context-provider": {
+      "command": "/path/to/mcp-context-provider/venv/bin/python",
+      "args": ["/path/to/mcp-context-provider/context_provider_server.py"],
+      "env": {
+        "CONTEXT_CONFIG_DIR": "/path/to/mcp-context-provider/contexts",
+        "AUTO_LOAD_CONTEXTS": "true"
+      }
+    }
+  }
+}
+```
 
+**For System Python Installation:**
 ```json
 {
   "mcpServers": {
@@ -82,7 +134,17 @@ Update your Claude Desktop configuration file with the correct path:
 }
 ```
 
-### 3. Restart Claude Desktop
+**Important**: Replace `/path/to/mcp-context-provider` with the actual installation path.
+
+### 3. Verify Installation
+
+Run the verification script to ensure everything is configured correctly:
+
+```bash
+python verify_install.py
+```
+
+### 4. Restart Claude Desktop
 
 After updating the configuration, restart Claude Desktop to load the MCP server.
 
