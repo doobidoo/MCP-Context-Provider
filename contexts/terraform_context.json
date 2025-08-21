@@ -1,0 +1,91 @@
+{
+  "tool_category": "terraform",
+  "description": "Terraform-specific context rules and best practices",
+  "auto_convert": true,
+  "syntax_rules": {
+    "resource_naming": {
+      "format": "resource_type_environment_purpose",
+      "examples": {
+        "storage_account": "storage_prod_logs", 
+        "resource_group": "rg_staging_web",
+        "virtual_machine": "vm_dev_bastion"
+      }
+    },
+    "variable_naming": {
+      "format": "snake_case",
+      "avoid": ["camelCase", "PascalCase", "kebab-case"]
+    },
+    "tags": {
+      "required": ["Environment", "Project", "Owner"],
+      "format": {
+        "Environment": ["dev", "staging", "prod"],
+        "Project": "string",
+        "Owner": "email_format"
+      }
+    },
+    "comments": {
+      "format": "# Single line comments preferred",
+      "avoid": ["/* Multi-line comments */"]
+    }
+  },
+  "preferences": {
+    "terraform_version": ">=1.0",
+    "provider_versions": {
+      "azurerm": "~>3.0",
+      "aws": "~>5.0"
+    },
+    "formatting": {
+      "indent": 2,
+      "align_equals": true,
+      "trailing_comma": true
+    }
+  },
+  "auto_corrections": {
+    "resource_naming": {
+      "pattern": "resource \"([^\"]+)\" \"([^-]+)-([^-]+)-([^\"]+)\"",
+      "replacement": "resource \"$1\" \"$2_$3_$4\""
+    },
+    "variable_camel_case": {
+      "pattern": "variable \"([a-z]+)([A-Z][a-zA-Z]*)\"",
+      "replacement": "variable \"$1_$2\""
+    },
+    "missing_description": {
+      "pattern": "variable \"([^\"]+)\" {\\s*type",
+      "replacement": "variable \"$1\" {\n  description = \"TODO: Add description\"\n  type"
+    }
+  },
+  "best_practices": {
+    "state_management": {
+      "use_remote_backend": true,
+      "enable_state_locking": true,
+      "backup_enabled": true
+    },
+    "security": {
+      "no_hardcoded_secrets": true,
+      "use_data_sources_for_sensitive": true,
+      "enable_encryption": true
+    },
+    "organization": {
+      "separate_by_environment": true,
+      "use_modules": true,
+      "version_modules": true
+    }
+  },
+  "common_patterns": {
+    "azure_resource_group": {
+      "template": "resource \"azurerm_resource_group\" \"${name}\" {\n  name     = \"rg-${var.project}-${var.environment}\"\n  location = var.location\n\n  tags = var.common_tags\n}"
+    },
+    "aws_s3_bucket": {
+      "template": "resource \"aws_s3_bucket\" \"${name}\" {\n  bucket = \"${var.project}-${var.environment}-${var.purpose}\"\n\n  tags = var.common_tags\n}"
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-01-08",
+    "applies_to_tools": [
+      "terraform:*",
+      "mcp__azure-mcp__*",
+      "bash:terraform"
+    ]
+  }
+}

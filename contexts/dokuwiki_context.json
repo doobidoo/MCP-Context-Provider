@@ -1,0 +1,73 @@
+{
+  "tool_category": "dokuwiki",
+  "description": "DokuWiki-specific context rules and syntax preferences",
+  "auto_convert": true,
+  "syntax_rules": {
+    "headers": {
+      "format": "======",
+      "levels": {
+        "1": "====== {} ======",
+        "2": "===== {} =====", 
+        "3": "==== {} ====",
+        "4": "=== {} ===",
+        "5": "== {} =="
+      },
+      "avoid": ["#", "##", "###", "####", "#####", "######"]
+    },
+    "code_blocks": {
+      "format": "<code {}>\n{}\n</code>",
+      "avoid": ["```", "~~~"]
+    },
+    "alerts": {
+      "warning": "<note warning>{}</note>",
+      "tip": "<note tip>{}</note>",
+      "important": "<note important>{}</note>",
+      "info": "<note>{}</note>",
+      "avoid": ["<WRAP>", "</WRAP>"]
+    },
+    "links": {
+      "format": "[[{}|{}]]",
+      "avoid": ["[{}]({})", "<a href"]
+    },
+    "inline_code": {
+      "format": "''{}''",
+      "avoid": ["`{}`"]
+    }
+  },
+  "preferences": {
+    "date_format": "manual",
+    "avoid_macros": ["{{date}}", "{{time}}", "{{user}}"],
+    "manual_date_format": "YYYY-MM-DD"
+  },
+  "auto_corrections": {
+    "headers": {
+      "pattern": "^(#{1,6})\\s*(.+)$",
+      "replacement": "====== $2 ======"
+    },
+    "code_blocks": {
+      "pattern": "^```(\\w+)",
+      "replacement": "<code $1>"
+    },
+    "links": {
+      "pattern": "\\[([^\\]]+)\\]\\(([^)]+)\\)",
+      "replacement": "[[$2|$1]]"
+    },
+    "wrap_warning": {
+      "pattern": "<WRAP[^>]*warning[^>]*>",
+      "replacement": "<note warning>"
+    },
+    "date_macro": {
+      "pattern": "\\{\\{date[^}]*\\}\\}",
+      "replacement": "{{CURRENT_DATE}}"
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-01-08",
+    "applies_to_tools": [
+      "dokuwiki:core_savePage",
+      "dokuwiki:core_appendPage", 
+      "dokuwiki:*"
+    ]
+  }
+}

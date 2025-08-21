@@ -1,0 +1,23 @@
+{
+  "name": "mcp-context-provider",
+  "version": "1.0.0",
+  "description": "MCP server providing persistent tool context across Claude Desktop sessions",
+  "main": "context_provider_server.py",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/doobidoo/MCP-Context-Provider.git"
+  },
+  "keywords": [
+    "mcp",
+    "claude",
+    "context",
+    "tool-context",
+    "persistent",
+    "claude-desktop"
+  ],
+  "author": "doobidoo",
+  "license": "MIT",
+  "engines": {
+    "python": ">=3.8"
+  }
+}
