@@ -110,6 +110,12 @@ Once loaded, the following tools are available in all chat sessions:
 - `list_available_contexts`: List all loaded context categories
 - `apply_auto_corrections`: Apply automatic syntax corrections
 
+<div align="center">
+  <img src="assets/Get-tool-specific-context-rules.png" alt="MCP Context Provider Tools in Action" width="800"/>
+  
+  *Screenshot showing the MCP Context Provider in action within Claude Desktop. The tool automatically detects and lists all available context categories (dokuwiki, terraform, azure, git, general_preferences) and provides interactive access to tool-specific rules and guidelines.*
+</div>
+
 ## Context Files
 
 The server loads context files from the `/contexts` directory:
