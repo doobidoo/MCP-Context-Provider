@@ -1,0 +1,134 @@
+{
+  "tool_category": "azure",
+  "description": "Azure-specific context rules and naming conventions",
+  "auto_convert": true,
+  "syntax_rules": {
+    "resource_naming": {
+      "format": "prefix-purpose-environment-location-instance",
+      "prefixes": {
+        "storage_account": "st",
+        "resource_group": "rg",
+        "virtual_machine": "vm",
+        "app_service": "app",
+        "key_vault": "kv",
+        "sql_server": "sql",
+        "container_registry": "cr",
+        "function_app": "func",
+        "application_insights": "appi"
+      },
+      "examples": {
+        "storage_account": "stlogsprodwe01",
+        "resource_group": "rg-web-prod-westeurope",
+        "key_vault": "kv-secrets-prod-we-01"
+      },
+      "avoid": ["spaces", "underscores_in_names", "UPPERCASE"]
+    },
+    "location_codes": {
+      "westeurope": "we",
+      "northeurope": "ne", 
+      "eastus": "eus",
+      "westus2": "wus2",
+      "centralus": "cus",
+      "southeastasia": "sea",
+      "japaneast": "je"
+    },
+    "tags": {
+      "required": ["Environment", "Project", "Owner", "CostCenter"],
+      "standard_values": {
+        "Environment": ["dev", "staging", "prod"],
+        "Project": "string",
+        "Owner": "email",
+        "CostCenter": "cost_code"
+      }
+    }
+  },
+  "preferences": {
+    "default_location": "westeurope",
+    "default_sku": {
+      "storage_account": "Standard_LRS",
+      "app_service_plan": "B1",
+      "sql_database": "S0"
+    },
+    "security": {
+      "enable_https_only": true,
+      "min_tls_version": "1.2",
+      "disable_public_access": true,
+      "enable_private_endpoints": true
+    }
+  },
+  "auto_corrections": {
+    "resource_group_naming": {
+      "pattern": "([a-zA-Z]+)[_\\s]+([a-zA-Z]+)[_\\s]+([a-zA-Z]+)",
+      "replacement": "rg-$1-$2-$3"
+    },
+    "storage_account_naming": {
+      "pattern": "storage[_\\s-]+([a-zA-Z0-9]+)",
+      "replacement": "st$1"
+    },
+    "location_standardization": {
+      "pattern": "West Europe|westeurope|WestEurope",
+      "replacement": "westeurope"
+    },
+    "tag_formatting": {
+      "pattern": "\"([eE]nvironment)\":\\s*\"([dD]ev|[sS]taging|[pP]rod)\"",
+      "replacement": "\"Environment\": \"$2\""
+    }
+  },
+  "best_practices": {
+    "security": {
+      "use_managed_identity": true,
+      "enable_azure_defender": true,
+      "implement_rbac": true,
+      "use_azure_ad_authentication": true
+    },
+    "monitoring": {
+      "enable_diagnostic_logs": true,
+      "use_application_insights": true,
+      "set_up_alerts": true,
+      "enable_metrics": true
+    },
+    "cost_optimization": {
+      "use_appropriate_skus": true,
+      "implement_auto_scaling": true,
+      "schedule_dev_resources": true,
+      "monitor_costs": true
+    }
+  },
+  "common_commands": {
+    "list_locations": "az account list-locations --output table",
+    "list_resource_groups": "az group list --output table",
+    "check_name_availability": "az storage account check-name --name {name}",
+    "get_resource_tags": "az resource show --ids {resource-id} --query tags"
+  },
+  "compliance": {
+    "required_policies": [
+      "Require HTTPS for storage accounts",
+      "Audit resources without tags",
+      "Require managed identity for App Services",
+      "Enable Azure Defender"
+    ],
+    "naming_validation": {
+      "max_lengths": {
+        "storage_account": 24,
+        "resource_group": 90,
+        "virtual_machine": 15,
+        "key_vault": 24
+      },
+      "allowed_characters": {
+        "storage_account": "lowercase_numbers_only",
+        "resource_group": "alphanumeric_hyphens_periods_parentheses",
+        "key_vault": "alphanumeric_hyphens"
+      }
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-01-08", 
+    "applies_to_tools": [
+      "mcp__azure-mcp__*",
+      "bash:az",
+      "terraform:azurerm",
+      "bicep:*"
+    ]
+  }
+}

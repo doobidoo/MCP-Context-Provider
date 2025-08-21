@@ -15,18 +15,38 @@ The Context Provider eliminates the need to re-establish context in each new cha
 
 ## Quick Start
 
-### 1. Installation
+### Option 1: DXT Installation (Recommended)
+
+The easiest way to install the MCP Context Provider is using the Desktop Extension (DXT) format:
+
+```bash
+# Install DXT CLI (if not already installed)
+npm install -g @anthropic-ai/dxt
+
+# Download and install the extension
+# Replace with the actual download URL when published
+dxt install mcp-context-provider-1.0.0.dxt
+```
+
+The DXT installation automatically:
+- Downloads and installs all Python dependencies
+- Sets up the proper directory structure
+- Configures Claude Desktop MCP server settings
+
+### Option 2: Manual Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/MCP-Context-Provider.git
+git clone https://github.com/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 
 # Install dependencies
-pip install mcp
+pip install mcp>=1.9.4
 ```
 
 ### 2. Configuration
+
+**Note**: If you used DXT installation, configuration is handled automatically. The following steps are only needed for manual installation.
 
 Update your Claude Desktop configuration file with the correct path:
 
@@ -207,6 +227,37 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for detailed solutions.
 - [Developer Guide](DEVELOPER_GUIDE.md): Creating custom contexts
 - [Examples](EXAMPLES.md): Real-world usage examples
 - [Troubleshooting](TROUBLESHOOTING.md): Common issues and solutions
+
+## DXT Package Distribution
+
+The MCP Context Provider is available as a Desktop Extension (DXT) package for easy distribution and installation:
+
+- **Package**: `mcp-context-provider-1.0.0.dxt` (18.6 MB)
+- **Contents**: Complete server with all dependencies bundled
+- **Platform**: Windows, macOS, Linux with Python 3.8+
+- **Dependencies**: Self-contained (no external pip requirements)
+
+### Building DXT Package
+
+To build your own DXT package from source:
+
+```bash
+# Install DXT CLI
+npm install -g @anthropic-ai/dxt
+
+# Build the package
+cd dxt
+dxt pack
+
+# The package will be created as mcp-context-provider-1.0.0.dxt
+```
+
+### Distribution Notes
+
+- The DXT package includes all Python dependencies (MCP SDK, Pydantic, etc.)
+- Total unpacked size: ~45 MB including all dependencies
+- Optimized for offline installation and deployment
+- Compatible with corporate environments and air-gapped systems
 
 ## Contributing
 
