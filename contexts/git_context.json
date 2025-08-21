@@ -1,0 +1,154 @@
+{
+  "tool_category": "git",
+  "description": "Git-specific context rules and commit conventions",
+  "auto_convert": true,
+  "syntax_rules": {
+    "commit_message_format": {
+      "format": "type(scope): description\n\nBody (optional)\n\nFooter (optional)",
+      "types": [
+        "feat", "fix", "docs", "style", "refactor", 
+        "perf", "test", "chore", "build", "ci"
+      ],
+      "examples": {
+        "feature": "feat(auth): add OAuth2 authentication",
+        "bugfix": "fix(api): resolve null pointer exception in user service", 
+        "documentation": "docs(readme): update installation instructions",
+        "chore": "chore(deps): update dependencies to latest versions"
+      }
+    },
+    "branch_naming": {
+      "format": "type/description-with-hyphens",
+      "types": ["feature", "bugfix", "hotfix", "release", "chore"],
+      "examples": {
+        "feature": "feature/user-authentication",
+        "bugfix": "bugfix/fix-login-redirect", 
+        "hotfix": "hotfix/critical-security-patch",
+        "chore": "chore/update-dependencies"
+      },
+      "avoid": ["spaces", "underscores", "UPPERCASE", "special_chars"]
+    },
+    "tag_naming": {
+      "format": "semantic_versioning",
+      "pattern": "v{MAJOR}.{MINOR}.{PATCH}",
+      "examples": ["v1.0.0", "v2.1.3", "v1.0.0-beta.1"]
+    }
+  },
+  "preferences": {
+    "default_branch": "main",
+    "merge_strategy": "squash",
+    "commit_signing": true,
+    "line_endings": "lf",
+    "ignore_case": false
+  },
+  "auto_corrections": {
+    "commit_type_fix": {
+      "pattern": "^(Fix|FIX|fixed)\\s*:?\\s*(.+)",
+      "replacement": "fix: $2"
+    },
+    "commit_type_add": {
+      "pattern": "^(Add|ADD|added)\\s*:?\\s*(.+)", 
+      "replacement": "feat: $2"
+    },
+    "commit_type_update": {
+      "pattern": "^(Update|UPDATE|updated)\\s*:?\\s*(.+)",
+      "replacement": "chore: $2"
+    },
+    "branch_name_spaces": {
+      "pattern": "([a-z]+)\\s+([a-z]+)",
+      "replacement": "$1-$2"
+    },
+    "branch_name_underscores": {
+      "pattern": "([a-z]+)_([a-z]+)",
+      "replacement": "$1-$2"
+    }
+  },
+  "workflow_patterns": {
+    "gitflow": {
+      "main_branches": ["main", "develop"],
+      "feature_branches": "feature/*",
+      "release_branches": "release/*",
+      "hotfix_branches": "hotfix/*"
+    },
+    "github_flow": {
+      "main_branch": "main",
+      "feature_branches": "feature/*",
+      "workflow": "feature -> main via PR"
+    }
+  },
+  "best_practices": {
+    "commits": {
+      "atomic_commits": "Each commit should represent a single logical change",
+      "descriptive_messages": "Explain what and why, not just what",
+      "present_tense": "Use present tense in commit messages",
+      "line_length": "Keep first line under 50 characters"
+    },
+    "branches": {
+      "short_lived": "Keep feature branches short-lived",
+      "descriptive_names": "Use descriptive branch names",
+      "clean_history": "Rebase before merging to maintain clean history"
+    },
+    "pull_requests": {
+      "small_changes": "Keep PRs focused and small",
+      "good_descriptions": "Provide context and rationale",
+      "review_process": "Require code review before merging"
+    }
+  },
+  "hooks": {
+    "pre_commit": {
+      "enabled": true,
+      "checks": ["lint", "format", "test"],
+      "prevent_commits_to_main": true
+    },
+    "commit_msg": {
+      "enabled": true,
+      "validate_format": true,
+      "max_length": 72
+    },
+    "pre_push": {
+      "enabled": true,
+      "run_tests": true,
+      "prevent_push_to_main": true
+    }
+  },
+  "common_commands": {
+    "status": "git status --short",
+    "log_oneline": "git log --oneline --graph --decorate",
+    "branch_list": "git branch -v",
+    "clean_branches": "git branch --merged | grep -v '\\*\\|main\\|develop' | xargs -n 1 git branch -d",
+    "amend_commit": "git commit --amend --no-edit"
+  },
+  "gitignore_templates": {
+    "node_js": [
+      "node_modules/",
+      "npm-debug.log*",
+      ".env",
+      "dist/",
+      "build/"
+    ],
+    "python": [
+      "__pycache__/",
+      "*.pyc",
+      ".env",
+      "venv/",
+      ".pytest_cache/"
+    ],
+    "general": [
+      ".DS_Store",
+      "Thumbs.db",
+      "*.log",
+      ".env*",
+      "*.swp",
+      "*.swo"
+    ]
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-01-08",
+    "applies_to_tools": [
+      "bash:git",
+      "git:*",
+      "github:*",
+      "gitlab:*"
+    ]
+  }
+}
