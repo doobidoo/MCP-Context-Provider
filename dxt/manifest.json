@@ -1,0 +1,76 @@
+{
+  "dxt_version": "0.1.0",
+  "name": "mcp-context-provider",
+  "display_name": "MCP Context Provider",
+  "version": "1.1.0",
+  "description": "MCP server providing persistent tool context across Claude Desktop sessions",
+  "long_description": "The MCP Context Provider delivers persistent, tool-specific context rules and user preferences that survive chat session restarts in Claude Desktop. It provides auto-corrections, syntax transformations, and customizable preferences for tools like Terraform, Git, Azure, and DokuWiki, ensuring consistent behavior across all conversations.",
+  "author": {
+    "name": "doobidoo",
+    "url": "https://github.com/doobidoo/MCP-Context-Provider"
+  },
+  "server": {
+    "type": "python",
+    "entry_point": "server/context_provider_server.py",
+    "mcp_config": {
+      "command": "python",
+      "args": ["server/context_provider_server.py"],
+      "env": {
+        "CONTEXT_CONFIG_DIR": "contexts",
+        "PYTHONPATH": "server/lib"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "list_available_contexts",
+      "description": "List all available context configurations"
+    },
+    {
+      "name": "get_context_rules",
+      "description": "Get context rules for a specific tool category"
+    },
+    {
+      "name": "apply_auto_corrections",
+      "description": "Apply auto-corrections to text based on context rules"
+    },
+    {
+      "name": "get_tool_preferences",
+      "description": "Get preferences for a specific tool category"
+    }
+  ],
+  "keywords": [
+    "mcp",
+    "claude",
+    "context",
+    "tool-context",
+    "persistent",
+    "claude-desktop",
+    "terraform",
+    "git",
+    "azure",
+    "dokuwiki",
+    "preferences"
+  ],
+  "license": "MIT",
+  "user_config": {
+    "context_config_dir": {
+      "type": "string",
+      "title": "Context Configuration Directory",
+      "description": "Directory path containing context JSON files (relative to extension root)",
+      "default": "contexts",
+      "required": false
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["win32", "darwin", "linux"],
+    "runtimes": {
+      "python": ">=3.8"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/doobidoo/MCP-Context-Provider.git"
+  }
+}
