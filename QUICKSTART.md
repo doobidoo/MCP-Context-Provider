@@ -57,10 +57,10 @@ python --version  # Should be 3.8+
 
 ```bash
 # Download the DXT package
-wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.1.0.dxt
+wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.2.1.dxt
 
 # Extract to your preferred location
-dxt unpack mcp-context-provider-1.1.0.dxt ~/mcp-context-provider
+dxt unpack mcp-context-provider-1.2.1.dxt ~/mcp-context-provider
 cd ~/mcp-context-provider
 ```
 
@@ -82,7 +82,8 @@ pip install mcp>=1.9.4
 #### Step 4: Configure Claude Desktop
 
 **Find your configuration file:**
-- **Linux/macOS:** `~/.config/claude/claude_desktop_config.json`
+- **Linux:** `~/.config/claude/claude_desktop_config.json`
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
 - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 **Add this configuration:**
@@ -206,8 +207,11 @@ If something goes wrong:
 # Remove installation
 rm -rf ~/mcp-context-provider
 
-# Remove from Claude config  
-# Edit ~/.config/claude/claude_desktop_config.json
+# Remove from Claude config
+# Edit your Claude Desktop config file:
+# - Linux: ~/.config/claude/claude_desktop_config.json
+# - macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+# - Windows: %APPDATA%\Claude\claude_desktop_config.json
 # Remove the "context-provider" section
 
 # Start over with fresh install

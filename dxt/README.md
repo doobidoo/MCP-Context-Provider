@@ -15,7 +15,7 @@ This directory contains the Desktop Extension (DXT) package structure for the MC
 # From the dxt directory
 dxt pack
 
-# This creates: mcp-context-provider-1.0.0.dxt
+# This creates: mcp-context-provider-1.2.1.dxt
 ```
 
 ## Package Information

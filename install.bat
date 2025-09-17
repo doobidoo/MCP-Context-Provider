@@ -5,7 +5,7 @@ setlocal enabledelayedexpansion
 :: Supports Windows 10 and Windows 11
 
 :: Configuration
-set "PACKAGE_NAME=mcp-context-provider-1.1.0.dxt"
+set "PACKAGE_NAME=mcp-context-provider-1.2.1.dxt"
 set "PACKAGE_URL=https://github.com/doobidoo/MCP-Context-Provider/raw/main/%PACKAGE_NAME%"
 set "INSTALL_DIR=%USERPROFILE%\mcp-context-provider"
 set "CLAUDE_CONFIG_DIR=%APPDATA%\Claude"
