@@ -42,25 +42,25 @@ This learning data drives automatic context optimization and proactive suggestio
 ┌─────────────────────────────────────────────────────────────┐
 │                    Phase 3 Learning System                  │
 ├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────────┐    ┌──────────────────────────────────┐ │
-│  │ ContextProvider │    │      ContextLearningEngine       │ │
-│  │                 │◄──►│                                  │ │
+│  ┌─────────────────┐    ┌─────────────────────────────────┐ │
+│  │ ContextProvider │    │      ContextLearningEngine      │ │
+│  │                 │◄──►│                                 │ │
 │  │ • Session Init  │    │ • Pattern Recognition           │ │
 │  │ • Context Mgmt  │    │ • Effectiveness Analysis        │ │
 │  │ • Auto Learning │    │ • Optimization Suggestions      │ │
 │  └─────────────────┘    │ • Proactive Recommendations     │ │
-│           │              └──────────────────────────────────┘ │
-│           ▼                             ▲                    │
-│  ┌─────────────────┐                    │                    │
-│  │ Memory Service  │◄───────────────────┘                    │
-│  │ Integration     │                                         │
-│  │                 │                                         │
-│  │ • mcp-memory-   │                                         │
-│  │   service       │                                         │
-│  │ • sqlite_vec    │                                         │
-│  │ • Persistent    │                                         │
-│  │   Learning Data │                                         │
-│  └─────────────────┘                                         │
+│           │              └────────────────────────────────┘ │
+│           ▼                             ▲                   │
+│  ┌─────────────────┐                    │                   │
+│  │ Memory Service  │◄───────────────────┘                   │
+│  │ Integration     │                                        │
+│  │                 │                                        │
+│  │ • mcp-memory-   │                                        │
+│  │   service       │                                        │
+│  │ • sqlite_vec    │                                        │
+│  │ • Persistent    │                                        │
+│  │   Learning Data │                                        │
+│  └─────────────────┘                                        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
