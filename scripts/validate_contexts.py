@@ -8,6 +8,7 @@ and contain required fields.
 
 import json
 import sys
+import glob
 from pathlib import Path
 from typing import Dict, List, Any
 
@@ -105,7 +106,21 @@ def main():
 
     total_errors = 0
 
-    for file_path_str in sys.argv[1:]:
+    # Expand glob patterns for cross-platform compatibility
+    all_files = []
+    for file_pattern in sys.argv[1:]:
+        if '*' in file_pattern or '?' in file_pattern:
+            # Use glob to expand pattern
+            expanded_files = glob.glob(file_pattern)
+            if not expanded_files:
+                print(f"[ERROR] No files found matching pattern: {file_pattern}")
+                total_errors += 1
+                continue
+            all_files.extend(expanded_files)
+        else:
+            all_files.append(file_pattern)
+
+    for file_path_str in all_files:
         file_path = Path(file_path_str)
 
         if not file_path.exists():
