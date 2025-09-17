@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'  # Trigger on version tags like v1.7.0, v1.8.0, etc.
 
+permissions:
+  contents: write    # Required to create releases and upload assets
+  actions: read      # Required to read workflow status
+  checks: read       # Required to read check results
+
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
