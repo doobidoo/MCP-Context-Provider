@@ -57,3 +57,8 @@ claude_desktop_config.json
 *.tmp
 *.bak
 *.backup
+
+# Build artifacts
+dxt/
+*.dxt
+dxt_manifest_template.json

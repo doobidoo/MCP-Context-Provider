@@ -35,22 +35,26 @@ The easiest way to install MCP Context Provider is using the provided installati
 
 **Unix/Linux/macOS:**
 ```bash
-# Download the DXT package
-wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.2.1.dxt
+# Clone the repository (contains latest source files)
+git clone https://github.com/doobidoo/MCP-Context-Provider.git
+cd MCP-Context-Provider
 
-# Run the installation script
-curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/scripts/install.sh | bash
+# Run the automated installer (builds fresh package)
+./scripts/install.sh
 ```
 
 **Windows:**
 ```powershell
-# Download and run the Windows installer
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/scripts/install.bat" -OutFile "install.bat"
-.\install.bat
+# Clone the repository first
+git clone https://github.com/doobidoo/MCP-Context-Provider.git
+cd MCP-Context-Provider
+
+# Run the Windows installer
+.\scripts\install.bat
 ```
 
 The installation script automatically:
-- Unpacks the DXT extension
+- Builds the latest DXT package from source
 - Creates a Python virtual environment
 - Installs all required dependencies
 - Configures Claude Desktop settings
