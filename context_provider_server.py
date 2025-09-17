@@ -10,6 +10,8 @@ import json
 import os
 import sys
 import time
+import re
+import shutil
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from datetime import datetime
@@ -252,6 +254,338 @@ class ContextProvider:
                 return True
         return False
 
+    # Dynamic Context Management Methods
+
+    def _validate_context_name(self, name: str) -> bool:
+        """Validate context name for security and compatibility"""
+        # Only allow alphanumeric, underscore, and hyphen
+        pattern = r'^[a-zA-Z0-9_-]+$'
+        if not re.match(pattern, name):
+            return False
+
+        # Check length limits
+        if len(name) < 1 or len(name) > 50:
+            return False
+
+        # Avoid reserved names
+        reserved_names = ['system', 'admin', 'config', 'server']
+        if name.lower() in reserved_names:
+            return False
+
+        return True
+
+    def _validate_context_data(self, context_data: Dict[str, Any]) -> Dict[str, List[str]]:
+        """Validate context data structure and return validation results"""
+        errors = []
+        warnings = []
+
+        # Required fields
+        required_fields = ['tool_category', 'description']
+        for field in required_fields:
+            if field not in context_data:
+                errors.append(f"Missing required field: {field}")
+
+        # Validate tool_category
+        if 'tool_category' in context_data:
+            if not isinstance(context_data['tool_category'], str):
+                errors.append("tool_category must be a string")
+            elif not self._validate_context_name(context_data['tool_category']):
+                errors.append("tool_category contains invalid characters")
+
+        # Validate description
+        if 'description' in context_data:
+            if not isinstance(context_data['description'], str):
+                errors.append("description must be a string")
+            elif len(context_data['description']) > 500:
+                warnings.append("description is very long (>500 characters)")
+
+        # Validate optional sections
+        optional_sections = ['syntax_rules', 'preferences', 'auto_corrections', 'session_initialization']
+        for section in optional_sections:
+            if section in context_data and not isinstance(context_data[section], dict):
+                errors.append(f"{section} must be a dictionary")
+
+        # Validate metadata if present
+        if 'metadata' in context_data:
+            metadata = context_data['metadata']
+            if not isinstance(metadata, dict):
+                errors.append("metadata must be a dictionary")
+            else:
+                # Check version format
+                if 'version' in metadata:
+                    version_pattern = r'^\d+\.\d+\.\d+$'
+                    if not re.match(version_pattern, str(metadata['version'])):
+                        warnings.append("version should follow semantic versioning (x.y.z)")
+
+        return {'errors': errors, 'warnings': warnings}
+
+    def _backup_context_file(self, context_name: str) -> Optional[Path]:
+        """Create a backup of existing context file"""
+        context_file = self.config_dir / f"{context_name}_context.json"
+        if not context_file.exists():
+            return None
+
+        # Create backup directory if it doesn't exist
+        backup_dir = self.config_dir / 'backups'
+        backup_dir.mkdir(exist_ok=True)
+
+        # Create timestamped backup
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        backup_file = backup_dir / f"{context_name}_context_{timestamp}.json"
+
+        try:
+            shutil.copy2(context_file, backup_file)
+            return backup_file
+        except Exception as e:
+            print(f"Warning: Could not create backup for {context_name}: {e}", file=sys.stderr)
+            return None
+
+    def create_context_file(self, name: str, category: str, rules: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a new context file dynamically"""
+        # Validate input
+        if not self._validate_context_name(name):
+            return {
+                'success': False,
+                'error': 'Invalid context name. Use only alphanumeric characters, underscores, and hyphens.',
+                'context_name': name
+            }
+
+        if not self._validate_context_name(category):
+            return {
+                'success': False,
+                'error': 'Invalid category name. Use only alphanumeric characters, underscores, and hyphens.',
+                'context_name': name
+            }
+
+        # Check if context already exists
+        context_file = self.config_dir / f"{name}_context.json"
+        if context_file.exists():
+            return {
+                'success': False,
+                'error': f'Context file {name}_context.json already exists. Use update_context_rules to modify it.',
+                'context_name': name,
+                'existing_file': str(context_file)
+            }
+
+        # Build context structure - only add description if provided in rules
+        context_data = {
+            'tool_category': category,
+            'auto_convert': rules.get('auto_convert', False),
+            'metadata': {
+                'version': '1.0.0',
+                'last_updated': datetime.now().isoformat(),
+                'created_by': 'dynamic_context_management',
+                'applies_to_tools': rules.get('applies_to_tools', [f'{category}:*']),
+                'priority': rules.get('priority', 'medium')
+            }
+        }
+
+        # Add description if provided, otherwise use default
+        if 'description' in rules:
+            context_data['description'] = rules['description']
+        else:
+            context_data['description'] = f'Dynamically created context for {category}'
+
+        # Add optional sections from rules
+        optional_sections = ['syntax_rules', 'preferences', 'auto_corrections', 'session_initialization']
+        for section in optional_sections:
+            if section in rules:
+                context_data[section] = rules[section]
+
+        # Validate the complete context data
+        validation = self._validate_context_data(context_data)
+        if validation['errors']:
+            return {
+                'success': False,
+                'error': 'Context data validation failed',
+                'validation_errors': validation['errors'],
+                'context_name': name
+            }
+
+        try:
+            # Write context file
+            with open(context_file, 'w', encoding='utf-8') as f:
+                json.dump(context_data, f, indent=2, ensure_ascii=False)
+
+            # Reload contexts to include the new one
+            self.contexts[name] = context_data
+
+            result = {
+                'success': True,
+                'message': f'Context file {name}_context.json created successfully',
+                'context_name': name,
+                'context_file': str(context_file),
+                'context_data': context_data
+            }
+
+            if validation['warnings']:
+                result['warnings'] = validation['warnings']
+
+            return result
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f'Failed to create context file: {str(e)}',
+                'context_name': name
+            }
+
+    def update_context_rules(self, context_name: str, updates: Dict[str, Any]) -> Dict[str, Any]:
+        """Update existing context rules"""
+        # Validate context name
+        if not self._validate_context_name(context_name):
+            return {
+                'success': False,
+                'error': 'Invalid context name',
+                'context_name': context_name
+            }
+
+        # Check if context exists
+        if context_name not in self.contexts:
+            return {
+                'success': False,
+                'error': f'Context {context_name} not found. Use create_context_file to create it first.',
+                'context_name': context_name,
+                'available_contexts': list(self.contexts.keys())
+            }
+
+        try:
+            # Create backup
+            backup_file = self._backup_context_file(context_name)
+
+            # Get current context data
+            current_data = self.contexts[context_name].copy()
+
+            # Apply updates
+            for key, value in updates.items():
+                if key == 'metadata':
+                    # Special handling for metadata - merge instead of replace
+                    if 'metadata' not in current_data:
+                        current_data['metadata'] = {}
+                    current_data['metadata'].update(value)
+                    current_data['metadata']['last_updated'] = datetime.now().isoformat()
+                else:
+                    current_data[key] = value
+
+            # Update metadata
+            if 'metadata' not in current_data:
+                current_data['metadata'] = {}
+            current_data['metadata']['last_updated'] = datetime.now().isoformat()
+
+            # Validate updated data
+            validation = self._validate_context_data(current_data)
+            if validation['errors']:
+                return {
+                    'success': False,
+                    'error': 'Updated context data validation failed',
+                    'validation_errors': validation['errors'],
+                    'context_name': context_name,
+                    'backup_file': str(backup_file) if backup_file else None
+                }
+
+            # Write updated context file
+            context_file = self.config_dir / f"{context_name}_context.json"
+            with open(context_file, 'w', encoding='utf-8') as f:
+                json.dump(current_data, f, indent=2, ensure_ascii=False)
+
+            # Update in-memory contexts
+            self.contexts[context_name] = current_data
+
+            result = {
+                'success': True,
+                'message': f'Context {context_name} updated successfully',
+                'context_name': context_name,
+                'updated_fields': list(updates.keys()),
+                'context_file': str(context_file),
+                'backup_file': str(backup_file) if backup_file else None
+            }
+
+            if validation['warnings']:
+                result['warnings'] = validation['warnings']
+
+            return result
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f'Failed to update context: {str(e)}',
+                'context_name': context_name,
+                'backup_file': str(backup_file) if backup_file else None
+            }
+
+    def add_context_pattern(self, context_name: str, pattern_section: str, pattern_name: str, pattern_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Add a new pattern to a context's auto-trigger sections"""
+        # Validate inputs
+        if not self._validate_context_name(context_name):
+            return {
+                'success': False,
+                'error': 'Invalid context name',
+                'context_name': context_name
+            }
+
+        if context_name not in self.contexts:
+            return {
+                'success': False,
+                'error': f'Context {context_name} not found',
+                'context_name': context_name,
+                'available_contexts': list(self.contexts.keys())
+            }
+
+        # Validate pattern section
+        valid_sections = ['auto_store_triggers', 'auto_retrieve_triggers']
+        if pattern_section not in valid_sections:
+            return {
+                'success': False,
+                'error': f'Invalid pattern section. Must be one of: {valid_sections}',
+                'context_name': context_name,
+                'pattern_section': pattern_section
+            }
+
+        try:
+            # Create backup
+            backup_file = self._backup_context_file(context_name)
+
+            # Get current context data
+            current_data = self.contexts[context_name].copy()
+
+            # Ensure the pattern section exists
+            if pattern_section not in current_data:
+                current_data[pattern_section] = {}
+
+            # Add the new pattern
+            current_data[pattern_section][pattern_name] = pattern_config
+
+            # Update metadata
+            if 'metadata' not in current_data:
+                current_data['metadata'] = {}
+            current_data['metadata']['last_updated'] = datetime.now().isoformat()
+
+            # Write updated context file
+            context_file = self.config_dir / f"{context_name}_context.json"
+            with open(context_file, 'w', encoding='utf-8') as f:
+                json.dump(current_data, f, indent=2, ensure_ascii=False)
+
+            # Update in-memory contexts
+            self.contexts[context_name] = current_data
+
+            return {
+                'success': True,
+                'message': f'Pattern {pattern_name} added to {context_name}.{pattern_section}',
+                'context_name': context_name,
+                'pattern_section': pattern_section,
+                'pattern_name': pattern_name,
+                'context_file': str(context_file),
+                'backup_file': str(backup_file) if backup_file else None
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f'Failed to add pattern: {str(e)}',
+                'context_name': context_name,
+                'backup_file': str(backup_file) if backup_file else None
+            }
+
 # MCP Server Implementation
 app = Server("context-provider")
 
@@ -331,6 +665,83 @@ async def handle_list_tools() -> List[Tool]:
                 "properties": {},
                 "required": []
             }
+        ),
+        Tool(
+            name="create_context_file",
+            description="Create a new context file dynamically with validation and backup",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name for the new context file (alphanumeric, underscore, hyphen only)"
+                    },
+                    "category": {
+                        "type": "string",
+                        "description": "Tool category for the context (used as tool_category field)"
+                    },
+                    "rules": {
+                        "type": "object",
+                        "description": "Context rules and configuration",
+                        "properties": {
+                            "description": {"type": "string"},
+                            "auto_convert": {"type": "boolean"},
+                            "syntax_rules": {"type": "object"},
+                            "preferences": {"type": "object"},
+                            "auto_corrections": {"type": "object"},
+                            "session_initialization": {"type": "object"},
+                            "applies_to_tools": {"type": "array"},
+                            "priority": {"type": "string"}
+                        }
+                    }
+                },
+                "required": ["name", "category", "rules"]
+            }
+        ),
+        Tool(
+            name="update_context_rules",
+            description="Update existing context rules with backup and validation",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "context_name": {
+                        "type": "string",
+                        "description": "Name of the existing context to update"
+                    },
+                    "updates": {
+                        "type": "object",
+                        "description": "Fields to update in the context"
+                    }
+                },
+                "required": ["context_name", "updates"]
+            }
+        ),
+        Tool(
+            name="add_context_pattern",
+            description="Add a new pattern to a context's auto-trigger sections",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "context_name": {
+                        "type": "string",
+                        "description": "Name of the context to modify"
+                    },
+                    "pattern_section": {
+                        "type": "string",
+                        "enum": ["auto_store_triggers", "auto_retrieve_triggers"],
+                        "description": "Which trigger section to add the pattern to"
+                    },
+                    "pattern_name": {
+                        "type": "string",
+                        "description": "Name for the new pattern"
+                    },
+                    "pattern_config": {
+                        "type": "object",
+                        "description": "Pattern configuration with patterns, action, tags, etc."
+                    }
+                },
+                "required": ["context_name", "pattern_section", "pattern_name", "pattern_config"]
+            }
         )
     ]
 
@@ -377,6 +788,39 @@ async def handle_call_tool(name: str, arguments: dict):
         elif name == "get_session_status":
             status = provider.get_session_status()
             return [TextContent(type="text", text=json.dumps(status, indent=2))]
+
+        elif name == "create_context_file":
+            name_arg = arguments.get("name")
+            category = arguments.get("category")
+            rules = arguments.get("rules", {})
+
+            if not name_arg or not category:
+                return [TextContent(type="text", text="Error: name and category are required")]
+
+            result = provider.create_context_file(name_arg, category, rules)
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
+
+        elif name == "update_context_rules":
+            context_name = arguments.get("context_name")
+            updates = arguments.get("updates", {})
+
+            if not context_name:
+                return [TextContent(type="text", text="Error: context_name is required")]
+
+            result = provider.update_context_rules(context_name, updates)
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
+
+        elif name == "add_context_pattern":
+            context_name = arguments.get("context_name")
+            pattern_section = arguments.get("pattern_section")
+            pattern_name = arguments.get("pattern_name")
+            pattern_config = arguments.get("pattern_config", {})
+
+            if not all([context_name, pattern_section, pattern_name]):
+                return [TextContent(type="text", text="Error: context_name, pattern_section, and pattern_name are required")]
+
+            result = provider.add_context_pattern(context_name, pattern_section, pattern_name, pattern_config)
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
         else:
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
