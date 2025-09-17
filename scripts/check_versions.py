@@ -19,9 +19,9 @@ def extract_version_from_package_json(repo_root: Path) -> Optional[str]:
         return None
 
     try:
-        with open(package_file, 'r', encoding='utf-8') as f:
+        with open(package_file, "r", encoding="utf-8") as f:
             data = json.load(f)
-        return data.get('version')
+        return data.get("version")
     except Exception as e:
         print(f"❌ Error reading package.json: {e}")
         return None
@@ -34,7 +34,7 @@ def extract_version_from_build_script(repo_root: Path) -> Optional[str]:
         return None
 
     try:
-        with open(build_script, 'r', encoding='utf-8') as f:
+        with open(build_script, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Look for version patterns in the build script
@@ -43,7 +43,7 @@ def extract_version_from_build_script(repo_root: Path) -> Optional[str]:
             r'version\s*=\s*["\']([^"\']+)["\']',
             r'VERSION\s*=\s*["\']([^"\']+)["\']',
             r'default.*version.*["\']([^"\']+)["\']',
-            r'version.*["\']([0-9]+\.[0-9]+\.[0-9]+)["\']'
+            r'version.*["\']([0-9]+\.[0-9]+\.[0-9]+)["\']',
         ]
 
         for pattern in version_patterns:
@@ -64,13 +64,13 @@ def extract_version_from_changelog(repo_root: Path) -> Optional[str]:
         return None
 
     try:
-        with open(changelog_file, 'r', encoding='utf-8') as f:
+        with open(changelog_file, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Look for version patterns like [1.7.0] or ## [1.7.0]
         version_patterns = [
-            r'##\s*\[([0-9]+\.[0-9]+\.[0-9]+)\]',
-            r'\[([0-9]+\.[0-9]+\.[0-9]+)\]\s*-',
+            r"##\s*\[([0-9]+\.[0-9]+\.[0-9]+)\]",
+            r"\[([0-9]+\.[0-9]+\.[0-9]+)\]\s*-",
         ]
 
         for pattern in version_patterns:
@@ -97,17 +97,17 @@ def check_version_consistency():
 
     package_version = extract_version_from_package_json(repo_root)
     if package_version:
-        versions['package.json'] = package_version
+        versions["package.json"] = package_version
         print(f"📦 package.json: {package_version}")
 
     build_version = extract_version_from_build_script(repo_root)
     if build_version:
-        versions['build_script'] = build_version
+        versions["build_script"] = build_version
         print(f"🔨 build script: {build_version}")
 
     changelog_version = extract_version_from_changelog(repo_root)
     if changelog_version:
-        versions['CHANGELOG.md'] = changelog_version
+        versions["CHANGELOG.md"] = changelog_version
         print(f"📋 CHANGELOG.md: {changelog_version}")
 
     # Check if we found any versions
@@ -127,12 +127,15 @@ def check_version_consistency():
             print(f"  • {file}: {version}")
 
         # Suggest the most common version or the package.json version
-        if 'package.json' in versions:
-            suggested_version = versions['package.json']
-            print(f"\n💡 Suggestion: Update all files to match package.json version: {suggested_version}")
+        if "package.json" in versions:
+            suggested_version = versions["package.json"]
+            print(
+                f"\n💡 Suggestion: Update all files to match package.json version: {suggested_version}"
+            )
         else:
             # Find most common version
             from collections import Counter
+
             version_counts = Counter(versions.values())
             suggested_version = version_counts.most_common(1)[0][0]
             print(f"\n💡 Suggestion: Update all files to version: {suggested_version}")

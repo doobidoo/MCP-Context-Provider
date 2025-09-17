@@ -51,7 +51,7 @@ def test_build_process():
     # Test JSON syntax in all context files
     for context_file in context_files:
         try:
-            with open(context_file, 'r', encoding='utf-8') as f:
+            with open(context_file, "r", encoding="utf-8") as f:
                 json.load(f)
             print(f"✅ Valid JSON: {context_file.name}")
         except json.JSONDecodeError as e:
@@ -109,7 +109,9 @@ def test_build_process():
 
             copied_contexts = list((test_dxt_dir / "contexts").glob("*.json"))
             if len(copied_contexts) != len(context_files):
-                print(f"❌ Context file copy mismatch: {len(copied_contexts)} vs {len(context_files)}")
+                print(
+                    f"❌ Context file copy mismatch: {len(copied_contexts)} vs {len(context_files)}"
+                )
                 return False
 
             print("✅ Test DXT structure created successfully")
