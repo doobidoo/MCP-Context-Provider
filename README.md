@@ -39,13 +39,13 @@ The easiest way to install MCP Context Provider is using the provided installati
 wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.2.1.dxt
 
 # Run the installation script
-curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/scripts/install.sh | bash
 ```
 
 **Windows:**
 ```powershell
 # Download and run the Windows installer
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.bat" -OutFile "install.bat"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/scripts/install.bat" -OutFile "install.bat"
 .\install.bat
 ```
 
@@ -142,7 +142,7 @@ Update your Claude Desktop configuration file:
 Run the verification script to ensure everything is configured correctly:
 
 ```bash
-python verify_install.py
+python scripts/verify_install.py
 ```
 
 ### 4. Restart Claude Desktop
@@ -360,7 +360,7 @@ The system tracks and analyzes:
 2. **Test Learning Features**:
 ```bash
 # Run comprehensive Phase 3 tests
-python test_phase3_learning.py
+python tests/test_phase3_learning.py
 
 # Check learning engine health
 python -c "
@@ -376,9 +376,9 @@ asyncio.run(test())
 
 ### 📚 Phase 3 Documentation
 
-- **[Learning System Guide](PHASE3_LEARNING_GUIDE.md)**: Comprehensive guide to intelligent features
-- **[API Reference](PHASE3_API_REFERENCE.md)**: Complete API documentation for learning components
-- **[Examples & Use Cases](PHASE3_EXAMPLES.md)**: Practical examples and enterprise use cases
+- **[Learning System Guide](docs/phase3/LEARNING_GUIDE.md)**: Comprehensive guide to intelligent features
+- **[API Reference](docs/phase3/API_REFERENCE.md)**: Complete API documentation for learning components
+- **[Examples & Use Cases](docs/phase3/EXAMPLES.md)**: Practical examples and enterprise use cases
 
 ### 🎉 Implementation Roadmap Complete
 
@@ -420,14 +420,14 @@ Use environment variables to load different context sets:
 2. **Server not starting**: Verify Python dependencies installed
 3. **Rules not applying**: Check JSON syntax in context files
 
-See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for detailed solutions.
+See [TROUBLESHOOTING.md](docs/guides/TROUBLESHOOTING.md) for detailed solutions.
 
 ## Documentation
 
-- [Context Guide](CONTEXT_GUIDE.md): Complete context file reference
-- [Developer Guide](DEVELOPER_GUIDE.md): Creating custom contexts
-- [Examples](EXAMPLES.md): Real-world usage examples
-- [Troubleshooting](TROUBLESHOOTING.md): Common issues and solutions
+- [Context Guide](docs/guides/CONTEXT_GUIDE.md): Complete context file reference
+- [Developer Guide](docs/guides/DEVELOPER_GUIDE.md): Creating custom contexts
+- [Examples](docs/EXAMPLES.md): Real-world usage examples
+- [Troubleshooting](docs/guides/TROUBLESHOOTING.md): Common issues and solutions
 
 ## 📚 Wiki & Use Cases
 
