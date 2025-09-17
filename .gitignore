@@ -42,9 +42,11 @@ env/
 *.log
 logs/
 
-# Test files
+# Test files (development only)
 test_server.py
-test_*.py
+test_session_init.py
+test_dynamic_context.py
+test_phase3_learning.py
 
 # User-specific configuration
 claude_desktop_config_with_context.json
