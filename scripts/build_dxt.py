@@ -276,9 +276,15 @@ class DXTBuilder:
         finally:
             os.chdir(original_cwd)
 
-    def move_package_to_root(self, package_file: Path):
-        """Move the built package to repository root"""
-        dest_file = self.repo_root / package_file.name
+    def move_package_to_root(self, package_file: Path, version: str = None):
+        """Move the built package to repository root with proper naming"""
+        # Determine the correct package name based on version
+        if version:
+            dest_name = f"mcp-context-provider-{version}.dxt"
+        else:
+            dest_name = "mcp-context-provider.dxt"
+
+        dest_file = self.repo_root / dest_name
         if dest_file.exists():
             dest_file.unlink()  # Remove existing package
 
@@ -307,7 +313,7 @@ class DXTBuilder:
 
         # Build package
         package_file = self.build_package()
-        final_package = self.move_package_to_root(package_file)
+        final_package = self.move_package_to_root(package_file, version)
 
         print(f"🎉 Build completed successfully!")
         print(f"📦 Package: {final_package}")
