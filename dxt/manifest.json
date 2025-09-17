@@ -2,7 +2,7 @@
   "dxt_version": "0.1.0",
   "name": "mcp-context-provider",
   "display_name": "MCP Context Provider",
-  "version": "1.2.1",
+  "version": "1.7.0",
   "description": "MCP server providing persistent tool context across Claude Desktop sessions",
   "long_description": "The MCP Context Provider delivers persistent, tool-specific context rules and user preferences that survive chat session restarts in Claude Desktop. It provides auto-corrections, syntax transformations, and customizable preferences for tools like Terraform, Git, Azure, and DokuWiki, ensuring consistent behavior across all conversations.",
   "author": {
