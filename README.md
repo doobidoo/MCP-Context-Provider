@@ -311,6 +311,17 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for detailed solutions.
 - [Examples](EXAMPLES.md): Real-world usage examples
 - [Troubleshooting](TROUBLESHOOTING.md): Common issues and solutions
 
+## 📚 Wiki & Use Cases
+
+Explore advanced integrations and real-world use cases in our **[Community Wiki](https://github.com/doobidoo/MCP-Context-Provider/wiki)**:
+
+- **[Wiki Homepage](https://github.com/doobidoo/MCP-Context-Provider/wiki)**: Comprehensive guide to what the Context Provider is good for
+- **[AppleScript with Memory Integration](https://github.com/doobidoo/MCP-Context-Provider/wiki/AppleScript-with-Memory-Integration)**: Advanced workflow showcasing intelligent script management with persistent memory
+- **Integration Examples**: Community-driven examples of Context Provider workflows
+- **Best Practices**: Tips and patterns for maximizing Context Provider effectiveness
+
+*The wiki demonstrates how the Context Provider transforms from simple rule storage into intelligent, self-improving workflow automation.*
+
 ## DXT Package Distribution
 
 The MCP Context Provider is available as a Desktop Extension (DXT) package for easy distribution and installation:
