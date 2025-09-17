@@ -109,30 +109,30 @@ def main():
         file_path = Path(file_path_str)
 
         if not file_path.exists():
-            print(f"❌ File not found: {file_path}")
+            print(f"[ERROR] File not found: {file_path}")
             total_errors += 1
             continue
 
         if not file_path.name.endswith(".json"):
-            print(f"⚠️  Skipping non-JSON file: {file_path}")
+            print(f"[WARN] Skipping non-JSON file: {file_path}")
             continue
 
-        print(f"🔍 Validating: {file_path}")
+        print(f"[INFO] Validating: {file_path}")
         errors = validate_context_structure(file_path)
 
         if errors:
-            print(f"❌ {file_path}: {len(errors)} error(s)")
+            print(f"[ERROR] {file_path}: {len(errors)} error(s)")
             for error in errors:
-                print(f"  • {error}")
+                print(f"  - {error}")
             total_errors += len(errors)
         else:
-            print(f"✅ {file_path}: Valid")
+            print(f"[OK] {file_path}: Valid")
 
     if total_errors > 0:
-        print(f"\n❌ Validation failed: {total_errors} error(s) found")
+        print(f"\n[FAIL] Validation failed: {total_errors} error(s) found")
         sys.exit(1)
     else:
-        print(f"\n✅ All context files validated successfully")
+        print(f"\n[PASS] All context files validated successfully")
         sys.exit(0)
 
 
