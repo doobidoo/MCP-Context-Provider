@@ -5,6 +5,66 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2025-09-17
+
+### Added
+- **Dynamic Context Management System**: Complete runtime context file creation and modification
+  - `create_context_file`: Create new context files dynamically with full validation
+  - `update_context_rules`: Update existing context rules with backup and validation
+  - `add_context_pattern`: Add patterns to auto-trigger sections for memory integration
+  - Support for all context file sections: syntax_rules, preferences, auto_corrections, session_initialization
+
+- **Advanced Security Framework**: Multi-layer validation and protection
+  - Context name validation: alphanumeric, underscore, hyphen only with length limits
+  - Reserved name protection (system, admin, config, server)
+  - JSON structure validation with type checking and required field enforcement
+  - Input sanitization and comprehensive error reporting
+  - Security-first approach with detailed validation feedback
+
+- **Automated Backup & Versioning System**: Complete change tracking and recovery
+  - Timestamped backups created automatically before any context modifications
+  - Organized backup storage in `contexts/backups/` directory
+  - Version tracking with metadata updates and modification timestamps
+  - Rollback capability through preserved backup files
+
+- **Memory Service Integration Ready**: Framework for intelligent context evolution
+  - Context usage tracking framework for effectiveness analysis
+  - Change history tracking for pattern recognition
+  - Foundation for storing pattern effectiveness data in mcp-memory-service
+  - Smart context-aware memory integration preparation
+
+### Enhanced
+- **ContextProvider Architecture**: Extended with comprehensive dynamic management
+  - Added validation methods: `_validate_context_name()`, `_validate_context_data()`
+  - Implemented backup system: `_backup_context_file()`
+  - Dynamic context operations: create, update, and pattern management
+  - Enhanced error handling with detailed feedback and recovery options
+
+### Technical Implementation
+- **Security-First Design**: Multiple validation layers prevent malformed or malicious contexts
+- **Atomic Operations**: All context modifications are atomic with backup-first approach
+- **Performance Optimized**: Efficient file operations with minimal I/O overhead
+- **Memory Integration Ready**: Prepared for seamless mcp-memory-service connection
+- **Extensible Framework**: Clean API design for easy addition of new management features
+
+### Testing & Quality Assurance
+- **Comprehensive Test Suite**: `test_dynamic_context.py` with 6 test categories
+  - Context name validation testing with edge cases
+  - Context creation testing with success and failure scenarios
+  - Context update testing with backup verification
+  - Pattern addition testing for auto-trigger management
+  - Security validation testing with malformed inputs
+  - Backup system testing with versioning verification
+- **100% Test Pass Rate**: All dynamic context management features verified
+- **Security Testing**: Comprehensive validation of input sanitization and error handling
+
+### Foundation for Phase 3
+This release establishes the infrastructure for:
+- **Intelligent Context Evolution**: Learning from usage patterns and effectiveness
+- **Team Knowledge Propagation**: Shared context evolution across team members
+- **Advanced Pattern Recognition**: Automatic context optimization based on user behavior
+- **Enterprise Context Analytics**: Usage tracking and optimization recommendations
+
 ## [1.4.0] - 2025-09-17
 
 ### Added
