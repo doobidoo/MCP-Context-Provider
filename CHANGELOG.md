@@ -5,6 +5,32 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-09-17
+
+### Added
+- **Dynamic Context Loading**: Implemented automatic discovery and loading of context files
+  - Server now uses glob patterns to discover `*_context.json` files automatically
+  - No more hardcoded context file lists - any new context files are automatically detected
+  - Added support for `AUTO_LOAD_CONTEXTS` environment variable (defaults to `true`)
+  - AppleScript context and any future contexts load automatically without code changes
+
+### Changed
+- **Context Loading System**: Replaced hardcoded context file list with dynamic file discovery
+  - `load_all_contexts()` method now scans the contexts directory using glob patterns
+  - Improved error handling and logging for context file loading
+  - Better debugging output showing discovered and loaded contexts
+
+### Fixed
+- **AppleScript Context Loading**: AppleScript context now loads automatically as intended
+  - Previously required manual addition to hardcoded list
+  - Now discovered and loaded dynamically like all other contexts
+
+### Technical Details
+- The server now properly implements the documented behavior of "automatically detects and loads any `*_context.json` files"
+- Environment variable `AUTO_LOAD_CONTEXTS=false` can disable auto-loading if needed
+- Improved logging shows context discovery and loading progress
+- Future-proof: new context files require no server code changes
+
 ## [1.2.1] - 2025-09-17
 
 ### Fixed
