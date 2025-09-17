@@ -109,7 +109,7 @@ def main():
     # Expand glob patterns for cross-platform compatibility
     all_files = []
     for file_pattern in sys.argv[1:]:
-        if '*' in file_pattern or '?' in file_pattern:
+        if "*" in file_pattern or "?" in file_pattern:
             # Use glob to expand pattern
             expanded_files = glob.glob(file_pattern)
             if not expanded_files:
