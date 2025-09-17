@@ -1,0 +1,52 @@
+{
+  "tool_category": "date_awareness",
+  "description": "Temporal accuracy context to prevent date-related errors across all tools",
+  "auto_convert": true,
+  "current_date_awareness": {
+    "principle": "Always use the system's current date, never hardcode dates",
+    "knowledge_cutoff": "January 2025 - DO NOT USE FOR CURRENT EVENTS",
+    "validation_required": true
+  },
+  "date_rules": {
+    "memory_storage": {
+      "rely_on_system": "Memory service automatically timestamps entries",
+      "avoid_redundancy": "Don't duplicate timestamps that the system provides",
+      "historical_events": "Only specify dates for historical events or specific past occurrences",
+      "current_events": "For 'today' or 'now', rely on system timestamps"
+    },
+    "common_mistakes": {
+      "knowledge_cutoff_confusion": {
+        "wrong": "Using January 2025 (knowledge cutoff) for current events",
+        "correct": "Letting the system handle current timestamps"
+      },
+      "hardcoding_dates": {
+        "wrong": "Hardcoding 'September 17, 2025' in rules",
+        "correct": "Using relative references or system timestamps"
+      }
+    }
+  },
+  "best_practices": {
+    "memory_entries": [
+      "Don't include 'stored on [date]' - the system handles this",
+      "Only mention dates when they're part of the actual content",
+      "For searches/analyses performed 'today', just say 'today' or omit",
+      "Trust the memory service's automatic timestamping"
+    ],
+    "scripts_and_code": [
+      "Use {{CURRENT_DATE}} as a parameter, not a hardcoded value",
+      "Let users fill in current dates when running scripts",
+      "Focus on functionality, not temporal metadata"
+    ]
+  },
+  "simplified_approach": {
+    "principle": "Less is more - let systems handle their own timestamps",
+    "focus": "Content accuracy over temporal metadata",
+    "verification": "Check that dates make logical sense, not against hardcoded values"
+  },
+  "metadata": {
+    "version": "2.0.0",
+    "note": "Simplified to avoid hardcoded dates and rely on system timestamps",
+    "applies_to_tools": ["*"],
+    "priority": "high"
+  }
+}

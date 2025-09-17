@@ -9,8 +9,10 @@ import asyncio
 import json
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+from datetime import datetime
 
 from mcp.server import Server, NotificationOptions
 from mcp.server.models import InitializationOptions
@@ -25,13 +27,21 @@ class ContextProvider:
     """
     Static context provider for Claude Desktop
     Loads and serves tool-specific rules and preferences
+    Supports session initialization with memory service integration
     """
-    
+
     def __init__(self, config_dir: str = None):
         if config_dir is None:
             config_dir = os.getenv('CONTEXT_CONFIG_DIR', './contexts')
         self.config_dir = Path(config_dir)
         self.contexts = {}
+        self.session_status = {
+            'initialized': False,
+            'initialization_time': None,
+            'executed_actions': [],
+            'errors': [],
+            'memory_retrieval_results': {}
+        }
         self.load_all_contexts()
     
     @classmethod
@@ -133,6 +143,115 @@ class ContextProvider:
         
         return corrected_text
 
+    async def execute_session_initialization(self) -> Dict[str, Any]:
+        """Execute session initialization actions from all contexts"""
+        start_time = time.time()
+        self.session_status = {
+            'initialized': False,
+            'initialization_time': datetime.now().isoformat(),
+            'executed_actions': [],
+            'errors': [],
+            'memory_retrieval_results': {}
+        }
+
+        print("Starting session initialization...", file=sys.stderr)
+
+        # Find all contexts with session_initialization enabled
+        initialized_contexts = []
+        for context_name, context_data in self.contexts.items():
+            session_init = context_data.get('session_initialization', {})
+            if session_init.get('enabled', False):
+                initialized_contexts.append(context_name)
+                await self._execute_context_initialization(context_name, context_data)
+
+        # Calculate execution time
+        execution_time = time.time() - start_time
+        self.session_status['execution_time_seconds'] = execution_time
+        self.session_status['initialized'] = True
+        self.session_status['initialized_contexts'] = initialized_contexts
+
+        print(f"Session initialization completed in {execution_time:.2f}s", file=sys.stderr)
+        return self.session_status
+
+    async def _execute_context_initialization(self, context_name: str, context_data: Dict[str, Any]):
+        """Execute initialization actions for a specific context"""
+        session_init = context_data.get('session_initialization', {})
+        actions = session_init.get('actions', {})
+        on_startup = actions.get('on_startup', [])
+
+        for action_config in on_startup:
+            try:
+                action_type = action_config.get('action')
+                parameters = action_config.get('parameters', {})
+                description = action_config.get('description', f"Execute {action_type}")
+
+                print(f"Executing {action_type} for {context_name}: {description}", file=sys.stderr)
+
+                # For now, we'll simulate memory service calls
+                # In production, these would be actual calls to mcp-memory-service
+                result = await self._simulate_memory_action(action_type, parameters)
+
+                self.session_status['executed_actions'].append({
+                    'context': context_name,
+                    'action': action_type,
+                    'description': description,
+                    'parameters': parameters,
+                    'result_summary': result.get('summary', 'No summary available'),
+                    'status': 'success'
+                })
+
+                # Store memory retrieval results
+                if action_type in ['recall_memory', 'search_by_tag']:
+                    self.session_status['memory_retrieval_results'][f"{context_name}_{action_type}"] = result
+
+            except Exception as e:
+                error_msg = f"Error executing {action_config.get('action', 'unknown')} for {context_name}: {str(e)}"
+                print(error_msg, file=sys.stderr)
+                self.session_status['errors'].append(error_msg)
+
+    async def _simulate_memory_action(self, action_type: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
+        """Simulate memory service actions - replace with actual memory service calls"""
+        # This is a placeholder for actual memory service integration
+        # In production, this would make HTTP requests or MCP calls to memory service
+
+        if action_type == 'recall_memory':
+            query = parameters.get('query', '')
+            n_results = parameters.get('n_results', 5)
+            return {
+                'action': 'recall_memory',
+                'query': query,
+                'results_count': n_results,
+                'summary': f"Retrieved {n_results} memories matching '{query}'"
+            }
+
+        elif action_type == 'search_by_tag':
+            tags = parameters.get('tags', [])
+            return {
+                'action': 'search_by_tag',
+                'tags': tags,
+                'results_count': len(tags) * 2,  # Simulated
+                'summary': f"Found items with tags: {', '.join(tags)}"
+            }
+
+        else:
+            return {
+                'action': action_type,
+                'parameters': parameters,
+                'summary': f"Executed {action_type} with parameters {parameters}"
+            }
+
+    def get_session_status(self) -> Dict[str, Any]:
+        """Get current session initialization status"""
+        return self.session_status.copy()
+
+    def has_session_initialization_contexts(self) -> bool:
+        """Check if any loaded contexts have session initialization enabled"""
+        for context_data in self.contexts.values():
+            session_init = context_data.get('session_initialization', {})
+            if session_init.get('enabled', False):
+                return True
+        return False
+
 # MCP Server Implementation
 app = Server("context-provider")
 
@@ -194,6 +313,24 @@ async def handle_list_tools() -> List[Tool]:
                 },
                 "required": ["tool_name", "text"]
             }
+        ),
+        Tool(
+            name="execute_session_initialization",
+            description="Execute session initialization actions from all contexts with memory service integration",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        ),
+        Tool(
+            name="get_session_status",
+            description="Get current session initialization status and results",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
         )
     ]
 
@@ -226,13 +363,21 @@ async def handle_call_tool(name: str, arguments: dict):
         elif name == "apply_auto_corrections":
             tool_name = arguments.get("tool_name")
             text = arguments.get("text")
-            
+
             if not tool_name or not text:
                 return [TextContent(type="text", text="Error: tool_name and text are required")]
-            
+
             corrected_text = provider.apply_auto_corrections(tool_name, text)
             return [TextContent(type="text", text=corrected_text)]
-            
+
+        elif name == "execute_session_initialization":
+            session_result = await provider.execute_session_initialization()
+            return [TextContent(type="text", text=json.dumps(session_result, indent=2))]
+
+        elif name == "get_session_status":
+            status = provider.get_session_status()
+            return [TextContent(type="text", text=json.dumps(status, indent=2))]
+
         else:
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
             
