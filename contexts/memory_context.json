@@ -1,0 +1,232 @@
+{
+  "tool_category": "memory",
+  "description": "Memory service context rules for proactive storage and retrieval",
+  "auto_convert": false,
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "recall_memory",
+          "parameters": {
+            "query": "last 24 hours",
+            "n_results": 10
+          },
+          "description": "Load recent activities from the past day"
+        },
+        {
+          "action": "search_by_tag",
+          "parameters": {
+            "tags": ["in-progress", "active", "reminder", "follow-up"]
+          },
+          "description": "Find ongoing tasks and reminders"
+        }
+      ],
+      "greeting_format": "Based on your recent activities: {summary}"
+    }
+  },
+  "auto_store_triggers": {
+    "decisions_and_agreements": {
+      "patterns": [
+        "I decided to",
+        "We agreed that",
+        "The plan is",
+        "Let's go with",
+        "We'll use",
+        "The approach will be"
+      ],
+      "action": "store_memory",
+      "tags": ["decision", "{project_name}"],
+      "priority": "high"
+    },
+    "personal_preferences": {
+      "patterns": [
+        "I prefer",
+        "I always",
+        "I never",
+        "I like to",
+        "My preference is",
+        "I usually"
+      ],
+      "action": "store_memory",
+      "tags": ["preference", "personal"],
+      "priority": "medium"
+    },
+    "activities_completed": {
+      "patterns": [
+        "I did",
+        "I completed",
+        "I finished",
+        "I worked on",
+        "I implemented",
+        "I fixed",
+        "I resolved"
+      ],
+      "action": "store_memory",
+      "tags": ["activity", "completed", "{date}"],
+      "priority": "high"
+    },
+    "technical_solutions": {
+      "patterns": [
+        "The fix was",
+        "This solved it",
+        "The solution is",
+        "It works by",
+        "The workaround is",
+        "To resolve this"
+      ],
+      "action": "store_memory",
+      "tags": ["solution", "technical", "{tool_name}"],
+      "priority": "high"
+    },
+    "learning_moments": {
+      "patterns": [
+        "I learned that",
+        "I discovered",
+        "It turns out",
+        "The issue was",
+        "I found out",
+        "The problem was"
+      ],
+      "action": "store_memory",
+      "tags": ["learning", "insight"],
+      "priority": "medium"
+    },
+    "future_tasks": {
+      "patterns": [
+        "I need to",
+        "I should",
+        "Next time",
+        "TODO:",
+        "Remember to",
+        "Don't forget to"
+      ],
+      "action": "store_memory",
+      "tags": ["todo", "future", "in-progress"],
+      "priority": "high"
+    },
+    "project_context": {
+      "patterns": [
+        "Working on project",
+        "The project",
+        "In the {project} project",
+        "For {company}"
+      ],
+      "action": "store_memory",
+      "tags": ["project", "{project_name}"],
+      "priority": "medium"
+    }
+  },
+  "auto_retrieve_triggers": {
+    "temporal_queries": {
+      "patterns": [
+        "What did I",
+        "When did I",
+        "Last week",
+        "Recently",
+        "Yesterday",
+        "This morning",
+        "Earlier today"
+      ],
+      "action": "recall_memory",
+      "extract_timeframe": true
+    },
+    "continuation_patterns": {
+      "patterns": [
+        "Continue with",
+        "Where were we",
+        "Back to",
+        "Resume",
+        "Pick up where",
+        "Let's get back to"
+      ],
+      "action": "retrieve_memory",
+      "additional_tags": ["in-progress"]
+    },
+    "reference_patterns": {
+      "patterns": [
+        "As we discussed",
+        "Like before",
+        "Remember when",
+        "That thing about",
+        "You mentioned",
+        "We talked about"
+      ],
+      "action": "retrieve_memory",
+      "use_context": true
+    },
+    "problem_solving": {
+      "patterns": [
+        "How did I fix",
+        "What was the solution for",
+        "Last time this happened",
+        "Previous fix for",
+        "How did we solve"
+      ],
+      "action": "search_by_tag",
+      "tags": ["solution", "{topic}"]
+    }
+  },
+  "smart_tagging": {
+    "auto_detect_projects": true,
+    "auto_detect_tools": true,
+    "temporal_tags": {
+      "add_day_of_week": true,
+      "add_month": true,
+      "add_year": true
+    },
+    "context_tags": {
+      "detect_from_conversation": true,
+      "maintain_context_stack": true,
+      "max_context_depth": 3
+    },
+    "tool_detection": {
+      "patterns": {
+        "terraform": ["terraform", "tf", "hcl"],
+        "docker": ["docker", "dockerfile", "container"],
+        "kubernetes": ["k8s", "kubernetes", "kubectl"],
+        "azure": ["azure", "az", "arm"],
+        "aws": ["aws", "amazon", "s3", "ec2"],
+        "git": ["git", "github", "commit", "branch"],
+        "python": ["python", "pip", "venv"],
+        "javascript": ["javascript", "js", "node", "npm"]
+      }
+    }
+  },
+  "memory_management": {
+    "retention_policy": {
+      "default_retention_days": 90,
+      "tag_based_retention": {
+        "decision": 365,
+        "solution": 180,
+        "preference": 365,
+        "todo": 30,
+        "temporary": 7
+      }
+    },
+    "deduplication": {
+      "enabled": true,
+      "similarity_threshold": 0.95
+    },
+    "chunking": {
+      "max_memory_size": 2000,
+      "chunk_overlap": 200
+    }
+  },
+  "context_awareness": {
+    "maintain_working_context": true,
+    "context_switch_detection": true,
+    "suggest_relevant_memories": true,
+    "proactive_retrieval": {
+      "enabled": true,
+      "confidence_threshold": 0.7
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-01-17",
+    "applies_to_tools": ["memory", "mcp-memory"],
+    "priority": "high",
+    "author": "hkr"
+  }
+}
