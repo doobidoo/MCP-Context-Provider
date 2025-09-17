@@ -17,7 +17,7 @@ def validate_context_structure(file_path: Path) -> List[str]:
     errors = []
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
     except json.JSONDecodeError as e:
         return [f"Invalid JSON syntax: {e}"]
@@ -25,7 +25,7 @@ def validate_context_structure(file_path: Path) -> List[str]:
         return [f"Failed to read file: {e}"]
 
     # Required fields
-    required_fields = ['tool_category', 'description']
+    required_fields = ["tool_category", "description"]
     for field in required_fields:
         if field not in data:
             errors.append(f"Missing required field: {field}")
@@ -33,20 +33,22 @@ def validate_context_structure(file_path: Path) -> List[str]:
             errors.append(f"Field '{field}' must be a string")
 
     # Validate tool_category format
-    if 'tool_category' in data:
-        tool_category = data['tool_category']
-        if not tool_category.replace('_', '').replace('-', '').isalnum():
-            errors.append("tool_category should contain only alphanumeric characters, underscores, and hyphens")
+    if "tool_category" in data:
+        tool_category = data["tool_category"]
+        if not tool_category.replace("_", "").replace("-", "").isalnum():
+            errors.append(
+                "tool_category should contain only alphanumeric characters, underscores, and hyphens"
+            )
 
     # Validate optional sections structure
     optional_sections = {
-        'syntax_rules': dict,
-        'preferences': dict,
-        'auto_corrections': dict,
-        'session_initialization': dict,
-        'auto_store_triggers': dict,
-        'auto_retrieve_triggers': dict,
-        'metadata': dict
+        "syntax_rules": dict,
+        "preferences": dict,
+        "auto_corrections": dict,
+        "session_initialization": dict,
+        "auto_store_triggers": dict,
+        "auto_retrieve_triggers": dict,
+        "metadata": dict,
     }
 
     for section, expected_type in optional_sections.items():
@@ -54,35 +56,43 @@ def validate_context_structure(file_path: Path) -> List[str]:
             errors.append(f"Section '{section}' must be a {expected_type.__name__}")
 
     # Validate metadata structure if present
-    if 'metadata' in data:
-        metadata = data['metadata']
-        if 'version' in metadata:
-            version = metadata['version']
+    if "metadata" in data:
+        metadata = data["metadata"]
+        if "version" in metadata:
+            version = metadata["version"]
             if not isinstance(version, str):
                 errors.append("metadata.version must be a string")
-            elif not version.count('.') >= 2:
-                errors.append("metadata.version should follow semantic versioning (x.y.z)")
+            elif not version.count(".") >= 2:
+                errors.append(
+                    "metadata.version should follow semantic versioning (x.y.z)"
+                )
 
     # Validate session_initialization structure
-    if 'session_initialization' in data:
-        session_init = data['session_initialization']
-        if 'enabled' in session_init and not isinstance(session_init['enabled'], bool):
+    if "session_initialization" in data:
+        session_init = data["session_initialization"]
+        if "enabled" in session_init and not isinstance(session_init["enabled"], bool):
             errors.append("session_initialization.enabled must be a boolean")
 
-        if 'actions' in session_init:
-            actions = session_init['actions']
+        if "actions" in session_init:
+            actions = session_init["actions"]
             if not isinstance(actions, dict):
                 errors.append("session_initialization.actions must be a dictionary")
-            elif 'on_startup' in actions:
-                on_startup = actions['on_startup']
+            elif "on_startup" in actions:
+                on_startup = actions["on_startup"]
                 if not isinstance(on_startup, list):
-                    errors.append("session_initialization.actions.on_startup must be a list")
+                    errors.append(
+                        "session_initialization.actions.on_startup must be a list"
+                    )
                 else:
                     for i, action in enumerate(on_startup):
                         if not isinstance(action, dict):
-                            errors.append(f"session_initialization.actions.on_startup[{i}] must be a dictionary")
-                        elif 'action' not in action:
-                            errors.append(f"session_initialization.actions.on_startup[{i}] must have 'action' field")
+                            errors.append(
+                                f"session_initialization.actions.on_startup[{i}] must be a dictionary"
+                            )
+                        elif "action" not in action:
+                            errors.append(
+                                f"session_initialization.actions.on_startup[{i}] must have 'action' field"
+                            )
 
     return errors
 
@@ -103,7 +113,7 @@ def main():
             total_errors += 1
             continue
 
-        if not file_path.name.endswith('.json'):
+        if not file_path.name.endswith(".json"):
             print(f"⚠️  Skipping non-JSON file: {file_path}")
             continue
 

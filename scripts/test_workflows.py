@@ -24,7 +24,7 @@ class WorkflowValidator:
     def validate_workflow_syntax(self, workflow_file: Path) -> bool:
         """Validate YAML syntax of workflow file"""
         try:
-            with open(workflow_file, 'r') as f:
+            with open(workflow_file, "r") as f:
                 yaml.safe_load(f)
             print(f"✅ Valid YAML syntax: {workflow_file.name}")
             return True
@@ -34,11 +34,11 @@ class WorkflowValidator:
 
     def check_required_permissions(self, workflow_file: Path) -> bool:
         """Check if workflow has required permissions"""
-        with open(workflow_file, 'r') as f:
+        with open(workflow_file, "r") as f:
             workflow = yaml.safe_load(f)
 
-        workflow_name = workflow.get('name', workflow_file.name)
-        permissions = workflow.get('permissions', {})
+        workflow_name = workflow.get("name", workflow_file.name)
+        permissions = workflow.get("permissions", {})
 
         if not permissions:
             print(f"⚠️  No permissions defined in {workflow_name}")
@@ -46,16 +46,16 @@ class WorkflowValidator:
 
         # Check for common required permissions
         required_perms = {
-            'release': ['contents: write'],
-            'ci': ['contents: read', 'checks: write'],
-            'security': ['security-events: write']
+            "release": ["contents: write"],
+            "ci": ["contents: read", "checks: write"],
+            "security": ["security-events: write"],
         }
 
         workflow_type = self._detect_workflow_type(workflow)
         if workflow_type in required_perms:
             missing_perms = []
             for perm in required_perms[workflow_type]:
-                perm_name = perm.split(':')[0]
+                perm_name = perm.split(":")[0]
                 if perm_name not in permissions:
                     missing_perms.append(perm)
 
@@ -68,22 +68,22 @@ class WorkflowValidator:
 
     def _detect_workflow_type(self, workflow: Dict[str, Any]) -> str:
         """Detect the type of workflow based on triggers and content"""
-        triggers = workflow.get('on', {})
-        name = workflow.get('name', '').lower()
+        triggers = workflow.get("on", {})
+        name = workflow.get("name", "").lower()
 
-        if 'tags' in triggers or 'release' in name:
-            return 'release'
-        elif any(keyword in name for keyword in ['security', 'scan', 'codeql']):
-            return 'security'
+        if "tags" in triggers or "release" in name:
+            return "release"
+        elif any(keyword in name for keyword in ["security", "scan", "codeql"]):
+            return "security"
         else:
-            return 'ci'
+            return "ci"
 
     def validate_job_dependencies(self, workflow_file: Path) -> bool:
         """Validate job dependencies and structure"""
-        with open(workflow_file, 'r') as f:
+        with open(workflow_file, "r") as f:
             workflow = yaml.safe_load(f)
 
-        jobs = workflow.get('jobs', {})
+        jobs = workflow.get("jobs", {})
         if not jobs:
             print(f"❌ No jobs defined in {workflow_file.name}")
             return False
@@ -93,11 +93,11 @@ class WorkflowValidator:
                 print(f"❌ Invalid job configuration: {job_name}")
                 return False
 
-            if 'runs-on' not in job_config:
+            if "runs-on" not in job_config:
                 print(f"❌ Missing 'runs-on' in job: {job_name}")
                 return False
 
-            steps = job_config.get('steps', [])
+            steps = job_config.get("steps", [])
             if not steps:
                 print(f"⚠️  No steps defined in job: {job_name}")
 
@@ -106,14 +106,14 @@ class WorkflowValidator:
 
     def check_action_versions(self, workflow_file: Path) -> bool:
         """Check for outdated action versions"""
-        with open(workflow_file, 'r') as f:
+        with open(workflow_file, "r") as f:
             content = f.read()
 
         # Common actions and their recommended versions
         action_versions = {
-            'actions/checkout@v3': 'actions/checkout@v4',
-            'actions/setup-python@v3': 'actions/setup-python@v4',
-            'actions/setup-node@v3': 'actions/setup-node@v4',
+            "actions/checkout@v3": "actions/checkout@v4",
+            "actions/setup-python@v3": "actions/setup-python@v4",
+            "actions/setup-node@v3": "actions/setup-node@v4",
         }
 
         outdated_actions = []
@@ -132,24 +132,34 @@ class WorkflowValidator:
 
     def validate_secrets_usage(self, workflow_file: Path) -> bool:
         """Validate proper secrets usage"""
-        with open(workflow_file, 'r') as f:
+        with open(workflow_file, "r") as f:
             content = f.read()
 
         # Check for hardcoded tokens or secrets
         security_issues = []
 
-        if 'ghp_' in content or 'github_pat_' in content:
+        if "ghp_" in content or "github_pat_" in content:
             security_issues.append("Potential hardcoded GitHub token")
 
         # Only flag if there are actual hardcoded values, not just the word "token" or "key"
-        lines = content.split('\n')
+        lines = content.split("\n")
         for line in lines:
-            if ':' in line and any(word in line.lower() for word in ['token', 'key', 'password']) and '${{ secrets.' not in line:
+            if (
+                ":" in line
+                and any(word in line.lower() for word in ["token", "key", "password"])
+                and "${{ secrets." not in line
+            ):
                 # Check if it's an actual assignment with a value
-                if '=' in line or ': ' in line:
-                    parts = line.split(':' if ': ' in line else '=')
-                    if len(parts) > 1 and parts[1].strip() and not parts[1].strip().startswith('${{'):
-                        security_issues.append(f"Potential hardcoded credential in: {line.strip()}")
+                if "=" in line or ": " in line:
+                    parts = line.split(":" if ": " in line else "=")
+                    if (
+                        len(parts) > 1
+                        and parts[1].strip()
+                        and not parts[1].strip().startswith("${{")
+                    ):
+                        security_issues.append(
+                            f"Potential hardcoded credential in: {line.strip()}"
+                        )
 
         if security_issues:
             print(f"🔒 Security concerns in {workflow_file.name}:")
@@ -162,11 +172,11 @@ class WorkflowValidator:
 
     def test_workflow_trigger_conditions(self, workflow_file: Path) -> bool:
         """Test workflow trigger conditions"""
-        with open(workflow_file, 'r') as f:
+        with open(workflow_file, "r") as f:
             workflow = yaml.safe_load(f)
 
         # Handle both 'on' key and potential string values
-        triggers = workflow.get('on') or workflow.get(True) or {}
+        triggers = workflow.get("on") or workflow.get(True) or {}
 
         # If triggers is a string, convert to dict
         if isinstance(triggers, str):
@@ -177,7 +187,14 @@ class WorkflowValidator:
             return False
 
         # Validate trigger syntax
-        valid_triggers = ['push', 'pull_request', 'schedule', 'workflow_dispatch', 'release', 'workflow_call']
+        valid_triggers = [
+            "push",
+            "pull_request",
+            "schedule",
+            "workflow_dispatch",
+            "release",
+            "workflow_call",
+        ]
         unusual_triggers = []
 
         for trigger in triggers:
@@ -198,7 +215,9 @@ class WorkflowValidator:
             print(f"❌ Workflows directory not found: {self.workflows_dir}")
             return results
 
-        workflow_files = list(self.workflows_dir.glob("*.yml")) + list(self.workflows_dir.glob("*.yaml"))
+        workflow_files = list(self.workflows_dir.glob("*.yml")) + list(
+            self.workflows_dir.glob("*.yaml")
+        )
 
         if not workflow_files:
             print(f"❌ No workflow files found in {self.workflows_dir}")
@@ -215,7 +234,7 @@ class WorkflowValidator:
                 self.validate_job_dependencies(workflow_file),
                 self.check_action_versions(workflow_file),
                 self.validate_secrets_usage(workflow_file),
-                self.test_workflow_trigger_conditions(workflow_file)
+                self.test_workflow_trigger_conditions(workflow_file),
             ]
 
             results[workflow_file.name] = all(checks)
@@ -241,7 +260,9 @@ class WorkflowValidator:
         if passed_workflows == total_workflows:
             print("\n🎉 All workflows passed validation!")
         else:
-            print(f"\n⚠️  {total_workflows - passed_workflows} workflow(s) need attention:")
+            print(
+                f"\n⚠️  {total_workflows - passed_workflows} workflow(s) need attention:"
+            )
             for workflow, passed in results.items():
                 if not passed:
                     print(f"   - {workflow}")
@@ -250,7 +271,9 @@ class WorkflowValidator:
 def main():
     parser = argparse.ArgumentParser(description="Validate GitHub Actions workflows")
     parser.add_argument("--workflow", help="Validate specific workflow file")
-    parser.add_argument("--report", action="store_true", help="Generate detailed report")
+    parser.add_argument(
+        "--report", action="store_true", help="Generate detailed report"
+    )
 
     args = parser.parse_args()
 
