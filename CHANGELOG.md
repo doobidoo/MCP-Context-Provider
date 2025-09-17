@@ -5,6 +5,40 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2025-09-18
+
+### Added
+- **Complete Build Automation System**: Comprehensive CI/CD pipeline and quality assurance
+  - **GitHub Actions**: Automated release workflow with package building and GitHub releases on git tags
+  - **Continuous Integration**: Multi-platform testing (Ubuntu, macOS, Windows) with Python 3.8-3.11 support
+  - **Pre-commit Hooks**: Automatic validation with JSON formatting, context validation, and build testing
+  - **Security Integration**: Automated secret scanning and sensitive file detection
+
+- **Single Source of Truth Architecture**: Eliminated duplication and maintenance issues
+  - **Dynamic Build System**: `scripts/build_dxt.py` builds packages from single source automatically
+  - **Automated Validation**: Comprehensive validation scripts for context files, build process, and versions
+  - **Version Management**: `scripts/bump_version.py` for automated semantic versioning across all files
+
+- **Quality Assurance Framework**: Multi-layer validation and testing
+  - **Context Validation**: `scripts/validate_contexts.py` validates JSON structure and required fields
+  - **Build Testing**: `scripts/test_build.py` tests build process without creating packages
+  - **Version Consistency**: `scripts/check_versions.py` ensures version synchronization across files
+
+### Changed
+- **Repository Structure**: Removed duplicate DXT directory from version control
+  - **Build Artifacts**: DXT directory now generated during build, not version controlled
+  - **Clean Repository**: Build artifacts excluded via .gitignore for cleaner development
+  - **Dynamic Context Loading**: Server discovers all 8 context files automatically
+
+- **Installation Process**: Updated to use automated build system
+  - **Fresh Package Builds**: Installation script builds packages from latest source
+  - **No Download Dependencies**: Eliminates version drift from pre-built packages
+  - **Consistent Installation**: Always installs latest server with dynamic loading
+
+### Fixed
+- **Context File Discovery**: Server now loads all context files instead of hardcoded 5
+- **Version Synchronization**: Automated version management prevents inconsistencies
+- **Build Reproducibility**: Eliminates manual file copying and synchronization issues
 ## [1.7.0] - 2025-09-18
 
 ### Changed

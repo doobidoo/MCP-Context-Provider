@@ -13,9 +13,13 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PACKAGE_NAME="mcp-context-provider-1.2.1.dxt"
-PACKAGE_URL="https://github.com/doobidoo/MCP-Context-Provider/raw/main/${PACKAGE_NAME}"
+PACKAGE_VERSION="1.8.0"
+PACKAGE_NAME="mcp-context-provider-${PACKAGE_VERSION}.dxt"
 INSTALL_DIR="$HOME/mcp-context-provider"
+
+# Build package locally instead of downloading
+BUILD_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(dirname "$BUILD_SCRIPT_DIR")"
 
 # Detect OS and set appropriate Claude config directory
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -90,23 +94,30 @@ install_dxt() {
     fi
 }
 
-# Function to download DXT package
-download_package() {
-    print_info "Downloading MCP Context Provider package..."
-    
-    if command_exists wget; then
-        wget -q --show-progress "$PACKAGE_URL" -O "$PACKAGE_NAME"
-    elif command_exists curl; then
-        curl -L -o "$PACKAGE_NAME" "$PACKAGE_URL"
-    else
-        print_error "Neither wget nor curl is available. Please install one of them."
+# Function to build DXT package locally
+build_package() {
+    print_info "Building MCP Context Provider package from source..."
+
+    # Change to repository root
+    cd "$REPO_ROOT"
+
+    # Check if build script exists
+    if [ ! -f "scripts/build_dxt.py" ]; then
+        print_error "Build script not found. This must be run from the MCP Context Provider repository."
         exit 1
     fi
-    
+
+    # Build the package
+    if ! $PYTHON_CMD scripts/build_dxt.py --version "$PACKAGE_VERSION"; then
+        print_error "Failed to build DXT package"
+        exit 1
+    fi
+
+    # Check if package was created
     if [ -f "$PACKAGE_NAME" ]; then
-        print_success "Package downloaded: $PACKAGE_NAME"
+        print_success "Package built: $PACKAGE_NAME"
     else
-        print_error "Failed to download package"
+        print_error "Package build completed but file not found: $PACKAGE_NAME"
         exit 1
     fi
 }
@@ -235,6 +246,7 @@ verify_installation() {
 
 # Function to cleanup temporary files
 cleanup() {
+    cd "$REPO_ROOT"
     if [ -f "$PACKAGE_NAME" ]; then
         rm -f "$PACKAGE_NAME"
         print_info "Cleaned up temporary files"
@@ -251,8 +263,8 @@ main() {
     check_python
     install_dxt
     
-    # Download and install
-    download_package
+    # Build and install
+    build_package
     unpack_package
     setup_venv
     update_claude_config
