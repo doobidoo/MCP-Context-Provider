@@ -43,19 +43,44 @@ class ContextProvider:
     
     def load_all_contexts(self):
         """Load all context files at startup"""
-        context_files = [
-            "dokuwiki_context.json",
-            "terraform_context.json", 
-            "azure_context.json",
-            "git_context.json",
-            "general_preferences.json"
-        ]
-        
-        for file in context_files:
-            file_path = self.config_dir / file
-            if file_path.exists():
-                context_name = file.replace("_context.json", "").replace(".json", "")
+        # Check if auto-loading is enabled
+        auto_load = os.getenv('AUTO_LOAD_CONTEXTS', 'true').lower() == 'true'
+
+        if not auto_load:
+            print("Auto-loading of contexts is disabled", file=sys.stderr)
+            return
+
+        if not self.config_dir.exists():
+            print(f"Context directory does not exist: {self.config_dir}", file=sys.stderr)
+            return
+
+        # Dynamically discover all JSON context files
+        context_files = []
+
+        # Look for *_context.json files first (preferred pattern)
+        context_files.extend(self.config_dir.glob("*_context.json"))
+
+        # Also look for other .json files that might be contexts
+        for json_file in self.config_dir.glob("*.json"):
+            if json_file not in context_files:
+                context_files.append(json_file)
+
+        print(f"Discovered {len(context_files)} context files", file=sys.stderr)
+
+        for file_path in context_files:
+            try:
+                # Extract context name from filename
+                if file_path.name.endswith("_context.json"):
+                    context_name = file_path.name.replace("_context.json", "")
+                elif file_path.name.endswith(".json"):
+                    context_name = file_path.name.replace(".json", "")
+                else:
+                    continue
+
                 self.contexts[context_name] = self.load_context_file(file_path)
+                print(f"Loaded context: {context_name}", file=sys.stderr)
+            except Exception as e:
+                print(f"Error loading context file {file_path.name}: {e}", file=sys.stderr)
     
     def load_context_file(self, file_path: Path) -> Dict[str, Any]:
         """Load individual context file"""
