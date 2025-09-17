@@ -5,6 +5,24 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2025-09-18
+
+### Changed
+- **Repository Structure**: Major reorganization for improved maintainability
+  - Created `docs/` directory with `guides/` and `phase3/` subdirectories for all documentation
+  - Created `scripts/` directory for installation and utility scripts
+  - Created `tests/` directory for all test files
+  - Moved all documentation files to appropriate subdirectories
+  - Cleaned up root directory from 37 to 22 items for better navigation
+
+### Fixed
+- Updated all documentation references to reflect new directory structure
+- Fixed installation script paths in README.md and CLAUDE.md
+- Corrected test file paths in documentation
+
+### Removed
+- Outdated DXT package file (mcp-context-provider-1.1.0.dxt)
+
 ## [1.6.0] - 2025-09-17
 
 ### Added

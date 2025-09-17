@@ -29,10 +29,10 @@ Each context file follows this structure:
 ### Installation & Setup
 ```bash
 # Automated installation (recommended)
-curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/scripts/install.sh | bash
 
 # Verification
-python verify_install.py
+python scripts/verify_install.py
 
 # Development setup from source
 python -m venv venv
@@ -43,10 +43,10 @@ pip install -r requirements.txt
 ### Testing & Verification
 ```bash
 # Comprehensive installation check
-python verify_install.py
+python scripts/verify_install.py
 
 # Information about current installation
-python verify_install.py --info
+python scripts/verify_install.py --info
 
 # Server testing with auto-loading disabled (for development)
 env AUTO_LOAD_CONTEXTS=false python context_provider_server.py
