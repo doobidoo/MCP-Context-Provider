@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "memory": {
+      "command": "/Users/hkr/.local/bin/uv",
+      "args": [
+        "--directory",
+        "/Users/hkr/Documents/GitHub/mcp-memory-service",
+        "run",
+        "memory"
+      ],
+      "env": {
+        "MCP_MEMORY_BACKUPS_PATH": "/Users/hkr/Library/Application Support/mcp-memory/backups",
+        "MCP_MEMORY_STORAGE_BACKEND": "sqlite_vec",
+        "MCP_MEMORY_SQLITE_PATH": "/Users/hkr/Library/Application Support/mcp-memory/sqlite_vec.db"
+      }
+    },
+    "context-provider": {
+      "command": "python",
+      "args": ["context_provider_server.py"],
+      "cwd": "/Users/hkr/Documents/GitHub/MCP-Context-Provider",
+      "env": {
+        "CONTEXT_CONFIG_DIR": "./contexts",
+        "AUTO_LOAD_CONTEXTS": "true"
+      }
+    }
+  }
+}
