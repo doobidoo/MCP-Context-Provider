@@ -13,10 +13,18 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PACKAGE_NAME="mcp-context-provider-1.1.0.dxt"
+PACKAGE_NAME="mcp-context-provider-1.2.1.dxt"
 PACKAGE_URL="https://github.com/doobidoo/MCP-Context-Provider/raw/main/${PACKAGE_NAME}"
 INSTALL_DIR="$HOME/mcp-context-provider"
-CLAUDE_CONFIG_DIR="$HOME/.config/claude"
+
+# Detect OS and set appropriate Claude config directory
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    CLAUDE_CONFIG_DIR="$HOME/Library/Application Support/Claude"
+else
+    # Linux and other Unix-like systems
+    CLAUDE_CONFIG_DIR="$HOME/.config/claude"
+fi
 CLAUDE_CONFIG_FILE="$CLAUDE_CONFIG_DIR/claude_desktop_config.json"
 
 # Function to print colored output

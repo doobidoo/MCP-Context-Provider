@@ -230,7 +230,7 @@ def find_claude_config():
     if system == "Windows":
         config_path = Path(os.environ['APPDATA']) / "Claude" / "claude_desktop_config.json"
     elif system == "Darwin":  # macOS
-        config_path = Path.home() / ".config" / "claude" / "claude_desktop_config.json"
+        config_path = Path.home() / "Library" / "Application Support" / "Claude" / "claude_desktop_config.json"
     else:  # Linux and others
         config_path = Path.home() / ".config" / "claude" / "claude_desktop_config.json"
     
@@ -246,7 +246,9 @@ def check_claude_configuration():
         print_info("Expected locations:")
         if platform.system() == "Windows":
             print_info(f"  - {Path(os.environ['APPDATA']) / 'Claude' / 'claude_desktop_config.json'}")
-        else:
+        elif platform.system() == "Darwin":  # macOS
+            print_info(f"  - {Path.home() / 'Library' / 'Application Support' / 'Claude' / 'claude_desktop_config.json'}")
+        else:  # Linux and others
             print_info(f"  - {Path.home() / '.config' / 'claude' / 'claude_desktop_config.json'}")
         return False
     

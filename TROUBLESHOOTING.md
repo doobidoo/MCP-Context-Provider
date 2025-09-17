@@ -20,7 +20,7 @@ Common issues and solutions for the MCP Context Provider.
 
 **Symptoms**: 
 - `dxt install` command doesn't exist
-- Error: "unknown command 'install'" when running `dxt install mcp-context-provider-1.1.0.dxt`
+- Error: "unknown command 'install'" when running `dxt install mcp-context-provider-1.2.1.dxt`
 
 **Root Cause**: The DXT CLI doesn't have an `install` command. Available commands are: `init`, `validate`, `clean`, `pack`, `unpack`, `sign`, `verify`, `info`, `unsign`.
 
@@ -34,8 +34,8 @@ curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/i
 npm install -g @anthropic-ai/dxt
 
 # 2. Download and unpack
-wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.1.0.dxt
-dxt unpack mcp-context-provider-1.1.0.dxt ~/mcp-context-provider
+wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.2.1.dxt
+dxt unpack mcp-context-provider-1.2.1.dxt ~/mcp-context-provider
 
 # 3. Set up virtual environment
 cd ~/mcp-context-provider
@@ -169,7 +169,8 @@ sudo chown $USER:$USER context_provider_server.py
 
 **Solution**:
 1. **Check configuration file location**:
-   - Linux/Mac: `~/.config/claude/claude_desktop_config.json`
+   - Linux: `~/.config/claude/claude_desktop_config.json`
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
    - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
 2. **Validate JSON syntax**:
@@ -339,7 +340,7 @@ python -m json.tool contexts/dokuwiki_context.json
    ```
 
 3. **Check Claude Desktop logs**:
-   - **Mac**: `~/Library/Logs/Claude/`
+   - **macOS**: `~/Library/Logs/Claude/`
    - **Windows**: `%APPDATA%\Claude\logs\`
    - **Linux**: `~/.config/claude/logs/`
 
@@ -417,7 +418,10 @@ python -m json.tool contexts/dokuwiki_context.json
 python context_provider_server.py
 
 # 2. Check Claude Desktop logs
+# On Linux:
 tail -f ~/.config/claude/logs/claude_desktop.log
+# On macOS:
+tail -f ~/Library/Logs/Claude/claude_desktop.log
 
 # 3. Verify configuration
 python -c "
@@ -655,7 +659,10 @@ Before seeking help, collect:
 3. **Error logs**:
    ```bash
    # Recent errors from Claude Desktop logs
+   # On Linux:
    tail -100 ~/.config/claude/logs/claude_desktop.log
+   # On macOS:
+   tail -100 ~/Library/Logs/Claude/claude_desktop.log
    ```
 
 4. **Context files**:

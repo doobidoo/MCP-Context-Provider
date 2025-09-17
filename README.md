@@ -36,7 +36,7 @@ The easiest way to install MCP Context Provider is using the provided installati
 **Unix/Linux/macOS:**
 ```bash
 # Download the DXT package
-wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.1.0.dxt
+wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.2.1.dxt
 
 # Run the installation script
 curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.sh | bash
@@ -62,10 +62,10 @@ The installation script automatically:
 npm install -g @anthropic-ai/dxt
 
 # Download the DXT package
-wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.1.0.dxt
+wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.2.1.dxt
 
 # Unpack the extension to your desired location
-dxt unpack mcp-context-provider-1.1.0.dxt ~/mcp-context-provider
+dxt unpack mcp-context-provider-1.2.1.dxt ~/mcp-context-provider
 
 # Navigate to the installation directory
 cd ~/mcp-context-provider
@@ -97,8 +97,9 @@ pip install -r requirements.txt
 
 Update your Claude Desktop configuration file:
 
-**Configuration File Location**: 
-- **Linux/Mac**: `~/.config/claude/claude_desktop_config.json`
+**Configuration File Location**:
+- **Linux**: `~/.config/claude/claude_desktop_config.json`
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 **For Virtual Environment Installation (Recommended):**

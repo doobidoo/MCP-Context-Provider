@@ -5,6 +5,26 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2025-09-17
+
+### Fixed
+- **macOS Configuration Path Issue**: Fixed incorrect Claude Desktop configuration path detection
+  - `install.sh`: Added proper macOS detection using `$OSTYPE` to use `~/Library/Application Support/Claude/` instead of `~/.config/claude/`
+  - `verify_install.py`: Updated `find_claude_config()` function to use correct macOS path
+  - Updated error messages to show platform-specific paths for better troubleshooting
+
+### Changed
+- **Documentation Updates**: Corrected macOS paths throughout documentation
+  - `README.md`: Separated Linux/macOS configuration file locations
+  - `QUICKSTART.md`: Updated configuration paths and uninstall instructions
+  - `TROUBLESHOOTING.md`: Fixed all references to use platform-specific paths for config files and logs
+- **Version References**: Updated all package references from 1.1.0 to 1.2.1
+
+### Technical Details
+- The installation scripts now correctly detect macOS and place configuration files in the proper location that Claude Desktop actually uses
+- Windows and Linux path detection were already correct and remain unchanged
+- This resolves the issue where the installer would create config files in the wrong location on macOS systems
+
 ## [1.2.0] - 2025-08-21
 
 ### Fixed
