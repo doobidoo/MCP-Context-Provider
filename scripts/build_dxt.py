@@ -59,7 +59,7 @@ class DXTBuilder:
         # Validate JSON syntax
         for context_file in context_files:
             try:
-                with open(context_file, 'r') as f:
+                with open(context_file, "r") as f:
                     json.load(f)
                 print(f"✅ Valid JSON: {context_file.name}")
             except json.JSONDecodeError as e:
@@ -108,9 +108,9 @@ class DXTBuilder:
             existing_manifest = self.dxt_dir / "manifest.json"
             if existing_manifest.exists():
                 try:
-                    with open(existing_manifest, 'r') as f:
+                    with open(existing_manifest, "r") as f:
                         existing_data = json.load(f)
-                        version = existing_data.get('version', '1.7.0')
+                        version = existing_data.get("version", "1.7.0")
                 except:
                     version = "1.8.0"
             else:
@@ -118,7 +118,7 @@ class DXTBuilder:
 
         # Use template if available, otherwise create basic manifest
         if self.manifest_template.exists():
-            with open(self.manifest_template, 'r') as f:
+            with open(self.manifest_template, "r") as f:
                 manifest_data = json.load(f)
         else:
             manifest_data = {
@@ -129,7 +129,7 @@ class DXTBuilder:
                 "long_description": "The MCP Context Provider delivers persistent, tool-specific context rules and user preferences that survive chat session restarts in Claude Desktop. It provides auto-corrections, syntax transformations, and customizable preferences for tools like Terraform, Git, Azure, and DokuWiki, ensuring consistent behavior across all conversations.",
                 "author": {
                     "name": "doobidoo",
-                    "url": "https://github.com/doobidoo/MCP-Context-Provider"
+                    "url": "https://github.com/doobidoo/MCP-Context-Provider",
                 },
                 "server": {
                     "type": "python",
@@ -139,27 +139,27 @@ class DXTBuilder:
                         "args": ["server/context_provider_server.py"],
                         "env": {
                             "CONTEXT_CONFIG_DIR": "contexts",
-                            "PYTHONPATH": "server/lib"
-                        }
-                    }
+                            "PYTHONPATH": "server/lib",
+                        },
+                    },
                 },
                 "tools": [
                     {
                         "name": "list_available_contexts",
-                        "description": "List all available context configurations"
+                        "description": "List all available context configurations",
                     },
                     {
                         "name": "get_context_rules",
-                        "description": "Get context rules for a specific tool category"
+                        "description": "Get context rules for a specific tool category",
                     },
                     {
                         "name": "apply_auto_corrections",
-                        "description": "Apply auto-corrections to text based on context rules"
+                        "description": "Apply auto-corrections to text based on context rules",
                     },
                     {
                         "name": "get_tool_preferences",
-                        "description": "Get preferences for a specific tool category"
-                    }
+                        "description": "Get preferences for a specific tool category",
+                    },
                 ],
                 "keywords": [
                     "mcp",
@@ -172,7 +172,7 @@ class DXTBuilder:
                     "git",
                     "azure",
                     "dokuwiki",
-                    "preferences"
+                    "preferences",
                 ],
                 "license": "MIT",
                 "user_config": {
@@ -181,20 +181,18 @@ class DXTBuilder:
                         "title": "Context Configuration Directory",
                         "description": "Directory path containing context JSON files (relative to extension root)",
                         "default": "contexts",
-                        "required": False
+                        "required": False,
                     }
                 },
                 "compatibility": {
                     "claude_desktop": ">=1.0.0",
                     "platforms": ["win32", "darwin", "linux"],
-                    "runtimes": {
-                        "python": ">=3.8"
-                    }
+                    "runtimes": {"python": ">=3.8"},
                 },
                 "repository": {
                     "type": "git",
-                    "url": "https://github.com/doobidoo/MCP-Context-Provider.git"
-                }
+                    "url": "https://github.com/doobidoo/MCP-Context-Provider.git",
+                },
             }
 
         # Update version
@@ -202,7 +200,7 @@ class DXTBuilder:
 
         # Write manifest
         manifest_file = self.dxt_dir / "manifest.json"
-        with open(manifest_file, 'w', encoding='utf-8') as f:
+        with open(manifest_file, "w", encoding="utf-8") as f:
             json.dump(manifest_data, f, indent=2, ensure_ascii=False)
 
         print(f"✅ Created manifest: {manifest_file}")
@@ -221,7 +219,7 @@ class DXTBuilder:
         else:
             # Create minimal requirements.txt
             requirements_dest = self.dxt_dir / "requirements.txt"
-            with open(requirements_dest, 'w') as f:
+            with open(requirements_dest, "w") as f:
                 f.write("mcp>=1.9.4\n")
             print(f"✅ Created: requirements.txt")
 
@@ -230,19 +228,19 @@ class DXTBuilder:
         if readme_src.exists():
             readme_dest = self.dxt_dir / "README.md"
             # Create a shortened README for the package
-            with open(readme_src, 'r') as f:
+            with open(readme_src, "r") as f:
                 readme_content = f.read()
 
             # Take first few sections only
-            lines = readme_content.split('\n')
+            lines = readme_content.split("\n")
             package_readme = []
             for line in lines[:50]:  # First 50 lines should cover the basics
                 package_readme.append(line)
-                if line.startswith('##') and len(package_readme) > 20:
+                if line.startswith("##") and len(package_readme) > 20:
                     break
 
-            with open(readme_dest, 'w') as f:
-                f.write('\n'.join(package_readme))
+            with open(readme_dest, "w") as f:
+                f.write("\n".join(package_readme))
             print(f"✅ Created package README")
 
     def build_package(self) -> Path:
@@ -253,13 +251,13 @@ class DXTBuilder:
         original_cwd = os.getcwd()
         try:
             os.chdir(self.dxt_dir)
-            result = subprocess.run(['dxt', 'pack'], capture_output=True, text=True)
+            result = subprocess.run(["dxt", "pack"], capture_output=True, text=True)
 
             if result.returncode != 0:
                 print(f"❌ DXT pack failed:")
                 print(f"STDOUT: {result.stdout}")
                 print(f"STDERR: {result.stderr}")
-                raise subprocess.CalledProcessError(result.returncode, 'dxt pack')
+                raise subprocess.CalledProcessError(result.returncode, "dxt pack")
 
             print("✅ DXT package built successfully")
             print(result.stdout)
@@ -323,10 +321,18 @@ class DXTBuilder:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Build DXT package for MCP Context Provider")
-    parser.add_argument("--clean", action="store_true", help="Clean build directory before building")
-    parser.add_argument("--version", help="Package version (default: auto-detect or 1.7.0)")
-    parser.add_argument("--no-clean", action="store_true", help="Don't clean build directory")
+    parser = argparse.ArgumentParser(
+        description="Build DXT package for MCP Context Provider"
+    )
+    parser.add_argument(
+        "--clean", action="store_true", help="Clean build directory before building"
+    )
+    parser.add_argument(
+        "--version", help="Package version (default: auto-detect or 1.7.0)"
+    )
+    parser.add_argument(
+        "--no-clean", action="store_true", help="Don't clean build directory"
+    )
 
     args = parser.parse_args()
 
@@ -338,8 +344,7 @@ def main():
         # Build the package
         builder = DXTBuilder(repo_root)
         package_file = builder.build(
-            clean=not args.no_clean if args.no_clean else True,
-            version=args.version
+            clean=not args.no_clean if args.no_clean else True, version=args.version
         )
 
         print(f"\n✅ SUCCESS: DXT package built at {package_file}")

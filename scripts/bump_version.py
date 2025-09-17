@@ -19,16 +19,16 @@ class VersionManager:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
         self.files_to_update = {
-            'package.json': self.update_package_json,
-            'scripts/build_dxt.py': self.update_build_script,
-            'CHANGELOG.md': self.update_changelog,
-            'scripts/install.sh': self.update_install_script
+            "package.json": self.update_package_json,
+            "scripts/build_dxt.py": self.update_build_script,
+            "CHANGELOG.md": self.update_changelog,
+            "scripts/install.sh": self.update_install_script,
         }
 
     def parse_version(self, version_str: str) -> tuple:
         """Parse semantic version string into (major, minor, patch)"""
         try:
-            parts = version_str.split('.')
+            parts = version_str.split(".")
             if len(parts) != 3:
                 raise ValueError("Version must be in format major.minor.patch")
             return (int(parts[0]), int(parts[1]), int(parts[2]))
@@ -43,14 +43,14 @@ class VersionManager:
         """Increment version based on bump type"""
         major, minor, patch = self.parse_version(current_version)
 
-        if bump_type == 'major':
+        if bump_type == "major":
             major += 1
             minor = 0
             patch = 0
-        elif bump_type == 'minor':
+        elif bump_type == "minor":
             minor += 1
             patch = 0
-        elif bump_type == 'patch':
+        elif bump_type == "patch":
             patch += 1
         else:
             raise ValueError(f"Invalid bump type: {bump_type}")
@@ -59,35 +59,35 @@ class VersionManager:
 
     def get_current_version(self) -> Optional[str]:
         """Get current version from package.json"""
-        package_file = self.repo_root / 'package.json'
+        package_file = self.repo_root / "package.json"
         if not package_file.exists():
             return None
 
         try:
-            with open(package_file, 'r', encoding='utf-8') as f:
+            with open(package_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            return data.get('version')
+            return data.get("version")
         except Exception as e:
             print(f"❌ Error reading package.json: {e}")
             return None
 
     def update_package_json(self, new_version: str) -> bool:
         """Update version in package.json"""
-        package_file = self.repo_root / 'package.json'
+        package_file = self.repo_root / "package.json"
         if not package_file.exists():
             print(f"⚠️  package.json not found, skipping")
             return True
 
         try:
-            with open(package_file, 'r', encoding='utf-8') as f:
+            with open(package_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
-            old_version = data.get('version', 'unknown')
-            data['version'] = new_version
+            old_version = data.get("version", "unknown")
+            data["version"] = new_version
 
-            with open(package_file, 'w', encoding='utf-8') as f:
+            with open(package_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
-                f.write('\n')  # Add final newline
+                f.write("\n")  # Add final newline
 
             print(f"✅ package.json: {old_version} → {new_version}")
             return True
@@ -98,20 +98,26 @@ class VersionManager:
 
     def update_build_script(self, new_version: str) -> bool:
         """Update default version in build script"""
-        build_script = self.repo_root / 'scripts' / 'build_dxt.py'
+        build_script = self.repo_root / "scripts" / "build_dxt.py"
         if not build_script.exists():
             print(f"⚠️  build script not found, skipping")
             return True
 
         try:
-            with open(build_script, 'r', encoding='utf-8') as f:
+            with open(build_script, "r", encoding="utf-8") as f:
                 content = f.read()
 
             # Look for version patterns and update them
             patterns = [
-                (r'PACKAGE_VERSION\s*=\s*["\']([^"\']+)["\']', f'PACKAGE_VERSION = "{new_version}"'),
+                (
+                    r'PACKAGE_VERSION\s*=\s*["\']([^"\']+)["\']',
+                    f'PACKAGE_VERSION = "{new_version}"',
+                ),
                 (r'version\s*=\s*["\']([^"\']+)["\']', f'version = "{new_version}"'),
-                (r'default.*["\']([0-9]+\.[0-9]+\.[0-9]+)["\']', f'default: "{new_version}"'),
+                (
+                    r'default.*["\']([0-9]+\.[0-9]+\.[0-9]+)["\']',
+                    f'default: "{new_version}"',
+                ),
             ]
 
             updated = False
@@ -124,7 +130,7 @@ class VersionManager:
                         break
 
             if updated:
-                with open(build_script, 'w', encoding='utf-8') as f:
+                with open(build_script, "w", encoding="utf-8") as f:
                     f.write(content)
                 print(f"✅ build script: Updated default version to {new_version}")
             else:
@@ -138,13 +144,13 @@ class VersionManager:
 
     def update_install_script(self, new_version: str) -> bool:
         """Update version in install script"""
-        install_script = self.repo_root / 'scripts' / 'install.sh'
+        install_script = self.repo_root / "scripts" / "install.sh"
         if not install_script.exists():
             print(f"⚠️  install script not found, skipping")
             return True
 
         try:
-            with open(install_script, 'r', encoding='utf-8') as f:
+            with open(install_script, "r", encoding="utf-8") as f:
                 content = f.read()
 
             # Update PACKAGE_VERSION variable
@@ -154,7 +160,7 @@ class VersionManager:
             if re.search(pattern, content):
                 content = re.sub(pattern, replacement, content)
 
-                with open(install_script, 'w', encoding='utf-8') as f:
+                with open(install_script, "w", encoding="utf-8") as f:
                     f.write(content)
                 print(f"✅ install script: Updated version to {new_version}")
             else:
@@ -168,18 +174,18 @@ class VersionManager:
 
     def update_changelog(self, new_version: str) -> bool:
         """Add new version entry to changelog"""
-        changelog_file = self.repo_root / 'CHANGELOG.md'
+        changelog_file = self.repo_root / "CHANGELOG.md"
         if not changelog_file.exists():
             print(f"⚠️  CHANGELOG.md not found, skipping")
             return True
 
         try:
-            with open(changelog_file, 'r', encoding='utf-8') as f:
+            with open(changelog_file, "r", encoding="utf-8") as f:
                 content = f.read()
 
             # Find the position to insert new version
             # Look for the first version entry and insert before it
-            date_str = datetime.now().strftime('%Y-%m-%d')
+            date_str = datetime.now().strftime("%Y-%m-%d")
             new_entry = f"""
 ## [{new_version}] - {date_str}
 
@@ -195,21 +201,21 @@ class VersionManager:
 """
 
             # Find insertion point (after the header but before first version)
-            lines = content.split('\n')
+            lines = content.split("\n")
             insert_index = -1
 
             for i, line in enumerate(lines):
-                if re.match(r'^##\s*\[.*\]', line):
+                if re.match(r"^##\s*\[.*\]", line):
                     insert_index = i
                     break
 
             if insert_index == -1:
                 # No existing version entries, add after the header
                 for i, line in enumerate(lines):
-                    if line.startswith('# ') or line.startswith('## '):
+                    if line.startswith("# ") or line.startswith("## "):
                         # Skip headers, look for content start
                         continue
-                    elif line.strip() == '':
+                    elif line.strip() == "":
                         continue
                     else:
                         insert_index = max(0, i - 1)
@@ -217,9 +223,9 @@ class VersionManager:
 
             if insert_index >= 0:
                 lines.insert(insert_index, new_entry.strip())
-                content = '\n'.join(lines)
+                content = "\n".join(lines)
 
-                with open(changelog_file, 'w', encoding='utf-8') as f:
+                with open(changelog_file, "w", encoding="utf-8") as f:
                     f.write(content)
 
                 print(f"✅ CHANGELOG.md: Added entry for version {new_version}")
@@ -278,16 +284,16 @@ class VersionManager:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Manage project version across all files")
-    parser.add_argument(
-        'action',
-        choices=['bump', 'set', 'show'],
-        help="Action to perform"
+    parser = argparse.ArgumentParser(
+        description="Manage project version across all files"
     )
     parser.add_argument(
-        'value',
-        nargs='?',
-        help="Bump type (major|minor|patch) for 'bump' or version string for 'set'"
+        "action", choices=["bump", "set", "show"], help="Action to perform"
+    )
+    parser.add_argument(
+        "value",
+        nargs="?",
+        help="Bump type (major|minor|patch) for 'bump' or version string for 'set'",
     )
 
     args = parser.parse_args()
@@ -299,7 +305,7 @@ def main():
     version_manager = VersionManager(repo_root)
 
     try:
-        if args.action == 'show':
+        if args.action == "show":
             current_version = version_manager.get_current_version()
             if current_version:
                 print(f"Current version: {current_version}")
@@ -307,12 +313,12 @@ def main():
                 print("❌ Could not determine current version")
                 sys.exit(1)
 
-        elif args.action == 'bump':
+        elif args.action == "bump":
             if not args.value:
                 print("❌ Bump type required (major|minor|patch)")
                 sys.exit(1)
 
-            if args.value not in ['major', 'minor', 'patch']:
+            if args.value not in ["major", "minor", "patch"]:
                 print(f"❌ Invalid bump type: {args.value}")
                 sys.exit(1)
 
@@ -322,7 +328,7 @@ def main():
             print(f"   git commit -m 'chore: bump version to {new_version}'")
             print(f"   git tag v{new_version}")
 
-        elif args.action == 'set':
+        elif args.action == "set":
             if not args.value:
                 print("❌ Version string required")
                 sys.exit(1)
