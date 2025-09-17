@@ -6,6 +6,12 @@ on:
   push:
     branches: [ main, develop ]
 
+permissions:
+  contents: read     # Required to checkout code
+  actions: read      # Required to read workflow status
+  checks: write      # Required to write check results
+  security-events: write  # Required for security scanning
+
 jobs:
   validate:
     runs-on: ubuntu-latest
