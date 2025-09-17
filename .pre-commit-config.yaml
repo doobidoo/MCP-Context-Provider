@@ -1,0 +1,64 @@
+# Pre-commit hooks for MCP Context Provider
+# Install with: pip install pre-commit && pre-commit install
+
+repos:
+  # JSON validation for context files
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-json
+        files: ^contexts/.*\.json$
+        description: "Validate JSON syntax in context files"
+
+      - id: pretty-format-json
+        files: ^contexts/.*\.json$
+        args: [--autofix, --indent, "2"]
+        description: "Format JSON files consistently"
+
+      - id: check-yaml
+        files: \.(yml|yaml)$
+        description: "Validate YAML syntax"
+
+      - id: trailing-whitespace
+        description: "Remove trailing whitespace"
+
+      - id: end-of-file-fixer
+        description: "Ensure files end with newline"
+
+  # Python code quality
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+        files: \.py$
+        description: "Format Python code with black"
+
+  # Custom validation hooks
+  - repo: local
+    hooks:
+      - id: validate-context-structure
+        name: Validate context file structure
+        entry: python
+        language: system
+        files: ^contexts/.*\.json$
+        args: [scripts/validate_contexts.py]
+        description: "Validate context file structure and required fields"
+        pass_filenames: true
+
+      - id: test-build-process
+        name: Test DXT build process
+        entry: python
+        language: system
+        files: ^(context_provider_server\.py|contexts/.*\.json|scripts/build_dxt\.py)$
+        args: [scripts/test_build.py]
+        description: "Test that DXT build process works"
+        pass_filenames: false
+
+      - id: version-consistency-check
+        name: Check version consistency
+        entry: python
+        language: system
+        files: ^(package\.json|scripts/build_dxt\.py|CHANGELOG\.md)$
+        args: [scripts/check_versions.py]
+        description: "Ensure version consistency across files"
+        pass_filenames: false

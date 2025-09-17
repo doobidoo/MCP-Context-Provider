@@ -1,0 +1,195 @@
+name: Build and Release DXT Package
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.7.0, v1.8.0, etc.
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Set up Node.js (for DXT CLI)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install DXT CLI
+      run: npm install -g @anthropic-ai/dxt
+
+    - name: Extract version from tag
+      id: version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Validate source files
+      run: |
+        echo "🔍 Validating source files..."
+
+        # Check server file exists
+        if [ ! -f "context_provider_server.py" ]; then
+          echo "❌ Server file not found"
+          exit 1
+        fi
+
+        # Check contexts directory
+        if [ ! -d "contexts" ]; then
+          echo "❌ Contexts directory not found"
+          exit 1
+        fi
+
+        # Validate JSON files
+        echo "Validating JSON syntax..."
+        for json_file in contexts/*.json; do
+          if [ -f "$json_file" ]; then
+            if ! python -m json.tool "$json_file" > /dev/null 2>&1; then
+              echo "❌ Invalid JSON: $json_file"
+              exit 1
+            else
+              echo "✅ Valid JSON: $(basename $json_file)"
+            fi
+          fi
+        done
+
+        echo "✅ All source files validated"
+
+    - name: Build DXT package
+      run: |
+        echo "🔨 Building DXT package..."
+        python scripts/build_dxt.py --version ${{ steps.version.outputs.VERSION }}
+
+        # Verify package was created
+        PACKAGE_FILE="mcp-context-provider-${{ steps.version.outputs.VERSION }}.dxt"
+        if [ ! -f "$PACKAGE_FILE" ]; then
+          echo "❌ Package build failed - file not found: $PACKAGE_FILE"
+          exit 1
+        fi
+
+        # Get package info
+        PACKAGE_SIZE=$(stat -c%s "$PACKAGE_FILE" 2>/dev/null || stat -f%z "$PACKAGE_FILE")
+        echo "✅ Package built: $PACKAGE_FILE ($(( PACKAGE_SIZE / 1024 )) KB)"
+
+        # Set output for later steps
+        echo "PACKAGE_FILE=$PACKAGE_FILE" >> $GITHUB_ENV
+        echo "PACKAGE_SIZE=$PACKAGE_SIZE" >> $GITHUB_ENV
+
+    - name: Test DXT package
+      run: |
+        echo "🧪 Testing DXT package..."
+
+        # Create test directory
+        mkdir -p test-install
+
+        # Test unpack
+        if ! dxt unpack "$PACKAGE_FILE" test-install/; then
+          echo "❌ Package unpack failed"
+          exit 1
+        fi
+
+        # Verify unpacked structure
+        REQUIRED_FILES=(
+          "test-install/server/context_provider_server.py"
+          "test-install/contexts"
+          "test-install/manifest.json"
+          "test-install/requirements.txt"
+        )
+
+        for file in "${REQUIRED_FILES[@]}"; do
+          if [ ! -e "$file" ]; then
+            echo "❌ Missing required file after unpack: $file"
+            exit 1
+          fi
+        done
+
+        # Count context files
+        CONTEXT_COUNT=$(find test-install/contexts -name "*.json" | wc -l)
+        echo "✅ Package test passed - $CONTEXT_COUNT context files found"
+
+        # Cleanup
+        rm -rf test-install/
+
+    - name: Generate release notes
+      id: release_notes
+      run: |
+        echo "📝 Generating release notes..."
+
+        VERSION="${{ steps.version.outputs.VERSION }}"
+        PACKAGE_SIZE_KB=$(( PACKAGE_SIZE / 1024 ))
+        CONTEXT_COUNT=$(find contexts -name "*.json" | wc -l)
+
+        # Create release notes
+        cat > release_notes.md << EOF
+        # MCP Context Provider v${VERSION}
+
+        ## 📦 Package Information
+        - **Size**: ${PACKAGE_SIZE_KB} KB
+        - **Context Files**: ${CONTEXT_COUNT} included
+        - **Python**: 3.8+ required
+        - **Platforms**: Windows, macOS, Linux
+
+        ## 🚀 Installation
+
+        ### Automated Installation (Recommended)
+        \`\`\`bash
+        # Clone repository and run installer
+        git clone https://github.com/doobidoo/MCP-Context-Provider.git
+        cd MCP-Context-Provider
+        ./scripts/install.sh
+        \`\`\`
+
+        ### Manual Installation
+        1. Download \`mcp-context-provider-${VERSION}.dxt\`
+        2. Install DXT CLI: \`npm install -g @anthropic-ai/dxt\`
+        3. Unpack: \`dxt unpack mcp-context-provider-${VERSION}.dxt ~/mcp-context-provider\`
+        4. Follow setup instructions in README.md
+
+        ## 📋 Context Files Included
+        EOF
+
+        # Add context file list
+        echo "" >> release_notes.md
+        for context_file in contexts/*.json; do
+          if [ -f "$context_file" ]; then
+            CONTEXT_NAME=$(basename "$context_file" .json)
+            echo "- \`$CONTEXT_NAME\`" >> release_notes.md
+          fi
+        done
+
+        echo "" >> release_notes.md
+        echo "## 🔄 What's Changed" >> release_notes.md
+        echo "See [CHANGELOG.md](https://github.com/doobidoo/MCP-Context-Provider/blob/main/CHANGELOG.md) for detailed changes." >> release_notes.md
+
+        # Set output for release step
+        {
+          echo 'RELEASE_NOTES<<EOF'
+          cat release_notes.md
+          echo 'EOF'
+        } >> $GITHUB_OUTPUT
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: "MCP Context Provider v${{ steps.version.outputs.VERSION }}"
+        body: ${{ steps.release_notes.outputs.RELEASE_NOTES }}
+        files: |
+          ${{ env.PACKAGE_FILE }}
+        draft: false
+        prerelease: ${{ contains(steps.version.outputs.VERSION, '-') }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Update package registry info
+      run: |
+        echo "📋 Package registry information:"
+        echo "Version: ${{ steps.version.outputs.VERSION }}"
+        echo "Package: ${{ env.PACKAGE_FILE }}"
+        echo "Size: $(( PACKAGE_SIZE / 1024 )) KB"
+        echo "✅ Release completed successfully!"
