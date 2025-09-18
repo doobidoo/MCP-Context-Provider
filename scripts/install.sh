@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PACKAGE_VERSION="1.8.1"
+PACKAGE_VERSION="1.8.2"
 PACKAGE_NAME="mcp-context-provider-${PACKAGE_VERSION}.dxt"
 INSTALL_DIR="$HOME/mcp-context-provider"
 

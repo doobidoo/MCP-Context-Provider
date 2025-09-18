@@ -5,6 +5,34 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.2] - 2025-09-18
+
+### Added
+- **Phase 3 Intelligent Learning Context Enhancements**
+  - Auto-trigger patterns for automatic memory storage in all 8 context files
+  - Session initialization with memory searches and startup notifications
+  - Tool-specific pattern matching for intelligent automation
+  - New `general_preferences_context.json` for user workflow tracking
+  - Proactive context suggestions and effectiveness analysis capabilities
+
+### Enhanced Context Files
+- `applescript_context.json`: AppleScript detection and automation triggers
+- `terraform_context.json`: IaC code and command pattern triggers
+- `azure_context.json`: Cloud resource and Azure CLI triggers
+- `git_context.json`: Version control workflow triggers
+- `date_awareness_context.json`: Temporal event and scheduling triggers
+- `dokuwiki_context.json`: Wiki syntax and documentation triggers
+- `general_preferences_context.json`: User preference and workflow triggers (NEW)
+
+### Technical Improvements
+- Standardized session_initialization format across all context files
+- Comprehensive pattern-based automation framework
+- Confidence thresholds for trigger accuracy
+- Memory integration with search and storage actions
+- Tool-specific tagging for organized memory storage
+
+### Fixed
+- Corrected session_initialization structure to match validation requirements
 ## [1.8.1] - 2025-09-18
 
 ### Added
