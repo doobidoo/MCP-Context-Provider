@@ -7,36 +7,58 @@
       "format": "======",
       "levels": {
         "1": "====== {} ======",
-        "2": "===== {} =====", 
+        "2": "===== {} =====",
         "3": "==== {} ====",
         "4": "=== {} ===",
         "5": "== {} =="
       },
-      "avoid": ["#", "##", "###", "####", "#####", "######"]
+      "avoid": [
+        "#",
+        "##",
+        "###",
+        "####",
+        "#####",
+        "######"
+      ]
     },
     "code_blocks": {
       "format": "<code {}>\n{}\n</code>",
-      "avoid": ["```", "~~~"]
+      "avoid": [
+        "```",
+        "~~~"
+      ]
     },
     "alerts": {
       "warning": "<note warning>{}</note>",
       "tip": "<note tip>{}</note>",
       "important": "<note important>{}</note>",
       "info": "<note>{}</note>",
-      "avoid": ["<WRAP>", "</WRAP>"]
+      "avoid": [
+        "<WRAP>",
+        "</WRAP>"
+      ]
     },
     "links": {
       "format": "[[{}|{}]]",
-      "avoid": ["[{}]({})", "<a href"]
+      "avoid": [
+        "[{}]({})",
+        "<a href"
+      ]
     },
     "inline_code": {
       "format": "''{}''",
-      "avoid": ["`{}`"]
+      "avoid": [
+        "`{}`"
+      ]
     }
   },
   "preferences": {
     "date_format": "manual",
-    "avoid_macros": ["{{date}}", "{{time}}", "{{user}}"],
+    "avoid_macros": [
+      "{{date}}",
+      "{{time}}",
+      "{{user}}"
+    ],
     "manual_date_format": "YYYY-MM-DD"
   },
   "auto_corrections": {
@@ -63,11 +85,100 @@
   },
   "metadata": {
     "version": "1.0.0",
-    "last_updated": "2025-01-08",
+    "last_updated": "2025-09-18T10:44:59.225771",
     "applies_to_tools": [
       "dokuwiki:core_savePage",
-      "dokuwiki:core_appendPage", 
+      "dokuwiki:core_appendPage",
       "dokuwiki:*"
     ]
+  },
+  "auto_store_triggers": {
+    "wiki_syntax": {
+      "tags": [
+        "dokuwiki",
+        "wiki",
+        "documentation"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "======",
+        "=====",
+        "====",
+        "<code",
+        "</code>",
+        "<note",
+        "</note>",
+        "[[",
+        "]]"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "documentation_creation": {
+      "tags": [
+        "dokuwiki",
+        "documentation",
+        "knowledge-base"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "create wiki page",
+        "document this",
+        "add to wiki",
+        "wiki entry for"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "auto_retrieve_triggers": {
+    "wiki_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "dokuwiki syntax",
+        "wiki formatting",
+        "how to format wiki",
+        "wiki markup"
+      ],
+      "search_tags": [
+        "dokuwiki",
+        "syntax",
+        "formatting"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "documentation_search": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "find in wiki",
+        "wiki page about",
+        "documented in wiki",
+        "wiki entry for"
+      ],
+      "search_tags": [
+        "dokuwiki",
+        "documentation"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "search_memory",
+          "store_as": "recent_wiki",
+          "parameters": {
+            "tags": [
+              "dokuwiki"
+            ],
+            "n_results": 5
+          }
+        },
+        {
+          "action": "notify",
+          "message": "DokuWiki context loaded. Found {recent_wiki.count} wiki-related items."
+        }
+      ]
+    }
   }
 }

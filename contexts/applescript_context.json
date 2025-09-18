@@ -52,20 +52,56 @@
     "storage_pattern": {
       "content": "The AppleScript code with PARAMETER placeholders",
       "metadata": {
-        "tags": ["applescript", "app:<name>", "action:<type>", "category:<category>"],
+        "tags": [
+          "applescript",
+          "app:<name>",
+          "action:<type>",
+          "category:<category>"
+        ],
         "type": "applescript-template",
         "description": "Clear description of functionality",
-        "parameters": ["list", "of", "replaceable", "parameters"],
+        "parameters": [
+          "list",
+          "of",
+          "replaceable",
+          "parameters"
+        ],
         "example_usage": "How to use this script",
         "tested_on": "macOS version",
-        "dependencies": ["required apps or permissions"]
+        "dependencies": [
+          "required apps or permissions"
+        ]
       }
     },
     "tag_taxonomy": {
-      "app_tags": ["app:calendar", "app:finder", "app:messages", "app:notes", "app:mail", "app:safari", "app:system"],
-      "action_tags": ["action:create", "action:read", "action:update", "action:delete", "action:search", "action:notify"],
-      "category_tags": ["category:productivity", "category:communication", "category:system", "category:file-management"],
-      "feature_tags": ["feature:automation", "feature:notification", "feature:integration"]
+      "app_tags": [
+        "app:calendar",
+        "app:finder",
+        "app:messages",
+        "app:notes",
+        "app:mail",
+        "app:safari",
+        "app:system"
+      ],
+      "action_tags": [
+        "action:create",
+        "action:read",
+        "action:update",
+        "action:delete",
+        "action:search",
+        "action:notify"
+      ],
+      "category_tags": [
+        "category:productivity",
+        "category:communication",
+        "category:system",
+        "category:file-management"
+      ],
+      "feature_tags": [
+        "feature:automation",
+        "feature:notification",
+        "feature:integration"
+      ]
     }
   },
   "auto_corrections": {
@@ -85,19 +121,35 @@
   "common_patterns": {
     "calendar_event": {
       "template": "tell application \"Calendar\"\n  tell calendar \"CALENDAR_NAME\"\n    set startDate to date \"START_DATE\"\n    set endDate to date \"END_DATE\"\n    make new event with properties {summary:\"EVENT_TITLE\", start date:startDate, end date:endDate}\n  end tell\nend tell",
-      "parameters": ["CALENDAR_NAME", "EVENT_TITLE", "START_DATE", "END_DATE"]
+      "parameters": [
+        "CALENDAR_NAME",
+        "EVENT_TITLE",
+        "START_DATE",
+        "END_DATE"
+      ]
     },
     "send_message": {
       "template": "tell application \"Messages\"\n  set targetBuddy to buddy \"RECIPIENT_ID\" of service \"SERVICE_TYPE\"\n  send \"MESSAGE_TEXT\" to targetBuddy\nend tell",
-      "parameters": ["RECIPIENT_ID", "SERVICE_TYPE", "MESSAGE_TEXT"]
+      "parameters": [
+        "RECIPIENT_ID",
+        "SERVICE_TYPE",
+        "MESSAGE_TEXT"
+      ]
     },
     "system_notification": {
       "template": "display notification \"NOTIFICATION_MESSAGE\" with title \"NOTIFICATION_TITLE\" sound name \"SOUND_NAME\"",
-      "parameters": ["NOTIFICATION_TITLE", "NOTIFICATION_MESSAGE", "SOUND_NAME"]
+      "parameters": [
+        "NOTIFICATION_TITLE",
+        "NOTIFICATION_MESSAGE",
+        "SOUND_NAME"
+      ]
     },
     "file_search": {
       "template": "tell application \"Finder\"\n  set searchFolder to folder \"FOLDER_PATH\"\n  set fileList to every file of searchFolder whose name contains \"SEARCH_TERM\"\n  return fileList\nend tell",
-      "parameters": ["FOLDER_PATH", "SEARCH_TERM"]
+      "parameters": [
+        "FOLDER_PATH",
+        "SEARCH_TERM"
+      ]
     }
   },
   "best_practices": {
@@ -122,15 +174,23 @@
   },
   "permission_requirements": {
     "automation": {
-      "required_for": ["tell application blocks"],
+      "required_for": [
+        "tell application blocks"
+      ],
       "grant_via": "System Preferences > Security & Privacy > Privacy > Automation"
     },
     "full_disk_access": {
-      "required_for": ["Messages history", "Mail access", "certain file operations"],
+      "required_for": [
+        "Messages history",
+        "Mail access",
+        "certain file operations"
+      ],
       "grant_via": "System Preferences > Security & Privacy > Privacy > Full Disk Access"
     },
     "notifications": {
-      "required_for": ["display notification"],
+      "required_for": [
+        "display notification"
+      ],
       "grant_via": "System Preferences > Notifications > Script Editor"
     }
   },
@@ -138,17 +198,78 @@
     "primary_tool": "execute_applescript",
     "tool_source": "@peakmojo/applescript-mcp",
     "usage_pattern": "Pass complete AppleScript code as string parameter",
-    "memory_tools": ["store_memory", "search_by_tag", "retrieve_memory", "recall_memory"]
+    "memory_tools": [
+      "store_memory",
+      "search_by_tag",
+      "retrieve_memory",
+      "recall_memory"
+    ]
   },
   "metadata": {
     "version": "1.0.0",
-    "last_updated": "2025-01-17",
+    "last_updated": "2025-09-18T10:44:02.523875",
     "applies_to_tools": [
       "execute_applescript",
       "applescript:*",
       "memory:*"
     ],
-    "dependencies": ["mcp-memory-service"],
+    "dependencies": [
+      "mcp-memory-service"
+    ],
     "author": "MCP Context Provider"
+  },
+  "auto_store_triggers": {
+    "applescript_code_detection": {
+      "tags": [
+        "applescript",
+        "automation"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "tell application",
+        "end tell",
+        "osascript",
+        "AppleScript",
+        "display notification",
+        "set .* to .*"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "auto_retrieve_triggers": {
+    "applescript_help_request": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "how do I .* in applescript",
+        "applescript .* example",
+        "script to .*",
+        "automate .*"
+      ],
+      "search_tags": [
+        "applescript"
+      ],
+      "confidence_threshold": 0.6
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "search_memory",
+          "store_as": "recent_applescripts",
+          "parameters": {
+            "tags": [
+              "applescript"
+            ],
+            "n_results": 5
+          }
+        },
+        {
+          "action": "notify",
+          "message": "AppleScript context loaded. Found {recent_applescripts.count} stored scripts."
+        }
+      ]
+    }
   }
 }

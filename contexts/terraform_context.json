@@ -6,26 +6,40 @@
     "resource_naming": {
       "format": "resource_type_environment_purpose",
       "examples": {
-        "storage_account": "storage_prod_logs", 
+        "storage_account": "storage_prod_logs",
         "resource_group": "rg_staging_web",
         "virtual_machine": "vm_dev_bastion"
       }
     },
     "variable_naming": {
       "format": "snake_case",
-      "avoid": ["camelCase", "PascalCase", "kebab-case"]
+      "avoid": [
+        "camelCase",
+        "PascalCase",
+        "kebab-case"
+      ]
     },
     "tags": {
-      "required": ["Environment", "Project", "Owner"],
+      "required": [
+        "Environment",
+        "Project",
+        "Owner"
+      ],
       "format": {
-        "Environment": ["dev", "staging", "prod"],
+        "Environment": [
+          "dev",
+          "staging",
+          "prod"
+        ],
         "Project": "string",
         "Owner": "email_format"
       }
     },
     "comments": {
       "format": "# Single line comments preferred",
-      "avoid": ["/* Multi-line comments */"]
+      "avoid": [
+        "/* Multi-line comments */"
+      ]
     }
   },
   "preferences": {
@@ -81,11 +95,99 @@
   },
   "metadata": {
     "version": "1.0.0",
-    "last_updated": "2025-01-08",
+    "last_updated": "2025-09-18T10:44:13.262043",
     "applies_to_tools": [
       "terraform:*",
       "mcp__azure-mcp__*",
       "bash:terraform"
     ]
+  },
+  "auto_store_triggers": {
+    "terraform_code": {
+      "tags": [
+        "terraform",
+        "infrastructure",
+        "iac"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "resource \"",
+        "variable \"",
+        "module \"",
+        "terraform {",
+        "provider \"",
+        "data \"",
+        "locals {"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "terraform_commands": {
+      "tags": [
+        "terraform",
+        "command",
+        "workflow"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "terraform init",
+        "terraform plan",
+        "terraform apply",
+        "terraform destroy",
+        "terraform fmt"
+      ],
+      "confidence_threshold": 0.9
+    }
+  },
+  "auto_retrieve_triggers": {
+    "terraform_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "how to .* terraform",
+        "terraform .* example",
+        "create .* with terraform",
+        "deploy .* terraform"
+      ],
+      "search_tags": [
+        "terraform",
+        "infrastructure"
+      ],
+      "confidence_threshold": 0.7
+    },
+    "terraform_errors": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "terraform error",
+        "terraform issue",
+        "terraform problem",
+        "fix terraform"
+      ],
+      "search_tags": [
+        "terraform",
+        "solution",
+        "error"
+      ],
+      "confidence_threshold": 0.8
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "search_memory",
+          "store_as": "recent_terraform",
+          "parameters": {
+            "tags": [
+              "terraform"
+            ],
+            "n_results": 5
+          }
+        },
+        {
+          "action": "notify",
+          "message": "Terraform context loaded. Found {recent_terraform.count} stored configurations."
+        }
+      ]
+    }
   }
 }
