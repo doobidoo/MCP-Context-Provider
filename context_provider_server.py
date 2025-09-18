@@ -1584,7 +1584,7 @@ async def handle_list_tools() -> List[Tool]:
                     },
                     "apply_optimizations": {
                         "type": "boolean",
-                        "default": false,
+                        "default": False,
                         "description": "Whether to apply optimizations automatically or just suggest them",
                     },
                 },
