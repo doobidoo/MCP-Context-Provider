@@ -46,7 +46,98 @@
   "metadata": {
     "version": "2.0.0",
     "note": "Simplified to avoid hardcoded dates and rely on system timestamps",
-    "applies_to_tools": ["*"],
-    "priority": "high"
+    "applies_to_tools": [
+      "*"
+    ],
+    "priority": "high",
+    "last_updated": "2025-09-18T10:44:48.533546"
+  },
+  "auto_store_triggers": {
+    "temporal_events": {
+      "tags": [
+        "temporal",
+        "scheduled",
+        "deadline"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "scheduled for",
+        "deadline is",
+        "due on",
+        "expires on",
+        "meeting on",
+        "appointment at"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "time_sensitive_info": {
+      "tags": [
+        "temporal",
+        "time-sensitive"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "valid until",
+        "available from",
+        "starting from",
+        "ending on",
+        "between .* and"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "auto_retrieve_triggers": {
+    "calendar_queries": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "events on",
+        "appointments for",
+        "schedule for",
+        "what's on"
+      ],
+      "search_tags": [
+        "temporal",
+        "calendar",
+        "scheduled"
+      ],
+      "confidence_threshold": 0.7
+    },
+    "temporal_queries": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "when is",
+        "what time",
+        "scheduled for when",
+        "deadline for",
+        "due date"
+      ],
+      "search_tags": [
+        "temporal",
+        "scheduled"
+      ],
+      "confidence_threshold": 0.8
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "search_memory",
+          "store_as": "upcoming_events",
+          "parameters": {
+            "tags": [
+              "temporal",
+              "scheduled"
+            ],
+            "n_results": 10
+          }
+        },
+        {
+          "action": "notify",
+          "message": "Date awareness context loaded. Found {upcoming_events.count} scheduled items."
+        }
+      ]
+    }
   }
 }

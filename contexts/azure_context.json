@@ -21,11 +21,15 @@
         "resource_group": "rg-web-prod-westeurope",
         "key_vault": "kv-secrets-prod-we-01"
       },
-      "avoid": ["spaces", "underscores_in_names", "UPPERCASE"]
+      "avoid": [
+        "spaces",
+        "underscores_in_names",
+        "UPPERCASE"
+      ]
     },
     "location_codes": {
       "westeurope": "we",
-      "northeurope": "ne", 
+      "northeurope": "ne",
       "eastus": "eus",
       "westus2": "wus2",
       "centralus": "cus",
@@ -33,9 +37,18 @@
       "japaneast": "je"
     },
     "tags": {
-      "required": ["Environment", "Project", "Owner", "CostCenter"],
+      "required": [
+        "Environment",
+        "Project",
+        "Owner",
+        "CostCenter"
+      ],
       "standard_values": {
-        "Environment": ["dev", "staging", "prod"],
+        "Environment": [
+          "dev",
+          "staging",
+          "prod"
+        ],
         "Project": "string",
         "Owner": "email",
         "CostCenter": "cost_code"
@@ -123,12 +136,101 @@
   },
   "metadata": {
     "version": "1.0.0",
-    "last_updated": "2025-01-08", 
+    "last_updated": "2025-09-18T10:44:22.829880",
     "applies_to_tools": [
       "mcp__azure-mcp__*",
       "bash:az",
       "terraform:azurerm",
       "bicep:*"
     ]
+  },
+  "auto_store_triggers": {
+    "azure_commands": {
+      "tags": [
+        "azure",
+        "cloud",
+        "command"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "az .*",
+        "azure .*",
+        "Get-Az",
+        "New-Az",
+        "Set-Az",
+        "Remove-Az"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "azure_resources": {
+      "tags": [
+        "azure",
+        "resource",
+        "infrastructure"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "resource group",
+        "storage account",
+        "virtual machine",
+        "app service",
+        "function app",
+        "key vault",
+        "sql database"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "auto_retrieve_triggers": {
+    "azure_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "how to .* azure",
+        "azure .* example",
+        "create .* in azure",
+        "deploy to azure"
+      ],
+      "search_tags": [
+        "azure",
+        "cloud"
+      ],
+      "confidence_threshold": 0.7
+    },
+    "azure_troubleshooting": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "azure error",
+        "azure issue",
+        "fix azure",
+        "azure not working"
+      ],
+      "search_tags": [
+        "azure",
+        "solution",
+        "troubleshooting"
+      ],
+      "confidence_threshold": 0.8
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "search_memory",
+          "store_as": "recent_azure",
+          "parameters": {
+            "tags": [
+              "azure"
+            ],
+            "n_results": 5
+          }
+        },
+        {
+          "action": "notify",
+          "message": "Azure context loaded. Found {recent_azure.count} stored configurations."
+        }
+      ]
+    }
   }
 }
