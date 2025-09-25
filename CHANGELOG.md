@@ -5,6 +5,19 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.3] - 2025-09-25
+
+### Fixed
+- **Context File Ambiguity**: Removed duplicate `contexts/general_preferences.json` file
+  - Resolved conflict between old `general_preferences.json` and new `general_preferences_context.json`
+  - Now loads only the enhanced version with memory integration features
+  - Fixed context provider loading 9 files instead of expected 8
+
+### Technical Improvements
+- Clean context loading without duplicates
+- Maintained all v1.7.0+ memory integration features
+- Improved server startup reliability
+
 ## [1.8.2] - 2025-09-18
 
 ### Added
