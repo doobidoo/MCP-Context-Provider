@@ -5,6 +5,15 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.4] - 2025-10-05
+
+### Fixed
+- **Critical**: Fixed KeyError: 'insights' in session initialization learning phase (context_provider_server.py:686-688)
+  - Changed to use correct key 'insights_gained' instead of 'insights'
+  - Session initialization now completes successfully without errors
+  - Resolves context-provider showing as "not initialized" status
+  - Enables proper learning insights capture during session startup
+
 ## [1.8.3] - 2025-09-25
 
 ### Fixed
