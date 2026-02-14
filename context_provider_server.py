@@ -1485,7 +1485,10 @@ async def handle_list_tools() -> List[Tool]:
                             "preferences": {"type": "object"},
                             "auto_corrections": {"type": "object"},
                             "session_initialization": {"type": "object"},
-                            "applies_to_tools": {"type": "array"},
+                            "applies_to_tools": {
+                                "type": "array",
+                                "items": {"type": "string"}
+                            },
                             "priority": {"type": "string"},
                         },
                     },
