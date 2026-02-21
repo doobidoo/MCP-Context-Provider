@@ -1,5 +1,5 @@
 {
-  "tool_category": "postgres",
+  "tool_category": "dmi_manageengine_solutions",
   "auto_convert": false,
   "metadata": {
     "version": "1.0.0",
@@ -67,5 +67,32 @@
     "table_name": "solution",
     "business_purpose": "Store and manage IT support solutions, knowledge base articles, and troubleshooting guides for DMI clients",
     "central_hub": "The solution table is the central entity connecting topics, statuses, organizations, users, workorders, and feedback"
+  },
+  "auto_store_triggers": {
+    "sql_queries": {
+      "tags": ["manageengine", "sql", "solutions"],
+      "action": "store_with_metadata",
+      "patterns": ["SELECT.*FROM.*solution", "INSERT INTO.*solution", "UPDATE.*solution", "JOIN.*categorydef", "JOIN.*statusdefinition"],
+      "confidence_threshold": 0.8
+    }
+  },
+  "auto_retrieve_triggers": {
+    "solutions_search": {
+      "action": "search_and_suggest",
+      "patterns": ["manageengine", "support solution", "knowledge base", "helpdesk", "solution database"],
+      "search_tags": ["manageengine", "solutions", "sql"],
+      "confidence_threshold": 0.7
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "notify",
+          "message": "DMI ManageEngine Solutions context loaded. Use SQL queries against the 'solution' table."
+        }
+      ]
+    }
   }
 }

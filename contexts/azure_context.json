@@ -3,6 +3,20 @@
   "description": "Azure-specific context rules and naming conventions",
   "auto_convert": true,
   "syntax_rules": {
+    "cli_usage": {
+      "command_format": "az [service] [subcommand] [options]",
+      "common_options": [
+        "--output table|json|yaml|tsv",
+        "--query 'JMESPath query'",
+        "--resource-group RESOURCE_GROUP_NAME"
+      ],
+      "best_practices": [
+        "Use --output table for human-readable output",
+        "Use --output json for programmatic processing",
+        "Use --query to filter results with JMESPath",
+        "Always specify --resource-group when targeting specific resources"
+      ]
+    },
     "resource_naming": {
       "format": "prefix-purpose-environment-location-instance",
       "prefixes": {
@@ -67,6 +81,10 @@
       "min_tls_version": "1.2",
       "disable_public_access": true,
       "enable_private_endpoints": true
+    },
+    "cli_operations": {
+      "auto_approve_read_operations": true,
+      "require_approval_for_write_operations": true
     }
   },
   "auto_corrections": {
@@ -85,6 +103,14 @@
     "tag_formatting": {
       "pattern": "\"([eE]nvironment)\":\\s*\"([dD]ev|[sS]taging|[pP]rod)\"",
       "replacement": "\"Environment\": \"$2\""
+    },
+    "jmespath_instead_of_jq": {
+      "pattern": "az .+ --output json \\| jq",
+      "replacement": "Use az --query 'JMESPath' instead of piping to jq"
+    },
+    "jmespath_instead_of_grep": {
+      "pattern": "az .+ \\| grep",
+      "replacement": "Use az --query \"[?contains(name, 'pattern')]\" instead of grep"
     }
   },
   "best_practices": {

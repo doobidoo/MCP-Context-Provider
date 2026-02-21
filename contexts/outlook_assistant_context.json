@@ -60,5 +60,38 @@
       }
     ],
     "trigger": "session_start"
+  },
+  "auto_store_triggers": {
+    "email_actions": {
+      "tags": [
+        "outlook",
+        "email",
+        "communication"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "sent email",
+        "drafted email",
+        "email to",
+        "mail an"
+      ],
+      "confidence_threshold": 0.8
+    }
+  },
+  "auto_retrieve_triggers": {
+    "email_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "send email",
+        "compose email",
+        "mail schreiben",
+        "outlook"
+      ],
+      "search_tags": [
+        "outlook",
+        "email"
+      ],
+      "confidence_threshold": 0.7
+    }
   }
 }

@@ -12,7 +12,7 @@
     ],
     "priority": "high"
   },
-  "description": "Rewrites AI-sounding text to clear, specific human voice. Removes buzzwords, clichés, and formulaic patterns while preserving original content, ideas, and structure.",
+  "description": "Rewrites AI-sounding text to clear, specific human voice. Removes buzzwords, clich\u00c3\u00a9s, and formulaic patterns while preserving original content, ideas, and structure.",
   "syntax_rules": {
     "banned_words": {
       "description": "Words that must be removed or replaced with short, concrete language",
@@ -255,5 +255,52 @@
     "harness the power": "use",
     "in this article": "[delete - reader knows where they are]",
     "without further ado": "[delete]"
+  },
+  "auto_store_triggers": {
+    "writing_edits": {
+      "tags": [
+        "writing",
+        "anti-ai",
+        "rewrite"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "rewrite",
+        "rephrase",
+        "make it sound human",
+        "remove buzzwords",
+        "anti-ai"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "auto_retrieve_triggers": {
+    "writing_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "sounds too AI",
+        "rewrite this",
+        "make it natural",
+        "too corporate",
+        "buzzword"
+      ],
+      "search_tags": [
+        "writing",
+        "anti-ai",
+        "rewrite"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "notify",
+          "message": "Anti-AI voice context loaded. Will detect and replace AI-sounding language."
+        }
+      ]
+    }
   }
 }
