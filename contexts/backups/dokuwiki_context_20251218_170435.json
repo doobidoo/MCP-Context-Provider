@@ -26,41 +26,7 @@
       "avoid": [
         "```",
         "~~~"
-      ],
-      "language_tags": {
-        "description": "Always specify language in code blocks for syntax highlighting",
-        "examples": [
-          "<code sql>",
-          "<code powershell>",
-          "<code bash>",
-          "<code python>",
-          "<code terraform>",
-          "<code abap>"
-        ]
-      },
-      "mandatory_tagging": {
-        "description": "EVERY code block MUST be followed by a corresponding tag for automatic listing on intern:tott:start#scripts",
-        "format": "</code>{{tag>tagname}}",
-        "language_to_tag_mapping": {
-          "sql": "{{tag>\"SQL Statement\"}}",
-          "powershell": "{{tag>powershell}}",
-          "python": "{{tag>python}}",
-          "bash": "{{tag>bash}}",
-          "terraform": "{{tag>terraform}}",
-          "java": "{{tag>java}}",
-          "javascript": "{{tag>javascript}}",
-          "csharp": "{{tag>csharp}}",
-          "xml": "{{tag>xml}}",
-          "json": "{{tag>json}}",
-          "yaml": "{{tag>yaml}}",
-          "mermaid": "{{tag>diagram}}",
-          "plantuml": "{{tag>PlantUML}}",
-          "abap": "{{tag>abap}}",
-          "kusto": "{{tag>kusto}}",
-          "cli": "{{tag>bash}}"
-        },
-        "example": "<code sql>\nSELECT * FROM users;\n</code>{{tag>\"SQL Statement\"}}"
-      }
+      ]
     },
     "alerts": {
       "warning": "<WRAP center round alert>{}</WRAP>",
@@ -68,6 +34,9 @@
       "important": "<WRAP center round important>{}</WRAP>",
       "info": "<WRAP center round info>{}</WRAP>",
       "box": "<WRAP center round box>{}</WRAP>",
+      "help": "<WRAP center round help>{}</WRAP>",
+      "download": "<WRAP center round download>{}</WRAP>",
+      "todo": "<WRAP center round todo>{}</WRAP>",
       "avoid": [
         "<note>",
         "</note>",
@@ -75,7 +44,11 @@
         "<note tip>",
         "<note important>"
       ],
-      "description": "Use WRAP plugin syntax for callouts/notices"
+      "description": "Use WRAP plugin syntax. Classes: alert (red), tip (green), important (yellow), info (blue), box (gray), help (?), download, todo. Optional modifiers: center, round, box.",
+      "restrictions": {
+        "list_placement": "WRAP blocks should be placed outside of lists for better rendering.",
+        "nesting": "WRAP blocks can be nested if needed"
+      }
     },
     "links": {
       "format": "[[{}|{}]]",
@@ -88,32 +61,19 @@
       "format": "''{}''",
       "avoid": [
         "`{}`"
-      ],
-      "limitations": {
-        "description": "Inline monospace ''..'' has markup conflicts with certain characters",
-        "problematic_content": [
-          "Curly braces {} - conflicts with DokuWiki syntax",
-          "Single quotes ' - can break the ''..'' delimiter",
-          "Complex shell commands with mixed quotes",
-          "JSON snippets or objects"
-        ],
-        "solution": "Use <code> blocks instead of inline ''..'' for complex content",
-        "examples": {
-          "bad": "''curl -d '{}'%%''%%'' (markup conflict with {})",
-          "good": "<code bash>\ncurl -X POST url -d '{}'\n</code>"
-        },
-        "rule": "If content contains {}, complex quotes, or is longer than ~60 chars, use <code> block"
-      }
+      ]
     },
     "tags": {
       "format": "{{tag>{}}}",
-      "location": "end_of_page AND after each code block",
+      "location": "end_of_page",
       "separator": " ",
-      "description": "Tags for categorization. Use quotes for multi-word tags: {{tag>\"SQL Statement\"}}",
+      "description": "Tags for categorization using the tag plugin. Format: {{tag>tag1 tag2 tag3}}",
       "avoid": [
         "**Tags:**",
         "Tags:",
-        "#tag"
+        "#tag",
+        "tags:",
+        "[tag]"
       ]
     }
   },
@@ -181,7 +141,7 @@
   },
   "metadata": {
     "version": "1.0.0",
-    "last_updated": "2026-01-29T12:00:00.000000",
+    "last_updated": "2025-12-16T10:30:04.551211",
     "applies_to_tools": [
       "dokuwiki:core_savePage",
       "dokuwiki:core_appendPage",
@@ -275,49 +235,6 @@
           "message": "DokuWiki context loaded. Found {recent_wiki.count} wiki-related items."
         }
       ]
-    }
-  },
-  "editing_best_practices": {
-    "description": "Best practices for editing existing DokuWiki pages",
-    "rules": {
-      "incremental_changes": {
-        "description": "NEVER rewrite entire pages at once. Make small, targeted changes only.",
-        "reason": "Large rewrites risk losing content, breaking formatting, and removing intentional structure.",
-        "approach": [
-          "Make ONE type of change at a time (e.g., only fix links, or only add tags)",
-          "Preserve existing structure and formatting",
-          "Test changes incrementally",
-          "Ask before making major structural changes"
-        ]
-      },
-      "preserve_existing": {
-        "description": "Respect the existing page structure and style",
-        "rules": [
-          "Keep the original heading hierarchy",
-          "Don't change formatting conventions used on the page",
-          "Don't remove content unless explicitly asked",
-          "Don't 'clean up' sections that weren't mentioned"
-        ]
-      },
-      "safe_changes": {
-        "description": "Changes that are generally safe to make",
-        "examples": [
-          "Adding tags to code blocks",
-          "Fixing broken links",
-          "Adding new content at the end",
-          "Correcting typos"
-        ]
-      },
-      "dangerous_changes": {
-        "description": "Changes that require explicit user approval",
-        "examples": [
-          "Restructuring sections",
-          "Changing heading levels",
-          "Removing duplicate entries",
-          "Converting link syntax across entire page",
-          "Reformatting lists"
-        ]
-      }
     }
   }
 }

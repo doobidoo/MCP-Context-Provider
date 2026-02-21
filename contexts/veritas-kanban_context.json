@@ -1,0 +1,49 @@
+{
+  "tool_category": "task-management",
+  "auto_convert": true,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-02-19T09:25:17.407453",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "veritas-kanban:create_task",
+      "veritas-kanban:update_task"
+    ],
+    "priority": "medium"
+  },
+  "description": "Veritas Kanban task management with automatic project assignment",
+  "syntax_rules": {
+    "create_task": {
+      "required_fields": [
+        "title",
+        "project"
+      ],
+      "project_suggestions": {
+        "CV": "TalentSearch",
+        "OCC": "Operations-Control-Center",
+        "Docker": "Infrastructure",
+        "Azure": "Azure-Operations",
+        "Database": "Database-Management",
+        "Security": "Security-Operations",
+        "Migration": "Data-Migration",
+        "Automation": "Process-Automation"
+      }
+    }
+  },
+  "preferences": {
+    "default_project": "General",
+    "require_project": true,
+    "project_inference": true
+  },
+  "auto_corrections": {
+    "missing_project_field": {
+      "pattern": "create_task.*without.*project",
+      "action": "add_default_project",
+      "replacement": "Add project parameter based on task title or use default 'General'"
+    }
+  },
+  "session_initialization": {
+    "load_project_list": true,
+    "suggest_active_projects": true
+  }
+}

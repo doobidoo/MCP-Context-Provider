@@ -136,7 +136,7 @@
   },
   "metadata": {
     "version": "1.0.0",
-    "last_updated": "2025-10-10T08:56:45.945458",
+    "last_updated": "2025-10-10T08:56:36.464632",
     "applies_to_tools": [
       "mcp__azure-mcp__*",
       "bash:az",
@@ -267,31 +267,6 @@
         "Follow step_by_step_workflow for complete setup",
         "Apply temporary tags for lifecycle management",
         "Provide connection information using template"
-      ]
-    },
-    "sftp_troubleshooting": {
-      "action": "search_and_suggest",
-      "patterns": [
-        ".*sftp.*not.*working.*",
-        ".*sftp.*error.*",
-        ".*sftp.*connection.*failed.*",
-        ".*sftp.*authentication.*",
-        ".*cannot.*enable.*sftp.*",
-        ".*hierarchical.*namespace.*"
-      ],
-      "search_tags": [
-        "azure",
-        "sftp",
-        "troubleshooting",
-        "solution"
-      ],
-      "confidence_threshold": 0.8,
-      "suggested_checks": [
-        "Verify hierarchical namespace is enabled (cannot be added later)",
-        "Check username format: [account].[user]@[account].blob.core.windows.net",
-        "Confirm local user has correct permissions (rwdlc)",
-        "Verify home-directory matches container name",
-        "Check that SFTP is explicitly enabled on storage account"
       ]
     }
   },

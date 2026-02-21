@@ -1,0 +1,44 @@
+{
+  "tool_category": "postgres",
+  "auto_convert": false,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-10-17T11:24:50.250555",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "server-postgres:query"
+    ],
+    "priority": "high"
+  },
+  "description": "DMI ManageEngine Support Center - Solutions Database Context. This context provides information about the PostgreSQL 'solution' table structure and usage guidelines for querying DMI support solutions.",
+  "syntax_rules": {
+    "table_schema": {
+      "solutionid": "bigint - Primary key, unique identifier for each solution",
+      "title": "citext - Case-insensitive title of the solution",
+      "description": "citext - HTML-formatted detailed description of the solution",
+      "topicid": "bigint - Foreign key to topic/category",
+      "solutiontype": "citext - Type of solution (e.g., 'Solution', 'FAQ', 'How-To')",
+      "statusid": "bigint - Status identifier (e.g., 1=Draft, 2=Published)",
+      "attachments": "boolean - Whether solution has file attachments",
+      "helpdeskid": "bigint - Foreign key to helpdesk/service desk"
+    },
+    "query_patterns": {
+      "search_by_keyword": "SELECT * FROM solution WHERE title ILIKE '%keyword%' OR description ILIKE '%keyword%' LIMIT 10;",
+      "search_by_type": "SELECT * FROM solution WHERE solutiontype = 'Solution' LIMIT 10;",
+      "search_published": "SELECT * FROM solution WHERE statusid = 2 LIMIT 10;",
+      "search_with_attachments": "SELECT * FROM solution WHERE attachments = true LIMIT 10;"
+    },
+    "best_practices": [
+      "Always use ILIKE for case-insensitive text searches on citext fields",
+      "Use LIMIT to prevent overwhelming result sets",
+      "Search in both title and description fields for better coverage",
+      "Description field contains HTML markup - may need parsing for clean text",
+      "Consider filtering by statusid=2 for published/active solutions only"
+    ]
+  },
+  "preferences": {
+    "database_context": "ManageEngine Support Center (DMI)",
+    "table_name": "solution",
+    "business_purpose": "Store and manage IT support solutions, knowledge base articles, and troubleshooting guides for DMI clients"
+  }
+}

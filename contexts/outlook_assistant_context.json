@@ -1,0 +1,64 @@
+{
+  "tool_category": "outlook",
+  "auto_convert": false,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-10-07T08:15:49.485609",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "outlook-assistant"
+    ],
+    "priority": "high"
+  },
+  "description": "Outlook Assistant automatic authentication and workflow management",
+  "syntax_rules": {
+    "authentication": {
+      "check_status_first": true,
+      "prompt_url_format": "http://localhost:3333/auth?client_id=...",
+      "action_after_auth": "verify_status"
+    },
+    "email_workflow": {
+      "step_1": "Draft email content in HTML or Plain Text format (NO MARKDOWN)",
+      "step_2": "Present to user for approval",
+      "step_3": "Wait for explicit confirmation",
+      "step_4": "Send email using outlook-assistant:send-email"
+    },
+    "email_formatting": {
+      "allowed_formats": [
+        "HTML",
+        "Plain Text"
+      ],
+      "forbidden": "Markdown (## headers, ** bold, - lists)",
+      "html_structure": "Use proper HTML tags: <h2>, <strong>, <ul><li>, <br>, <p>",
+      "plain_text_structure": "Use line breaks, spacing, and UPPERCASE for emphasis"
+    }
+  },
+  "preferences": {
+    "auth_check_on_start": true,
+    "draft_before_send": true,
+    "auto_authenticate_prompt": true
+  },
+  "auto_corrections": {
+    "markdown_in_email": {
+      "pattern": "## |### |\\*\\*|\\* |- ",
+      "error": "Email contains Markdown formatting which will not render in email clients",
+      "correction": "Convert to HTML (<h2>, <strong>, <ul>) or Plain Text (line breaks, UPPERCASE)"
+    },
+    "send-email": {
+      "before": "Always present email as draft first, never send directly. Ensure NO Markdown formatting.",
+      "pattern": "outlook-assistant:send-email",
+      "suggest": "Present email content for approval before sending. Check: No Markdown syntax in body."
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": [
+      {
+        "type": "tool_call",
+        "tool": "outlook-assistant:check-auth-status",
+        "description": "Check Outlook authentication status on session start"
+      }
+    ],
+    "trigger": "session_start"
+  }
+}

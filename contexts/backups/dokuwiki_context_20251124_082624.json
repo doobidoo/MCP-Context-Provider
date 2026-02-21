@@ -1,0 +1,351 @@
+{
+  "tool_category": "dokuwiki",
+  "description": "DokuWiki-specific context rules and DMI naming conventions for technical documentation",
+  "auto_convert": true,
+  "syntax_rules": {
+    "headers": {
+      "format": "======",
+      "levels": {
+        "1": "====== {} ======",
+        "2": "===== {} =====",
+        "3": "==== {} ====",
+        "4": "=== {} ===",
+        "5": "== {} =="
+      },
+      "avoid": [
+        "#",
+        "##",
+        "###",
+        "####",
+        "#####",
+        "######"
+      ]
+    },
+    "code_blocks": {
+      "format": "<code {}>\n{}\n</code>",
+      "avoid": [
+        "```",
+        "~~~"
+      ]
+    },
+    "alerts": {
+      "warning": "<note warning>{}</note>",
+      "tip": "<note tip>{}</note>",
+      "important": "<note important>{}</note>",
+      "info": "<note>{}</note>",
+      "avoid": [
+        "<WRAP>",
+        "</WRAP>"
+      ],
+      "restrictions": {
+        "list_placement": "CRITICAL: <note></note> syntax CANNOT be used inside lists (bullet points or numbered lists). Always place notes OUTSIDE and AFTER the list structure. This is a DokuWiki syntax limitation.",
+        "correct_usage": "Place notes after completing the list, not as a list item"
+      }
+    },
+    "links": {
+      "format": "[[{}|{}]]",
+      "avoid": [
+        "[{}]({})",
+        "<a href"
+      ]
+    },
+    "inline_code": {
+      "format": "''{}''",
+      "avoid": [
+        "`{}`"
+      ]
+    },
+    "tags": {
+      "format": "{{tag>{}}}",
+      "location": "end_of_page",
+      "separator": " ",
+      "description": "Tags for categorization using the tag plugin. Format: {{tag>tag1 tag2 tag3}}",
+      "avoid": [
+        "**Tags:**",
+        "Tags:",
+        "#tag",
+        "tags:",
+        "[tag]"
+      ]
+    }
+  },
+  "preferences": {
+    "date_format": "dynamic_system_date",
+    "avoid_macros": [
+      "{{date}}",
+      "{{time}}",
+      "{{user}}"
+    ],
+    "current_date_note": "ALWAYS use actual system date dynamically, NEVER hardcode dates",
+    "manual_date_format": "YYYY-MM-DD",
+    "date_implementation": "Retrieve current date from system context when creating/updating pages"
+  },
+  "auto_corrections": {
+    "date_correction": {
+      "note": "Use dynamic system date, never hardcode",
+      "pattern": "2025-01-\\d{2}",
+      "replacement": "{{CURRENT_SYSTEM_DATE}}"
+    },
+    "static_date_removal": {
+      "note": "Remove hardcoded dates",
+      "pattern": "2025-\\d{2}-\\d{2}",
+      "replacement": "{{CURRENT_DATE}}"
+    }
+  },
+  "metadata": {
+    "version": "3.0.0",
+    "last_updated": "2025-11-21T12:51:53.738514",
+    "applies_to_tools": [
+      "dokuwiki:core_savePage",
+      "dokuwiki:core_appendPage",
+      "dokuwiki:core_getPage",
+      "dokuwiki:*"
+    ],
+    "maintainer": "Technical Consultant (HKR)"
+  },
+  "auto_store_triggers": {
+    "wiki_syntax": {
+      "tags": [
+        "dokuwiki",
+        "wiki",
+        "documentation"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "======",
+        "=====",
+        "====",
+        "<code",
+        "</code>",
+        "<note",
+        "</note>",
+        "[[",
+        "]]"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "documentation_creation": {
+      "tags": [
+        "dokuwiki",
+        "documentation",
+        "knowledge-base"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "create wiki page",
+        "document this",
+        "add to wiki",
+        "wiki entry for"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "auto_retrieve_triggers": {
+    "wiki_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "dokuwiki syntax",
+        "wiki formatting",
+        "how to format wiki",
+        "wiki markup"
+      ],
+      "search_tags": [
+        "dokuwiki",
+        "syntax",
+        "formatting"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "documentation_search": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "find in wiki",
+        "wiki page about",
+        "documented in wiki",
+        "wiki entry for"
+      ],
+      "search_tags": [
+        "dokuwiki",
+        "documentation"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "search_memory",
+          "store_as": "recent_wiki",
+          "parameters": {
+            "tags": [
+              "dokuwiki"
+            ],
+            "n_results": 5
+          }
+        },
+        {
+          "action": "notify",
+          "message": "DokuWiki context loaded. Found {recent_wiki.count} wiki-related items."
+        }
+      ]
+    }
+  },
+  "dmi_naming_conventions": {
+    "namespace_structure": {
+      "software": {
+        "root": "sw:",
+        "products": {
+          "imp": "JiVS Information Management Platform",
+          "jdt": "JiVS DataTransfer",
+          "rm": "Retention Management",
+          "hsdt": "High Speed Data Transfer",
+          "bod": "Business Object Designer",
+          "bos": "Business Object Server",
+          "sapplugin": "SAP Plugin",
+          "occ": "One Click Cockpit"
+        }
+      },
+      "internal": {
+        "editors": "intern:editors:",
+        "categories": [
+          "attic",
+          "consolidation",
+          "ebook",
+          "wiki",
+          "wip"
+        ]
+      },
+      "standard_subcategories": [
+        ":start",
+        ":faq:",
+        ":howto:",
+        ":troubleshooting:",
+        ":configuration:",
+        ":installation:"
+      ]
+    },
+    "naming_rules": {
+      "general": [
+        "Use lowercase letters only",
+        "Separate words with hyphens (-)",
+        "Use underscores (_) for version numbers only",
+        "Keep names descriptive but concise",
+        "Use English for all page names"
+      ],
+      "patterns": {
+        "troubleshooting": "troubleshooting:[problem-description]",
+        "howto": "howto:[action-description]",
+        "faq": "faq:[topic-or-issue]",
+        "configuration": "configuration:[component-name]"
+      }
+    },
+    "security_requirements": {
+      "mandatory": [
+        "NEVER include usernames or passwords",
+        "Mask customer-specific information",
+        "Use placeholders: [Customer], [ProjectName], [Server]",
+        "Generalize problems for broader applicability"
+      ]
+    },
+    "content_templates": {
+      "troubleshooting_page": {
+        "sections": [
+          "====== Problem Description =====",
+          "===== Root Cause =====",
+          "===== Technical Analysis =====",
+          "===== Solution =====",
+          "===== Prevention =====",
+          "===== Related Information =====",
+          "===== Keywords =====",
+          "{{tag>}}",
+          "===== Last Updated ====="
+        ]
+      },
+      "howto_page": {
+        "sections": [
+          "====== Title ======",
+          "===== Overview =====",
+          "===== Prerequisites =====",
+          "===== Steps =====",
+          "===== Verification =====",
+          "===== Troubleshooting =====",
+          "===== Related =====",
+          "{{tag>}}"
+        ]
+      }
+    },
+    "dmi_specific_tags": {
+      "products": [
+        "jivs",
+        "imp",
+        "jdt",
+        "rm",
+        "hsdt",
+        "sapplugin",
+        "occ",
+        "bod",
+        "bos"
+      ],
+      "categories": [
+        "installation",
+        "configuration",
+        "troubleshooting",
+        "security",
+        "performance",
+        "migration"
+      ],
+      "technologies": [
+        "sql",
+        "sap",
+        "oracle",
+        "mssql",
+        "azure",
+        "ssl",
+        "tomcat",
+        "pentaho"
+      ],
+      "processes": [
+        "extraction",
+        "retention",
+        "archiving",
+        "decommissioning"
+      ],
+      "environments": [
+        "public-cloud",
+        "on-premise",
+        "hybrid"
+      ]
+    },
+    "technical_standards": {
+      "code_blocks": {
+        "sql": "<code sql>SELECT...</code>",
+        "powershell": "<code powershell>Get-Service...</code>",
+        "bash": "<code bash>#!/bin/bash...</code>",
+        "file_paths": "<code>C:\\path\\to\\file</code>"
+      },
+      "diagrams": "Use PlantUML (NOT Mermaid) for PDF export compatibility",
+      "screenshots": {
+        "location": "media namespace",
+        "format": "PNG preferred",
+        "annotation": "Include captions and annotations where helpful"
+      }
+    }
+  },
+  "date_handling": {
+    "critical_rule": "NEVER hardcode dates in DokuWiki pages",
+    "implementation": [
+      "When creating pages: Use actual system date",
+      "When updating pages: Use actual system date",
+      "Format: //YYYY-MM-DD - Action by Role//",
+      "Example: //{{SYSTEM_DATE}} - Created by Technical Consultant//"
+    ],
+    "system_date_usage": {
+      "creation": "Retrieve current date from environment/system",
+      "updates": "Always use fresh system date for modifications",
+      "templates": "Use {{CURRENT_DATE}} placeholder for templates",
+      "runtime": "Replace placeholders with actual system date at save time"
+    }
+  }
+}

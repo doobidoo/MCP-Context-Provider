@@ -1,0 +1,48 @@
+{
+  "tool_category": "dmi",
+  "auto_convert": true,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-11-21T12:52:08.649361",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "dokuwiki:*",
+      "memory:*",
+      "Azure MCP Server:*"
+    ],
+    "priority": "high"
+  },
+  "description": "DMI-specific technical documentation standards and context for JiVS platform products",
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "notify",
+          "message": "DMI Technical Documentation context loaded - Using dynamic system date"
+        }
+      ]
+    }
+  },
+  "date_handling": {
+    "critical": "ALWAYS use dynamic system date, NEVER hardcode dates",
+    "implementation": [
+      "Retrieve current date from system environment",
+      "Use placeholders like {{CURRENT_DATE}} in templates",
+      "Replace with actual system date at runtime"
+    ],
+    "dokuwiki_pages": {
+      "last_updated": "//{{SYSTEM_DATE}} - Action by Role//",
+      "created": "//{{SYSTEM_DATE}} - Created by Technical Consultant//",
+      "modified": "//{{SYSTEM_DATE}} - Modified by Technical Consultant//"
+    }
+  },
+  "documentation_standards": {
+    "timestamps": {
+      "rule": "Always use dynamic system timestamps",
+      "format": "YYYY-MM-DD from system",
+      "avoid": "Hardcoded dates like 2025-11-21",
+      "correct": "Dynamic date retrieval from environment"
+    }
+  }
+}
