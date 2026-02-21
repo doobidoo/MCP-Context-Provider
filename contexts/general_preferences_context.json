@@ -165,97 +165,34 @@
   },
   "metadata": {
     "version": "1.0.0",
-    "last_updated": "2025-09-18T10:45:10.309433",
+    "last_updated": "2026-02-21T11:45:06.442109",
     "applies_to_tools": [
       "*"
     ],
     "priority": "low",
     "inheritance": "fallback_for_unspecified_tools"
   },
-  "auto_store_triggers": {
-    "user_preferences": {
-      "tags": [
-        "preference",
-        "user-setting",
-        "personal"
-      ],
-      "action": "store_with_metadata",
-      "patterns": [
-        "I prefer",
-        "I like to",
-        "always use",
-        "my preference is",
-        "I want",
-        "please always"
-      ],
-      "confidence_threshold": 0.8
-    },
-    "workflow_patterns": {
-      "tags": [
-        "workflow",
-        "preference",
-        "process"
-      ],
-      "action": "store_with_metadata",
-      "patterns": [
-        "my workflow",
-        "I usually",
-        "the way I work",
-        "my process is",
-        "I typically"
-      ],
-      "confidence_threshold": 0.7
-    }
-  },
-  "auto_retrieve_triggers": {
-    "workflow_queries": {
-      "action": "search_and_suggest",
-      "patterns": [
-        "my usual workflow",
-        "how I typically",
-        "my process for"
-      ],
-      "search_tags": [
-        "workflow",
-        "preference"
-      ],
-      "confidence_threshold": 0.7
-    },
-    "preference_queries": {
-      "action": "search_and_suggest",
-      "patterns": [
-        "what's my preference",
-        "how do I usually",
-        "my default",
-        "my standard"
-      ],
-      "search_tags": [
-        "preference",
-        "user-setting"
-      ],
-      "confidence_threshold": 0.8
-    }
-  },
-  "session_initialization": {
+  "gi_cycle": {
     "enabled": true,
-    "actions": {
-      "on_startup": [
-        {
-          "action": "search_memory",
-          "store_as": "user_preferences",
-          "parameters": {
-            "tags": [
-              "preference",
-              "user-setting"
-            ],
-            "n_results": 10
-          }
-        },
-        {
-          "action": "notify",
-          "message": "General preferences loaded. Found {user_preferences.count} preferences."
-        }
-      ]
+    "description": "Proactively suggest G/I Cycle for complex tasks",
+    "suggest_when": [
+      "writing or reviewing documentation (DokuWiki, technical docs)",
+      "analysis or reports (SQL, Azure, infrastructure)",
+      "architecture decisions or Terraform design",
+      "code reviews or refactoring plans",
+      "any output longer than ~20 lines that has verifiable quality criteria"
+    ],
+    "do_not_suggest_when": [
+      "simple one-liner questions",
+      "creative or open-ended tasks",
+      "time pressure or quick lookups",
+      "requirements are unstable or unclear"
+    ],
+    "suggestion_format": "After delivering the output, add a short note: 'Tipp: /GRADE → /I für iterative Verbesserung (G/I Cycle)' – only once, not on every response.",
+    "shortcodes": {
+      "/GRADE": "Grade output with letter + specific point deductions",
+      "/I": "Improve based on deductions, then re-grade. Stop at <5 pts remaining.",
+      "/GRADE ANALYSIS": "Meta-grade: grade the thinking process, not just the output"
     }
   }
 }
