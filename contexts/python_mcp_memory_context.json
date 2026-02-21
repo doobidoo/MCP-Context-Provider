@@ -1,0 +1,291 @@
+{
+  "tool_category": "python-mcp-memory",
+  "description": "MCP Memory Service development patterns including FastAPI, MCP protocol, and storage backends",
+  "auto_convert": false,
+  "auto_store_triggers": {
+    "mcp_protocol_changes": {
+      "patterns": [
+        "MCP protocol",
+        "tool handler",
+        "JSON-RPC",
+        "stdio transport",
+        "MCP server",
+        "call_tool",
+        "list_tools",
+        "storage backend switch"
+      ],
+      "action": "store_memory",
+      "tags": ["mcp-protocol", "mcp-memory-service"],
+      "priority": "high"
+    },
+    "storage_backend_config": {
+      "patterns": [
+        "Cloudflare backend",
+        "SQLite-vec",
+        "hybrid backend",
+        "Vectorize index",
+        "D1 database",
+        "storage initialization",
+        "backend configuration"
+      ],
+      "action": "store_memory",
+      "tags": ["storage-backend", "configuration", "mcp-memory-service"],
+      "priority": "high"
+    },
+    "performance_optimization": {
+      "patterns": [
+        "25ms page load",
+        "embedding cache",
+        "async optimization",
+        "performance improvement",
+        "latency reduction",
+        "cache strategy"
+      ],
+      "action": "store_memory",
+      "tags": ["performance", "optimization", "mcp-memory-service"],
+      "priority": "medium"
+    },
+    "cloudflare_setup": {
+      "patterns": [
+        "Cloudflare configuration",
+        "Vectorize setup",
+        "D1 setup",
+        "Workers AI",
+        "R2 storage",
+        "CLOUDFLARE_API_TOKEN",
+        "CLOUDFLARE_ACCOUNT_ID"
+      ],
+      "action": "store_memory",
+      "tags": ["cloudflare", "setup", "mcp-memory-service"],
+      "priority": "high"
+    },
+    "hybrid_backend_setup": {
+      "patterns": [
+        "hybrid backend",
+        "dual storage",
+        "background sync",
+        "graceful fallback",
+        "hybrid configuration",
+        "sync interval"
+      ],
+      "action": "store_memory",
+      "tags": ["hybrid-backend", "sync", "mcp-memory-service"],
+      "priority": "high"
+    },
+    "oauth_integration": {
+      "patterns": [
+        "OAuth 2.1",
+        "Dynamic Client Registration",
+        "OAuth integration",
+        "OAuth configuration",
+        "MCP_OAUTH_ENABLED"
+      ],
+      "action": "store_memory",
+      "tags": ["oauth", "authentication", "mcp-memory-service"],
+      "priority": "medium"
+    },
+    "fastapi_implementation": {
+      "patterns": [
+        "FastAPI",
+        "uvicorn",
+        "API endpoint",
+        "async route",
+        "SSE events",
+        "/api/",
+        "dashboard"
+      ],
+      "action": "store_memory",
+      "tags": ["fastapi", "api", "mcp-memory-service"],
+      "priority": "medium"
+    },
+    "memory_hooks": {
+      "patterns": [
+        "Claude Code hooks",
+        "Natural Memory Triggers",
+        "memory-mode-controller",
+        "trigger system",
+        "dual protocol"
+      ],
+      "action": "store_memory",
+      "tags": ["memory-hooks", "integration", "mcp-memory-service"],
+      "priority": "medium"
+    },
+    "troubleshooting_solutions": {
+      "patterns": [
+        "fixed by",
+        "solution was",
+        "root cause",
+        "workaround",
+        "resolved by",
+        "error fix"
+      ],
+      "action": "store_memory",
+      "tags": ["troubleshooting", "solution", "mcp-memory-service"],
+      "priority": "high"
+    },
+    "environment_setup": {
+      "patterns": [
+        "environment variable",
+        "MCP_MEMORY_STORAGE_BACKEND",
+        "configuration precedence",
+        ".env file",
+        "export MCP"
+      ],
+      "action": "store_memory",
+      "tags": ["environment", "setup", "mcp-memory-service"],
+      "priority": "medium"
+    }
+  },
+  "auto_retrieve_triggers": {
+    "backend_errors": {
+      "patterns": [
+        "Cloudflare backend error",
+        "vectorize error",
+        "D1 error",
+        "storage backend failed",
+        "initialization error",
+        "backend not connecting"
+      ],
+      "action": "retrieve_memory",
+      "search_tags": ["cloudflare", "storage-backend", "troubleshooting"],
+      "confidence_threshold": 0.7
+    },
+    "mcp_connection_issues": {
+      "patterns": [
+        "MCP client connection",
+        "stdio error",
+        "tool call timeout",
+        "MCP server not responding",
+        "connection refused"
+      ],
+      "action": "retrieve_memory",
+      "search_tags": ["mcp-protocol", "troubleshooting", "connection"],
+      "confidence_threshold": 0.7
+    },
+    "configuration_help": {
+      "patterns": [
+        "backend configuration",
+        "environment setup",
+        "how to configure",
+        "installation steps",
+        "setup guide"
+      ],
+      "action": "retrieve_memory",
+      "search_tags": ["configuration", "setup", "environment"],
+      "confidence_threshold": 0.6
+    },
+    "implementation_examples": {
+      "patterns": [
+        "MCP handler example",
+        "API endpoint pattern",
+        "FastAPI example",
+        "storage backend example",
+        "code example"
+      ],
+      "action": "retrieve_memory",
+      "search_tags": ["fastapi", "mcp-protocol", "api", "example"],
+      "confidence_threshold": 0.6
+    },
+    "async_error_handling": {
+      "patterns": [
+        "async error",
+        "coroutine error",
+        "await issue",
+        "async/await pattern",
+        "asyncio"
+      ],
+      "action": "retrieve_memory",
+      "search_tags": ["async", "troubleshooting", "python"],
+      "confidence_threshold": 0.7
+    },
+    "performance_issues": {
+      "patterns": [
+        "performance problem",
+        "latency issue",
+        "slow response",
+        "optimization needed",
+        "cache miss"
+      ],
+      "action": "retrieve_memory",
+      "search_tags": ["performance", "optimization", "troubleshooting"],
+      "confidence_threshold": 0.6
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "recall_memory",
+          "parameters": {
+            "query": "last 7 days",
+            "n_results": 10
+          },
+          "description": "Load recent MCP Memory Service development activity"
+        },
+        {
+          "action": "retrieve_memory",
+          "parameters": {
+            "query": "MCP Memory Service architecture backend configuration",
+            "n_results": 5
+          },
+          "description": "Retrieve architecture and backend configuration context"
+        },
+        {
+          "action": "search_by_tag",
+          "parameters": {
+            "tags": ["in-progress", "mcp-memory-service", "cloudflare", "fastapi"]
+          },
+          "description": "Find ongoing MCP Memory Service tasks"
+        }
+      ],
+      "greeting_format": "📦 MCP Memory Service context loaded: {summary}"
+    }
+  },
+  "smart_tagging": {
+    "auto_detect_projects": true,
+    "auto_detect_tools": true,
+    "tool_detection": {
+      "patterns": {
+        "fastapi": ["fastapi", "uvicorn", "starlette", "pydantic"],
+        "mcp": ["mcp", "model context protocol", "json-rpc", "stdio"],
+        "cloudflare": ["cloudflare", "vectorize", "d1", "workers", "r2"],
+        "sqlite": ["sqlite", "sqlite-vec", "sql"],
+        "chromadb": ["chroma", "chromadb", "vector database"],
+        "python": ["python", "pip", "venv", "uv"],
+        "async": ["async", "await", "asyncio", "coroutine"],
+        "embedding": ["embedding", "sentence-transformers", "torch"],
+        "oauth": ["oauth", "authentication", "authorization"],
+        "hooks": ["hooks", "claude code", "memory triggers"]
+      }
+    }
+  },
+  "syntax_rules": {
+    "python_style": {
+      "import_style": "absolute",
+      "type_hints": "required",
+      "python_version": "3.10+",
+      "async_preferred": true
+    },
+    "mcp_patterns": {
+      "tool_handler_format": "async def handle_{tool_name}",
+      "error_handling": "structured with proper MCP error types",
+      "logging": "structured logging with context"
+    }
+  },
+  "preferences": {
+    "package_manager": "uv",
+    "test_framework": "pytest",
+    "code_formatter": "black",
+    "linter": "ruff",
+    "min_test_coverage": "80%",
+    "documentation_style": "google_docstrings"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-10-05",
+    "applies_to_tools": ["python", "mcp-memory", "memory-service", "fastapi"],
+    "priority": "high",
+    "author": "hkr"
+  }
+}

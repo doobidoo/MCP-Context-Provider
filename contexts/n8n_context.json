@@ -1,0 +1,282 @@
+{
+  "tool_category": "automation",
+  "auto_convert": true,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-12-11T20:52:20.886110",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "automation:*"
+    ],
+    "priority": "medium"
+  },
+  "description": "N8N workflow automation context rules and best practices",
+  "syntax_rules": {
+    "workflow_naming": {
+      "format": "Descriptive name with purpose",
+      "examples": {
+        "ai_integration": "Claude Code AI Agent (NetworkChuck Style)",
+        "api_workflow": "GitHub Issues to Slack Notifications",
+        "data_processing": "CSV Data Transform and Upload"
+      },
+      "avoid": [
+        "generic names",
+        "workflow1",
+        "test"
+      ]
+    },
+    "node_naming": {
+      "format": "Action-based descriptive names",
+      "patterns": {
+        "triggers": "Manual Trigger, Webhook Trigger, Schedule Trigger",
+        "processing": "Generate Session ID, Transform Data, Parse JSON",
+        "actions": "SSH - Initial Command, Send Slack Message, Create Database Record",
+        "logic": "Continue Conversation?, Check Status, Filter Results"
+      },
+      "examples": {
+        "ssh_node": "SSH - Initial Claude Command",
+        "code_node": "Generate Session ID",
+        "if_node": "Continue Conversation?"
+      }
+    },
+    "variable_naming": {
+      "format": "snake_case",
+      "examples": [
+        "session_id",
+        "user_prompt",
+        "continue_conversation"
+      ],
+      "avoid": [
+        "camelCase",
+        "PascalCase",
+        "kebab-case"
+      ]
+    }
+  },
+  "preferences": {
+    "node_positioning": {
+      "horizontal_spacing": 220,
+      "vertical_spacing": 100,
+      "start_position": [
+        240,
+        300
+      ]
+    },
+    "credential_management": {
+      "use_named_credentials": true,
+      "avoid_hardcoded_secrets": true
+    },
+    "workflow_settings": {
+      "execution_order": "v1",
+      "save_execution_progress": true,
+      "timeout": 300
+    }
+  },
+  "auto_corrections": {
+    "node_name_spacing": {
+      "pattern": "([A-Z][a-z]+)([A-Z][a-z]+)",
+      "replacement": "$1 $2"
+    },
+    "variable_camel_case": {
+      "pattern": "([a-z]+)([A-Z][a-zA-Z]*)",
+      "replacement": "$1_$2"
+    }
+  },
+  "session_initialization": {
+    "actions": [
+      {
+        "action": "search_memory",
+        "store_as": "recent_n8n",
+        "parameters": {
+          "tags": [
+            "n8n"
+          ],
+          "n_results": 5
+        }
+      },
+      {
+        "action": "notify",
+        "message": "N8N context loaded. Found {recent_n8n.count} stored workflows."
+      }
+    ]
+  },
+  "best_practices": {
+    "workflow_design": {
+      "single_responsibility": "Each workflow should have one clear purpose",
+      "error_handling": "Always include error paths and IF nodes for conditions",
+      "readability": "Use descriptive node names and logical flow",
+      "modularity": "Break complex workflows into smaller sub-workflows"
+    },
+    "api_integration": {
+      "authentication": "Use X-N8N-API-KEY header for API calls",
+      "required_fields": [
+        "name",
+        "nodes",
+        "connections",
+        "settings"
+      ],
+      "credential_references": "Link credentials properly in node parameters"
+    },
+    "session_management": {
+      "use_uuid": "Generate UUIDs for stateful workflows",
+      "maintain_context": "Pass session identifiers through workflow",
+      "state_persistence": "Use global variables or database for long-term state"
+    },
+    "ssh_integration": {
+      "claude_code_initial": "Use -p flag for headless/print mode",
+      "claude_code_resume": "Use -r flag to resume with --session-id",
+      "working_directory": "Set appropriate cwd parameter",
+      "credential_setup": "Configure SSH credentials with server details"
+    }
+  },
+  "common_patterns": {
+    "networkchuck_claude_pattern": {
+      "description": "AI agent orchestration via SSH to Claude Code CLI",
+      "flow": "Manual Trigger → Code (UUID) → SSH Initial (-p) → IF Continue → SSH Resume (-r)",
+      "key_elements": {
+        "uuid_generation": "JavaScript code node generating session ID",
+        "initial_command": "claude -p \"{{ $json.prompt }}\" --session-id {{ $json.session_id }}",
+        "resume_command": "claude -r \"{{ $json.follow_up_prompt }}\" --session-id {{ $json.session_id }}",
+        "if_logic": "Check continue_conversation boolean flag"
+      }
+    },
+    "webhook_trigger": {
+      "template": "Webhook Trigger → Process Data → Respond to Webhook",
+      "response_format": "JSON with status and data fields"
+    },
+    "api_workflow": {
+      "template": "HTTP Request → Parse Response → Transform Data → HTTP Request (output)",
+      "error_handling": "Include IF node to check response status"
+    }
+  },
+  "n8n_api_structure": {
+    "workflow_object": {
+      "required_fields": [
+        "name",
+        "settings",
+        "nodes",
+        "connections"
+      ],
+      "optional_fields": [
+        "description",
+        "tags",
+        "staticData",
+        "pinData"
+      ]
+    },
+    "node_structure": {
+      "required": [
+        "parameters",
+        "name",
+        "type",
+        "typeVersion",
+        "position"
+      ],
+      "optional": [
+        "credentials",
+        "id"
+      ]
+    },
+    "connection_structure": {
+      "format": "{ \"Source Node\": { \"main\": [[ { \"node\": \"Target Node\", \"type\": \"main\", \"index\": 0 } ]] } }"
+    }
+  },
+  "auto_store_triggers": {
+    "n8n_workflows": {
+      "tags": [
+        "n8n",
+        "workflow",
+        "automation"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "created.*workflow",
+        "n8n.*api",
+        "workflow.*deployed",
+        "POST.*5678.*workflows"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "claude_code_integration": {
+      "tags": [
+        "n8n",
+        "claude-code",
+        "ssh",
+        "ai-agent"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "claude -p",
+        "claude -r",
+        "--session-id",
+        "SSH.*Claude",
+        "NetworkChuck"
+      ],
+      "confidence_threshold": 0.9
+    },
+    "n8n_api_calls": {
+      "tags": [
+        "n8n",
+        "api",
+        "configuration"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "X-N8N-API-KEY",
+        "localhost:5678",
+        "n8n.*credentials",
+        "workflow.*api"
+      ],
+      "confidence_threshold": 0.8
+    }
+  },
+  "auto_retrieve_triggers": {
+    "n8n_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "how to.*n8n",
+        "n8n.*workflow",
+        "create.*n8n",
+        "n8n.*example",
+        "n8n.*api"
+      ],
+      "search_tags": [
+        "n8n",
+        "workflow",
+        "automation"
+      ],
+      "confidence_threshold": 0.7
+    },
+    "claude_integration_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "claude.*n8n",
+        "n8n.*ssh",
+        "ai.*agent.*n8n",
+        "networkchuck",
+        "claude.*workflow"
+      ],
+      "search_tags": [
+        "n8n",
+        "claude-code",
+        "ssh"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "n8n_errors": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "n8n error",
+        "workflow.*failed",
+        "n8n.*issue",
+        "fix.*n8n"
+      ],
+      "search_tags": [
+        "n8n",
+        "solution",
+        "error"
+      ],
+      "confidence_threshold": 0.8
+    }
+  }
+}
