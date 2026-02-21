@@ -1,0 +1,322 @@
+{
+  "tool_category": "git",
+  "description": "Git-specific context rules and commit conventions",
+  "auto_convert": true,
+  "syntax_rules": {
+    "commit_message_format": {
+      "format": "type(scope): description\n\nBody (optional)\n\nFooter (optional)",
+      "types": [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "chore",
+        "build",
+        "ci"
+      ],
+      "examples": {
+        "feature": "feat(auth): add OAuth2 authentication",
+        "bugfix": "fix(api): resolve null pointer exception in user service",
+        "documentation": "docs(readme): update installation instructions",
+        "chore": "chore(deps): update dependencies to latest versions"
+      }
+    },
+    "branch_naming": {
+      "format": "type/description-with-hyphens",
+      "types": [
+        "feature",
+        "bugfix",
+        "hotfix",
+        "release",
+        "chore"
+      ],
+      "examples": {
+        "feature": "feature/user-authentication",
+        "bugfix": "bugfix/fix-login-redirect",
+        "hotfix": "hotfix/critical-security-patch",
+        "chore": "chore/update-dependencies"
+      },
+      "avoid": [
+        "spaces",
+        "underscores",
+        "UPPERCASE",
+        "special_chars"
+      ]
+    },
+    "tag_naming": {
+      "format": "semantic_versioning",
+      "pattern": "v{MAJOR}.{MINOR}.{PATCH}",
+      "examples": [
+        "v1.0.0",
+        "v2.1.3",
+        "v1.0.0-beta.1"
+      ]
+    }
+  },
+  "preferences": {
+    "default_branch": "main",
+    "merge_strategy": "squash",
+    "commit_signing": true,
+    "line_endings": "lf",
+    "ignore_case": false
+  },
+  "auto_corrections": {
+    "commit_type_fix": {
+      "pattern": "^(Fix|FIX|fixed)\\s*:?\\s*(.+)",
+      "replacement": "fix: $2"
+    },
+    "commit_type_add": {
+      "pattern": "^(Add|ADD|added)\\s*:?\\s*(.+)",
+      "replacement": "feat: $2"
+    },
+    "commit_type_update": {
+      "pattern": "^(Update|UPDATE|updated)\\s*:?\\s*(.+)",
+      "replacement": "chore: $2"
+    },
+    "branch_name_spaces": {
+      "pattern": "([a-z]+)\\s+([a-z]+)",
+      "replacement": "$1-$2"
+    },
+    "branch_name_underscores": {
+      "pattern": "([a-z]+)_([a-z]+)",
+      "replacement": "$1-$2"
+    }
+  },
+  "workflow_patterns": {
+    "gitflow": {
+      "main_branches": [
+        "main",
+        "develop"
+      ],
+      "feature_branches": "feature/*",
+      "release_branches": "release/*",
+      "hotfix_branches": "hotfix/*"
+    },
+    "github_flow": {
+      "main_branch": "main",
+      "feature_branches": "feature/*",
+      "workflow": "feature -> main via PR"
+    }
+  },
+  "best_practices": {
+    "commits": {
+      "atomic_commits": "Each commit should represent a single logical change",
+      "descriptive_messages": "Explain what and why, not just what",
+      "present_tense": "Use present tense in commit messages",
+      "line_length": "Keep first line under 50 characters"
+    },
+    "branches": {
+      "short_lived": "Keep feature branches short-lived",
+      "descriptive_names": "Use descriptive branch names",
+      "clean_history": "Rebase before merging to maintain clean history"
+    },
+    "pull_requests": {
+      "small_changes": "Keep PRs focused and small",
+      "good_descriptions": "Provide context and rationale",
+      "review_process": "Require code review before merging"
+    }
+  },
+  "hooks": {
+    "pre_commit": {
+      "enabled": true,
+      "checks": [
+        "lint",
+        "format",
+        "test"
+      ],
+      "prevent_commits_to_main": true
+    },
+    "commit_msg": {
+      "enabled": true,
+      "validate_format": true,
+      "max_length": 72
+    },
+    "pre_push": {
+      "enabled": true,
+      "run_tests": true,
+      "prevent_push_to_main": true
+    }
+  },
+  "common_commands": {
+    "status": "git status --short",
+    "log_oneline": "git log --oneline --graph --decorate",
+    "branch_list": "git branch -v",
+    "clean_branches": "git branch --merged | grep -v '\\*\\|main\\|develop' | xargs -n 1 git branch -d",
+    "amend_commit": "git commit --amend --no-edit"
+  },
+  "gitignore_templates": {
+    "node_js": [
+      "node_modules/",
+      "npm-debug.log*",
+      ".env",
+      "dist/",
+      "build/"
+    ],
+    "python": [
+      "__pycache__/",
+      "*.pyc",
+      ".env",
+      "venv/",
+      ".pytest_cache/"
+    ],
+    "general": [
+      ".DS_Store",
+      "Thumbs.db",
+      "*.log",
+      ".env*",
+      "*.swp",
+      "*.swo"
+    ]
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-10-17T07:06:59.270633",
+    "applies_to_tools": [
+      "bash:git",
+      "git:*",
+      "github:*",
+      "gitlab:*"
+    ]
+  },
+  "auto_store_triggers": {
+    "git_commands": {
+      "tags": [
+        "git",
+        "version-control",
+        "command"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "git add",
+        "git commit",
+        "git push",
+        "git pull",
+        "git checkout",
+        "git merge",
+        "git rebase",
+        "git branch"
+      ],
+      "confidence_threshold": 0.9
+    },
+    "git_workflows": {
+      "tags": [
+        "git",
+        "workflow",
+        "history"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "created branch",
+        "merged .* into",
+        "resolved conflict",
+        "rebased .* onto",
+        "cherry-picked"
+      ],
+      "confidence_threshold": 0.8
+    }
+  },
+  "auto_retrieve_triggers": {
+    "git_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "how to .* git",
+        "git .* example",
+        "undo git",
+        "fix git",
+        "git workflow"
+      ],
+      "search_tags": [
+        "git",
+        "version-control"
+      ],
+      "confidence_threshold": 0.7
+    },
+    "git_errors": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "git error",
+        "merge conflict",
+        "git issue",
+        "detached HEAD",
+        "rejected push"
+      ],
+      "search_tags": [
+        "git",
+        "solution",
+        "error"
+      ],
+      "confidence_threshold": 0.8
+    }
+  },
+  "session_initialization": {
+    "actions": [
+      {
+        "action": "search_memory",
+        "store_as": "recent_git",
+        "parameters": {
+          "tags": [
+            "git"
+          ],
+          "n_results": 5
+        }
+      },
+      {
+        "action": "notify",
+        "message": "Git context loaded. Found {recent_git.count} stored workflows."
+      }
+    ]
+  },
+  "github_pr_inline_operations": {
+    "description": "TESTED operations for inline PR comments and review thread resolution",
+    "important_note": "Use REVIEW API (not individual comment API) for inline comments with proper position calculation",
+    "adding_inline_comments": {
+      "method": "REST API - Create Review with Comments",
+      "endpoint": "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
+      "critical_detail": "Use 'position' in diff (NOT 'line' number in file)",
+      "position_calculation": "Position starts from first @@ hunk header in diff, counting lines from there",
+      "required_fields": {
+        "event": "COMMENT (or APPROVE/REQUEST_CHANGES)",
+        "body": "overall review comment",
+        "comments": [
+          {
+            "path": "relative file path",
+            "position": "integer position in diff",
+            "body": "inline comment text"
+          }
+        ]
+      },
+      "working_example": "gh api repos/{owner}/{repo}/pulls/{pr}/reviews --method POST --input - <<'EOF'\n{\n  \"event\": \"COMMENT\",\n  \"body\": \"Review comment\",\n  \"comments\": [\n    {\n      \"path\": \"backend/pom.xml\",\n      \"position\": 1,\n      \"body\": \"Inline comment here\"\n    }\n  ]\n}\nEOF",
+      "tested_on": "PR #6, doobidoo/jcob repository"
+    },
+    "querying_review_threads": {
+      "method": "GraphQL API",
+      "query_name": "pullRequest.reviewThreads",
+      "working_example": "gh api graphql -f query='\nquery {\n  repository(owner: \"owner\", name: \"repo\") {\n    pullRequest(number: PR_NUMBER) {\n      reviewThreads(first: 10) {\n        nodes {\n          id\n          isResolved\n          comments(first: 5) {\n            nodes {\n              body\n              path\n            }\n          }\n        }\n      }\n    }\n  }\n}'",
+      "returns": "thread IDs needed for resolve/unresolve operations",
+      "tested_on": "PR #6, doobidoo/jcob repository"
+    },
+    "resolving_review_threads": {
+      "method": "GraphQL API ONLY",
+      "mutation_name": "resolveReviewThread",
+      "working_example": "gh api graphql -f query='\nmutation {\n  resolveReviewThread(input: {threadId: \"PRRT_kwDO...\"}) {\n    thread {\n      id\n      isResolved\n    }\n  }\n}'",
+      "unresolve_mutation": "unresolveReviewThread (same syntax)",
+      "tested_on": "PR #6, doobidoo/jcob repository, thread PRRT_kwDOQCtyds5eT-hg"
+    },
+    "api_capability_summary": {
+      "add_inline_comment": "REST /reviews endpoint ✓",
+      "resolve_thread": "GraphQL only ✓",
+      "unresolve_thread": "GraphQL only ✓",
+      "query_thread_status": "GraphQL only ✓"
+    },
+    "complete_workflow": "1. Create review with inline comments using REST /reviews endpoint with 'comments' array\n2. Query reviewThreads using GraphQL to get thread IDs\n3. Resolve/unresolve threads using GraphQL mutations",
+    "common_mistakes_to_avoid": [
+      "Using /pulls/{pr}/comments endpoint (requires 'line' not 'position', more complex)",
+      "Using 'line' instead of 'position' in diff",
+      "Trying to resolve threads via REST API (not supported)",
+      "Forgetting to query for thread IDs before resolving"
+    ]
+  }
+}

@@ -1,0 +1,425 @@
+{
+  "tool_category": "memory",
+  "auto_convert": false,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-12-20T08:36:14.147298",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "shodh-memory"
+    ],
+    "priority": "high"
+  },
+  "description": "SHODH Memory proactive context rules for automatic memory surfacing and episodic memory management",
+  "syntax_rules": {
+    "memory_types": [
+      "Observation",
+      "Decision",
+      "Learning",
+      "Error",
+      "Discovery",
+      "Pattern",
+      "Context",
+      "Task",
+      "CodeEdit",
+      "FileAccess",
+      "Search",
+      "Command",
+      "Conversation"
+    ],
+    "retrieval_modes": [
+      "semantic",
+      "associative",
+      "hybrid"
+    ],
+    "required_fields": {
+      "remember": [
+        "content"
+      ],
+      "recall": [
+        "query"
+      ],
+      "proactive_context": [
+        "context"
+      ]
+    }
+  },
+  "preferences": {
+    "default_retrieval_mode": "hybrid",
+    "semantic_threshold": 0.6,
+    "max_results": 5,
+    "auto_ingest": true,
+    "streaming_disabled": true,
+    "entity_match_weight": 0.4,
+    "recency_weight": 0.2
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "shodh-memory:context_summary",
+          "parameters": {
+            "include_decisions": true,
+            "include_learnings": true,
+            "include_context": true,
+            "max_items": 5
+          },
+          "description": "Load SHODH context summary at session start"
+        },
+        {
+          "action": "shodh-memory:consolidation_report",
+          "parameters": {},
+          "description": "Check memory consolidation activity"
+        }
+      ],
+      "greeting_format": "SHODH Memory loaded: {summary}"
+    }
+  },
+  "episodic_memory": {
+    "enabled": true,
+    "auto_episode_creation": true,
+    "episode_timeout_minutes": 30,
+    "sequence_tracking": true,
+    "description": "Group related memories into episodes for temporal coherence"
+  },
+  "emotional_metadata": {
+    "enabled": true,
+    "auto_detect": true,
+    "patterns": {
+      "positive_high_arousal": {
+        "triggers": [
+          "solved",
+          "fixed",
+          "success",
+          "works",
+          "achieved",
+          "breakthrough"
+        ],
+        "valence": 0.8,
+        "arousal": 0.7,
+        "emotion": "joy"
+      },
+      "positive_low_arousal": {
+        "triggers": [
+          "completed",
+          "done",
+          "finished",
+          "resolved",
+          "working"
+        ],
+        "valence": 0.5,
+        "arousal": 0.3,
+        "emotion": "satisfaction"
+      },
+      "negative_high_arousal": {
+        "triggers": [
+          "error",
+          "failed",
+          "broken",
+          "crash",
+          "critical",
+          "urgent"
+        ],
+        "valence": -0.7,
+        "arousal": 0.8,
+        "emotion": "frustration"
+      },
+      "negative_low_arousal": {
+        "triggers": [
+          "issue",
+          "problem",
+          "bug",
+          "not working",
+          "incorrect"
+        ],
+        "valence": -0.3,
+        "arousal": 0.4,
+        "emotion": "concern"
+      },
+      "neutral_discovery": {
+        "triggers": [
+          "discovered",
+          "found",
+          "noticed",
+          "realized",
+          "turns out"
+        ],
+        "valence": 0.2,
+        "arousal": 0.5,
+        "emotion": "surprise"
+      }
+    }
+  },
+  "auto_store_triggers": {
+    "discoveries": {
+      "patterns": [
+        "I discovered",
+        "I found out",
+        "It turns out",
+        "I realized",
+        "TIL"
+      ],
+      "action": "shodh-memory:remember",
+      "memory_type": "Discovery",
+      "credibility": 0.8,
+      "source_type": "user",
+      "tags": [
+        "discovery",
+        "insight"
+      ]
+    },
+    "error_fixes": {
+      "patterns": [
+        "fixed the",
+        "resolved by",
+        "the fix was",
+        "solution was",
+        "workaround is"
+      ],
+      "action": "shodh-memory:remember",
+      "memory_type": "Error",
+      "credibility": 0.9,
+      "source_type": "user",
+      "tags": [
+        "error-fix",
+        "solution"
+      ]
+    },
+    "decisions": {
+      "patterns": [
+        "decided to",
+        "decision:",
+        "strategy:",
+        "we agreed",
+        "the plan is",
+        "going with"
+      ],
+      "action": "shodh-memory:remember",
+      "memory_type": "Decision",
+      "credibility": 0.85,
+      "source_type": "user",
+      "tags": [
+        "decision",
+        "strategy"
+      ]
+    },
+    "patterns_learned": {
+      "patterns": [
+        "pattern:",
+        "best practice",
+        "always do",
+        "never do",
+        "rule of thumb"
+      ],
+      "action": "shodh-memory:remember",
+      "memory_type": "Pattern",
+      "credibility": 0.75,
+      "source_type": "inferred",
+      "tags": [
+        "pattern",
+        "best-practice"
+      ]
+    },
+    "learnings": {
+      "patterns": [
+        "I learned",
+        "lesson learned",
+        "takeaway:",
+        "key insight",
+        "important note"
+      ],
+      "action": "shodh-memory:remember",
+      "memory_type": "Learning",
+      "credibility": 0.8,
+      "source_type": "user",
+      "tags": [
+        "learning",
+        "knowledge"
+      ]
+    },
+    "context_updates": {
+      "patterns": [
+        "working on",
+        "current project",
+        "focusing on",
+        "this week",
+        "today's goal"
+      ],
+      "action": "shodh-memory:remember",
+      "memory_type": "Context",
+      "credibility": 0.7,
+      "source_type": "user",
+      "tags": [
+        "context",
+        "current-work"
+      ]
+    },
+    "observations": {
+      "patterns": [
+        "I noticed",
+        "interesting that",
+        "worth noting",
+        "observation:"
+      ],
+      "action": "shodh-memory:remember",
+      "memory_type": "Observation",
+      "credibility": 0.6,
+      "source_type": "user",
+      "tags": [
+        "observation"
+      ]
+    },
+    "tasks": {
+      "patterns": [
+        "TODO:",
+        "need to",
+        "must remember",
+        "don't forget",
+        "action item"
+      ],
+      "action": "shodh-memory:remember",
+      "memory_type": "Task",
+      "credibility": 0.9,
+      "source_type": "user",
+      "tags": [
+        "task",
+        "todo",
+        "action-item"
+      ]
+    }
+  },
+  "auto_retrieve_triggers": {
+    "work_context": {
+      "patterns": [
+        "working on",
+        "need to",
+        "help with",
+        "assist with",
+        "continue"
+      ],
+      "action": "shodh-memory:proactive_context",
+      "parameters": {
+        "max_results": 5,
+        "auto_ingest": true
+      }
+    },
+    "infrastructure_topics": {
+      "patterns": [
+        "terraform",
+        "azure",
+        "deployment",
+        "infrastructure",
+        "cloud"
+      ],
+      "action": "shodh-memory:recall",
+      "parameters": {
+        "mode": "hybrid",
+        "limit": 5
+      },
+      "memory_types": [
+        "Context",
+        "Pattern",
+        "Decision"
+      ]
+    },
+    "troubleshooting": {
+      "patterns": [
+        "error",
+        "failed",
+        "not working",
+        "broken",
+        "issue with",
+        "problem with"
+      ],
+      "action": "shodh-memory:recall_by_tags",
+      "parameters": {
+        "tags": [
+          "error-fix",
+          "solution",
+          "troubleshooting"
+        ],
+        "limit": 5
+      }
+    },
+    "mcp_memory_topics": {
+      "patterns": [
+        "mcp-memory",
+        "consolidation",
+        "memory service",
+        "embedding",
+        "vector"
+      ],
+      "action": "shodh-memory:recall",
+      "parameters": {
+        "mode": "semantic",
+        "limit": 5
+      }
+    },
+    "preferences_recall": {
+      "patterns": [
+        "my preference",
+        "I prefer",
+        "how do I like",
+        "my style"
+      ],
+      "action": "shodh-memory:recall_by_tags",
+      "parameters": {
+        "tags": [
+          "preference",
+          "personal",
+          "style"
+        ],
+        "limit": 3
+      }
+    },
+    "past_decisions": {
+      "patterns": [
+        "what did we decide",
+        "previous decision",
+        "agreed upon",
+        "our strategy"
+      ],
+      "action": "shodh-memory:recall_by_tags",
+      "parameters": {
+        "tags": [
+          "decision",
+          "strategy"
+        ],
+        "limit": 5
+      }
+    },
+    "temporal_queries": {
+      "patterns": [
+        "yesterday",
+        "last week",
+        "recently",
+        "earlier",
+        "this morning"
+      ],
+      "action": "shodh-memory:recall",
+      "parameters": {
+        "mode": "hybrid",
+        "limit": 10
+      },
+      "extract_timeframe": true
+    }
+  },
+  "credibility_rules": {
+    "user_stated": 1,
+    "user_confirmed": 0.95,
+    "documented": 0.9,
+    "tested_working": 0.85,
+    "ai_generated": 0.7,
+    "inferred": 0.5,
+    "uncertain": 0.3
+  },
+  "proactive_context_rules": {
+    "call_on_every_message": true,
+    "auto_ingest_conversations": true,
+    "surface_threshold": 0.65,
+    "max_surfaced": 5,
+    "prioritize_recent": true,
+    "include_episode_context": true
+  }
+}
