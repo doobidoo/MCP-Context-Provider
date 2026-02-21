@@ -1,0 +1,192 @@
+{
+  "tool_category": "ios-shortcuts",
+  "auto_convert": true,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-12-10T20:42:25.888731",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "ios-shortcuts:*"
+    ],
+    "priority": "high"
+  },
+  "description": "iOS Shortcuts plist creation context with memory integration. Covers action identifiers, magic variables, menu structures, and signing workflow.",
+  "syntax_rules": {
+    "plist_structure": {
+      "format": "Apple Property List (XML or Binary)",
+      "conversion": "plutil -convert binary1 input.plist -o output.shortcut",
+      "signing": "shortcuts sign --mode anyone --input unsigned.shortcut --output signed.shortcut"
+    },
+    "action_format": {
+      "template": "<dict>\n  <key>WFWorkflowActionIdentifier</key>\n  <string>is.workflow.actions.ACTION_NAME</string>\n  <key>WFWorkflowActionParameters</key>\n  <dict>...</dict>\n</dict>",
+      "uuid_requirement": "Each action needs UUID for magic variable references"
+    },
+    "magic_variables": {
+      "description": "Reference previous action outputs via UUID instead of setvariable",
+      "pattern": {
+        "OutputName": "Display name",
+        "OutputUUID": "UUID of source action",
+        "Type": "ActionOutput"
+      },
+      "serialization": "WFTextTokenAttachment"
+    },
+    "string_interpolation": {
+      "placeholder_char": "U+FFFC (Object Replacement Character)",
+      "utf8_bytes": "\\xEF\\xBF\\xBC",
+      "structure": {
+        "attachmentsByRange": "Dict with {position, 1} keys",
+        "string": "Text with ORC placeholder"
+      },
+      "serialization": "WFTextTokenString"
+    },
+    "menu_structure": {
+      "grouping": "Same GroupingIdentifier UUID for all menu parts",
+      "control_flow_modes": {
+        "0": "Menu start (WFMenuItems array)",
+        "1": "Menu option (WFMenuItemTitle)",
+        "2": "Menu end"
+      }
+    },
+    "conditional_structure": {
+      "identifier": "is.workflow.actions.conditional",
+      "control_flow_modes": {
+        "0": "If start",
+        "1": "Otherwise",
+        "2": "End if"
+      }
+    }
+  },
+  "preferences": {
+    "uuid_generation": "uuidgen | tr '[:lower:]' '[:upper:]'",
+    "minimum_client_version": 900,
+    "workflow_types": [
+      "NCWidget",
+      "WatchKit",
+      "ActionExtension"
+    ],
+    "test_before_deploy": true
+  },
+  "session_initialization": {
+    "actions": [
+      {
+        "action": "search_memory",
+        "store_as": "recent_shortcuts",
+        "parameters": {
+          "tags": [
+            "ios-shortcuts"
+          ],
+          "n_results": 5
+        }
+      },
+      {
+        "action": "notify",
+        "message": "iOS Shortcuts context loaded. Found {recent_shortcuts.count} stored shortcuts."
+      }
+    ]
+  },
+  "action_identifiers": {
+    "scripting": {
+      "comment": "is.workflow.actions.comment",
+      "setvariable": "is.workflow.actions.setvariable",
+      "getvariable": "is.workflow.actions.getvariable",
+      "conditional": "is.workflow.actions.conditional",
+      "choosefrommenu": "is.workflow.actions.choosefrommenu",
+      "alert": "is.workflow.actions.alert",
+      "notification": "is.workflow.actions.notification",
+      "exit": "is.workflow.actions.exit"
+    },
+    "date_time": {
+      "date": "is.workflow.actions.date",
+      "format_date": "is.workflow.actions.format.date",
+      "delay": "is.workflow.actions.delay"
+    },
+    "text": {
+      "gettext": "is.workflow.actions.gettext",
+      "dictatetext": "is.workflow.actions.dictatetext",
+      "speaktext": "is.workflow.actions.speaktext"
+    },
+    "sharing": {
+      "share": "is.workflow.actions.share",
+      "airdrop": "is.workflow.actions.airdropdocument"
+    },
+    "device": {
+      "dnd_set": "is.workflow.actions.dnd.set",
+      "vibrate": "is.workflow.actions.vibrate",
+      "flashlight": "is.workflow.actions.flashlight"
+    },
+    "notes": {
+      "shownote": "is.workflow.actions.shownote",
+      "createnote": "is.workflow.actions.createnote"
+    },
+    "network": {
+      "downloadurl": "is.workflow.actions.downloadurl",
+      "geturl": "is.workflow.actions.url.getcontents"
+    }
+  },
+  "memory_integration": {
+    "workflow": {
+      "step1": "Search memory: search_by_tag(['ios-shortcuts', '<action-type>'])",
+      "step2": "Adapt found plist templates or create new ones",
+      "step3": "Store working shortcuts with action list metadata",
+      "step4": "Tag tested shortcuts as 'working'"
+    },
+    "storage_pattern": {
+      "content": "Shell script or plist template",
+      "tags": [
+        "ios-shortcuts",
+        "action:<type>",
+        "complexity:<level>"
+      ]
+    },
+    "tag_taxonomy": {
+      "action_tags": [
+        "action:dictation",
+        "action:notes",
+        "action:sharing",
+        "action:focus",
+        "action:api-call"
+      ],
+      "complexity_tags": [
+        "complexity:simple",
+        "complexity:medium",
+        "complexity:advanced"
+      ],
+      "feature_tags": [
+        "feature:magic-variables",
+        "feature:menu",
+        "feature:conditional"
+      ]
+    }
+  },
+  "auto_store_triggers": {
+    "shortcut_detection": {
+      "tags": [
+        "ios-shortcuts"
+      ],
+      "patterns": [
+        "WFWorkflowActionIdentifier",
+        "is.workflow.actions",
+        "shortcuts sign",
+        ".shortcut"
+      ]
+    }
+  },
+  "auto_retrieve_triggers": {
+    "shortcut_help": {
+      "patterns": [
+        "ios shortcut",
+        "kurzbefehl",
+        "shortcut.*erstellen",
+        "action identifier"
+      ],
+      "search_tags": [
+        "ios-shortcuts"
+      ]
+    }
+  },
+  "resources": {
+    "cherrilang": "https://cherrilang.org/compiler/file-format.html",
+    "shortcuts_js": "https://github.com/joshfarrant/shortcuts-js",
+    "ios_reference": "https://github.com/sebj/iOS-Shortcuts-Reference"
+  }
+}
