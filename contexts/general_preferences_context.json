@@ -188,11 +188,39 @@
       "time pressure or quick lookups",
       "requirements are unstable or unclear"
     ],
-    "suggestion_format": "After delivering the output, add a short note: 'Tipp: /GRADE → /I für iterative Verbesserung (G/I Cycle)' – only once, not on every response.",
+    "suggestion_format": "After delivering the output, add a short note: 'Tipp: /GRADE \u00e2\u2020\u2019 /I f\u00c3\u00bcr iterative Verbesserung (G/I Cycle)' \u00e2\u20ac\u201c only once, not on every response.",
     "shortcodes": {
       "/GRADE": "Grade output with letter + specific point deductions",
       "/I": "Improve based on deductions, then re-grade. Stop at <5 pts remaining.",
       "/GRADE ANALYSIS": "Meta-grade: grade the thinking process, not just the output"
+    }
+  },
+  "auto_retrieve_triggers": {
+    "general_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "coding style",
+        "naming convention",
+        "best practice",
+        "code review"
+      ],
+      "search_tags": [
+        "preferences",
+        "style",
+        "convention"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "notify",
+          "message": "General preferences context loaded as fallback for unspecified tools."
+        }
+      ]
     }
   }
 }

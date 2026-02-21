@@ -99,5 +99,40 @@
         }
       ]
     }
+  },
+  "auto_store_triggers": {
+    "python_code": {
+      "tags": [
+        "python",
+        "mcp",
+        "code"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "async def",
+        "await",
+        "from mcp_memory_service",
+        "McpError",
+        "storage.store"
+      ],
+      "confidence_threshold": 0.8
+    }
+  },
+  "auto_retrieve_triggers": {
+    "python_mcp_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "mcp server",
+        "memory service",
+        "python async",
+        "mcp tool handler"
+      ],
+      "search_tags": [
+        "python",
+        "mcp",
+        "memory-service"
+      ],
+      "confidence_threshold": 0.7
+    }
   }
 }

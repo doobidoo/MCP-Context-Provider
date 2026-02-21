@@ -13,11 +13,11 @@
   "description": "Response style shortcodes for quick formatting and perspective changes",
   "syntax_rules": {
     "shortcode_formats": {
-      "/I": "G/I Cycle: Improve – address the deductions from the last /GRADE. Work through each deduction systematically. Then re-grade automatically at the end. Stop when: remaining deductions <5 points, grade stabilizes across 2 iterations, or gaps require information only the user has.",
+      "/I": "G/I Cycle: Improve \u00e2\u20ac\u201c address the deductions from the last /GRADE. Work through each deduction systematically. Then re-grade automatically at the end. Stop when: remaining deductions <5 points, grade stabilizes across 2 iterations, or gaps require information only the user has.",
       "/ELI5": "Explain as if to a 5-year-old with simple language and analogies",
       "/SWOT": "Strengths, Weaknesses, Opportunities, Threats analysis",
       "/TLDL": "Too Long Didn't Listen - Summarize in 2-3 lines maximum",
-      "/GRADE": "G/I Cycle: Grade the previous response with letter grade and specific point deductions (e.g. 'B+ (86/100). Deductions: -5 for missing X, -4 for unverified assumption Y'). Focus on concrete, actionable gaps. LLMs grade leniently – push past B if deductions are real.",
+      "/GRADE": "G/I Cycle: Grade the previous response with letter grade and specific point deductions (e.g. 'B+ (86/100). Deductions: -5 for missing X, -4 for unverified assumption Y'). Focus on concrete, actionable gaps. LLMs grade leniently \u00e2\u20ac\u201c push past B if deductions are real.",
       "/JARGON": "Use technical vocabulary and industry-specific terms",
       "/SCHEMA": "Generate structured outline or data model",
       "/BRIEFLY": "Maximum 1-2 sentences response",
@@ -34,7 +34,7 @@
       "/TONE [style]": "Apply specific tone (formal, casual, funny, dramatic, etc.)",
       "/ACT AS [role]": "Respond from the perspective of specified role",
       "/CONTEXT STACK": "Maintain multiple layers of context throughout response",
-      "/GRADE ANALYSIS": "G/I Cycle Meta-Level: Grade the thinking process and approach, not just the output. Ask 'what didn't I check?', 'what assumptions were made?', 'what would invalidate this?' – surfaces unknown unknowns.",
+      "/GRADE ANALYSIS": "G/I Cycle Meta-Level: Grade the thinking process and approach, not just the output. Ask 'what didn't I check?', 'what assumptions were made?', 'what would invalidate this?' \u00e2\u20ac\u201c surfaces unknown unknowns.",
       "/AUDIENCE [type]": "Adapt language and examples for specified audience",
       "/END WITH [text]": "End response with specified text",
       "/PARALLEL LENSES": "Examine from multiple angles simultaneously",
@@ -56,7 +56,12 @@
     "multiple_shortcodes": "If multiple shortcodes are present, combine their effects where logical",
     "fallback": "If shortcode format is unclear, ask for clarification"
   },
-  "auto_corrections": {},
+  "auto_corrections": {
+    "shortcode_uppercase": {
+      "pattern": "^/(grade|eli5|swot|tldl|jargon|schema|briefly|compare|pitfalls|checklist)\\b",
+      "replacement": "/\\U$1"
+    }
+  },
   "session_initialization": {
     "actions": [
       {
@@ -64,5 +69,39 @@
         "message": "Response shortcodes context loaded. Use /[SHORTCODE] at the start of your message to apply different response styles."
       }
     ]
+  },
+  "auto_store_triggers": {
+    "shortcode_usage": {
+      "tags": [
+        "shortcode",
+        "response-style"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "/GRADE",
+        "/ELI5",
+        "/SWOT",
+        "/TLDL",
+        "/I",
+        "/GRADE ANALYSIS"
+      ],
+      "confidence_threshold": 0.9
+    }
+  },
+  "auto_retrieve_triggers": {
+    "shortcode_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "which shortcode",
+        "response format",
+        "how to format",
+        "shortcode list"
+      ],
+      "search_tags": [
+        "shortcode",
+        "response-style"
+      ],
+      "confidence_threshold": 0.7
+    }
   }
 }
