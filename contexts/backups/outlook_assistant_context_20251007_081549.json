@@ -1,0 +1,50 @@
+{
+  "tool_category": "outlook",
+  "auto_convert": false,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-10-07T08:09:00.170351",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "outlook-assistant"
+    ],
+    "priority": "high"
+  },
+  "description": "Outlook Assistant automatic authentication and workflow management",
+  "syntax_rules": {
+    "authentication": {
+      "check_status_first": true,
+      "prompt_url_format": "http://localhost:3333/auth?client_id=...",
+      "action_after_auth": "verify_status"
+    },
+    "email_workflow": {
+      "step_1": "Draft email content",
+      "step_2": "Present to user for approval",
+      "step_3": "Wait for explicit confirmation",
+      "step_4": "Send email using outlook-assistant:send-email"
+    }
+  },
+  "preferences": {
+    "auth_check_on_start": true,
+    "draft_before_send": true,
+    "auto_authenticate_prompt": true
+  },
+  "auto_corrections": {
+    "send-email": {
+      "before": "Always present email as draft first, never send directly",
+      "pattern": "outlook-assistant:send-email",
+      "suggest": "Present email content for approval before sending"
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": [
+      {
+        "type": "tool_call",
+        "tool": "outlook-assistant:check-auth-status",
+        "description": "Check Outlook authentication status on session start"
+      }
+    ],
+    "trigger": "session_start"
+  }
+}

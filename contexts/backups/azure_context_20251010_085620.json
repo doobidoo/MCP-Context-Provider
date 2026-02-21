@@ -1,0 +1,390 @@
+{
+  "tool_category": "azure",
+  "description": "Azure-specific context rules and naming conventions",
+  "auto_convert": true,
+  "syntax_rules": {
+    "resource_naming": {
+      "format": "prefix-purpose-environment-location-instance",
+      "prefixes": {
+        "storage_account": "st",
+        "resource_group": "rg",
+        "virtual_machine": "vm",
+        "app_service": "app",
+        "key_vault": "kv",
+        "sql_server": "sql",
+        "container_registry": "cr",
+        "function_app": "func",
+        "application_insights": "appi"
+      },
+      "examples": {
+        "storage_account": "stlogsprodwe01",
+        "resource_group": "rg-web-prod-westeurope",
+        "key_vault": "kv-secrets-prod-we-01"
+      },
+      "avoid": [
+        "spaces",
+        "underscores_in_names",
+        "UPPERCASE"
+      ]
+    },
+    "location_codes": {
+      "westeurope": "we",
+      "northeurope": "ne",
+      "eastus": "eus",
+      "westus2": "wus2",
+      "centralus": "cus",
+      "southeastasia": "sea",
+      "japaneast": "je"
+    },
+    "tags": {
+      "required": [
+        "Environment",
+        "Project",
+        "Owner",
+        "CostCenter"
+      ],
+      "standard_values": {
+        "Environment": [
+          "dev",
+          "staging",
+          "prod"
+        ],
+        "Project": "string",
+        "Owner": "email",
+        "CostCenter": "cost_code"
+      }
+    }
+  },
+  "preferences": {
+    "default_location": "westeurope",
+    "default_sku": {
+      "storage_account": "Standard_LRS",
+      "app_service_plan": "B1",
+      "sql_database": "S0"
+    },
+    "security": {
+      "enable_https_only": true,
+      "min_tls_version": "1.2",
+      "disable_public_access": true,
+      "enable_private_endpoints": true
+    }
+  },
+  "auto_corrections": {
+    "resource_group_naming": {
+      "pattern": "([a-zA-Z]+)[_\\s]+([a-zA-Z]+)[_\\s]+([a-zA-Z]+)",
+      "replacement": "rg-$1-$2-$3"
+    },
+    "storage_account_naming": {
+      "pattern": "storage[_\\s-]+([a-zA-Z0-9]+)",
+      "replacement": "st$1"
+    },
+    "location_standardization": {
+      "pattern": "West Europe|westeurope|WestEurope",
+      "replacement": "westeurope"
+    },
+    "tag_formatting": {
+      "pattern": "\"([eE]nvironment)\":\\s*\"([dD]ev|[sS]taging|[pP]rod)\"",
+      "replacement": "\"Environment\": \"$2\""
+    }
+  },
+  "best_practices": {
+    "security": {
+      "use_managed_identity": true,
+      "enable_azure_defender": true,
+      "implement_rbac": true,
+      "use_azure_ad_authentication": true
+    },
+    "monitoring": {
+      "enable_diagnostic_logs": true,
+      "use_application_insights": true,
+      "set_up_alerts": true,
+      "enable_metrics": true
+    },
+    "cost_optimization": {
+      "use_appropriate_skus": true,
+      "implement_auto_scaling": true,
+      "schedule_dev_resources": true,
+      "monitor_costs": true
+    }
+  },
+  "common_commands": {
+    "list_locations": "az account list-locations --output table",
+    "list_resource_groups": "az group list --output table",
+    "check_name_availability": "az storage account check-name --name {name}",
+    "get_resource_tags": "az resource show --ids {resource-id} --query tags"
+  },
+  "compliance": {
+    "required_policies": [
+      "Require HTTPS for storage accounts",
+      "Audit resources without tags",
+      "Require managed identity for App Services",
+      "Enable Azure Defender"
+    ],
+    "naming_validation": {
+      "max_lengths": {
+        "storage_account": 24,
+        "resource_group": 90,
+        "virtual_machine": 15,
+        "key_vault": 24
+      },
+      "allowed_characters": {
+        "storage_account": "lowercase_numbers_only",
+        "resource_group": "alphanumeric_hyphens_periods_parentheses",
+        "key_vault": "alphanumeric_hyphens"
+      }
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-10-01T08:45:09.710829",
+    "applies_to_tools": [
+      "mcp__azure-mcp__*",
+      "bash:az",
+      "terraform:azurerm",
+      "bicep:*"
+    ]
+  },
+  "auto_store_triggers": {
+    "azure_commands": {
+      "tags": [
+        "azure",
+        "cloud",
+        "command"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "az .*",
+        "azure .*",
+        "Get-Az",
+        "New-Az",
+        "Set-Az",
+        "Remove-Az"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "azure_resources": {
+      "tags": [
+        "azure",
+        "resource",
+        "infrastructure"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "resource group",
+        "storage account",
+        "virtual machine",
+        "app service",
+        "function app",
+        "key vault",
+        "sql database"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "auto_retrieve_triggers": {
+    "azure_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "how to .* azure",
+        "azure .* example",
+        "create .* in azure",
+        "deploy to azure"
+      ],
+      "search_tags": [
+        "azure",
+        "cloud"
+      ],
+      "confidence_threshold": 0.7
+    },
+    "azure_troubleshooting": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "azure error",
+        "azure issue",
+        "fix azure",
+        "azure not working"
+      ],
+      "search_tags": [
+        "azure",
+        "solution",
+        "troubleshooting"
+      ],
+      "confidence_threshold": 0.8
+    },
+    "report_generation": {
+      "action": "search_and_execute_template",
+      "patterns": [
+        ".*wachstumsbericht.*",
+        ".*growth report.*",
+        ".*quarterly report.*",
+        ".*neue ressourcen.*letzte.*monate.*",
+        ".*new resources.*last.*months.*",
+        ".*kostenbericht.*",
+        ".*cost report.*",
+        ".*capacity.*report.*",
+        ".*kunde.*übersicht.*",
+        ".*customer.*overview.*"
+      ],
+      "search_tags": [
+        "azure",
+        "hosting",
+        "customers",
+        "report",
+        "costs"
+      ],
+      "confidence_threshold": 0.75,
+      "template_mapping": {
+        "wachstum|growth": "quarterly_growth_report",
+        "kosten|cost": "cost_breakdown_report",
+        "kapazität|capacity": "capacity_report",
+        "kunde|customer": "customer_overview_report"
+      }
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "search_memory",
+          "store_as": "recent_azure",
+          "parameters": {
+            "tags": [
+              "azure"
+            ],
+            "n_results": 5
+          }
+        },
+        {
+          "action": "notify",
+          "message": "Azure context loaded. Found {recent_azure.count} stored configurations."
+        }
+      ]
+    }
+  },
+  "reporting_templates": {
+    "quarterly_growth_report": {
+      "structure": [
+        "Executive Summary",
+        "Subscription-wise Analysis",
+        "Cost Analysis & Justification",
+        "Growth Rates & Metrics",
+        "Regional Distribution",
+        "Capacity Planning",
+        "Recommendations (Short/Mid/Long-term)",
+        "Compliance & Security Updates"
+      ],
+      "data_collection_workflow": [
+        "subscription_list",
+        "group_list per subscription",
+        "resource_count per group",
+        "cost_analysis (if available)",
+        "trend_comparison"
+      ],
+      "output_formats": {
+        "executive": "markdown with charts",
+        "technical": "detailed JSON with metrics",
+        "finance": "cost-focused with projections"
+      },
+      "trigger_patterns": [
+        "wachstumsbericht",
+        "growth report",
+        "quarterly report",
+        "cost justification",
+        "neue ressourcen",
+        "new resources"
+      ]
+    },
+    "capacity_report": {
+      "structure": [
+        "Current Utilization",
+        "IP Address Space Status",
+        "VM Size Distribution",
+        "Storage Capacity",
+        "Forecast & Recommendations"
+      ],
+      "metrics": [
+        "ip_address_usage_percentage",
+        "vm_count_by_size",
+        "storage_utilization",
+        "available_capacity"
+      ]
+    },
+    "customer_overview_report": {
+      "structure": [
+        "Total Customer Count",
+        "Customer Segmentation (Region, Plan Type)",
+        "Recent Additions",
+        "Resource Allocation per Customer",
+        "Compliance Status"
+      ],
+      "grouping": [
+        "by_region",
+        "by_plan_type",
+        "by_vm_size",
+        "by_date_added"
+      ]
+    },
+    "cost_breakdown_report": {
+      "structure": [
+        "Subscription Cost Overview",
+        "Cost per Customer/Project",
+        "Month-over-Month Comparison",
+        "Cost Optimization Opportunities",
+        "Budget Forecasts"
+      ],
+      "calculations": [
+        "per_customer_cost",
+        "trend_analysis",
+        "growth_rate",
+        "forecast_next_quarter"
+      ]
+    }
+  },
+  "report_automation": {
+    "scheduled_reports": {
+      "monthly_growth": {
+        "frequency": "monthly",
+        "day_of_month": 1,
+        "auto_trigger": true,
+        "recipients": [
+          "management",
+          "finance"
+        ],
+        "format": "executive"
+      },
+      "weekly_capacity": {
+        "frequency": "weekly",
+        "day_of_week": "monday",
+        "auto_trigger": false,
+        "recipients": [
+          "ops_team"
+        ],
+        "format": "technical"
+      }
+    },
+    "report_memory_tags": [
+      "report",
+      "quarterly",
+      "monthly",
+      "growth",
+      "costs",
+      "capacity"
+    ]
+  },
+  "standard_metrics": {
+    "hosting_kpis": {
+      "total_customers": "count of private hosting customers",
+      "ip_utilization": "percentage of /29 blocks used",
+      "vm_distribution": "breakdown by Standard_B4ms, B16ms, E8ds_v5",
+      "regional_spread": "customers per Azure region",
+      "monthly_growth_rate": "percentage increase in customers"
+    },
+    "cost_metrics": {
+      "per_customer_avg": "average monthly cost per private customer",
+      "storage_costs": "document storage costs separate",
+      "vm_costs": "compute costs by size",
+      "network_costs": "peering and bandwidth costs"
+    }
+  }
+}

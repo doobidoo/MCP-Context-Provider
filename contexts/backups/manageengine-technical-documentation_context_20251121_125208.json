@@ -1,0 +1,27 @@
+{
+  "tool_category": "[REDACTED]",
+  "auto_convert": true,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-11-21T12:39:46.933938",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "dokuwiki:*",
+      "memory:*",
+      "Azure MCP Server:*"
+    ],
+    "priority": "high"
+  },
+  "description": "[REDACTED]-specific technical documentation standards and context for JiVS platform products",
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "notify",
+          "message": "[REDACTED] Technical Documentation context loaded - Current date: 2025-11-21"
+        }
+      ]
+    }
+  }
+}
