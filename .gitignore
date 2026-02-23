@@ -64,3 +64,4 @@ claude_desktop_config.json
 dxt/
 *.dxt
 dxt_manifest_template.json
+site/
