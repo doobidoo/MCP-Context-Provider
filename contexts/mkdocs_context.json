@@ -1,0 +1,79 @@
+{
+  "tool_category": "mkdocs",
+  "description": "MkDocs Material documentation site patterns for GitHub Pages deployment",
+  "auto_convert": false,
+  "syntax_rules": {
+    "version_pins": {
+      "mkdocs": ">=1.5,<2.0",
+      "mkdocs_material": ">=9.5,<10",
+      "note": "MkDocs 2.0 is incompatible with mkdocs-material – always pin both"
+    },
+    "logo_path": "docs/assets/logo.svg (NOT repo-root assets/)",
+    "mkdocs_yml_logo": "assets/logo.svg (relative to docs/)",
+    "changelog_symlink": "ln -sf ../CHANGELOG.md docs/CHANGELOG.md"
+  },
+  "preferences": {
+    "theme": "material",
+    "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"],
+    "deploy_command": "mkdocs gh-deploy --force",
+    "gh_pages_branch": "gh-pages (auto-created by gh-deploy)"
+  },
+  "auto_corrections": {
+    "svg_write_method": "ALWAYS use bash heredoc for SVG files, NEVER write_file – write_file corrupts SVG to 6 bytes",
+    "logo_background": "SVG logo must have transparent background (no fill on root circle) – dark fill invisible in header"
+  },
+  "auto_store_triggers": {
+    "mkdocs_issues": {
+      "patterns": [
+        "mkdocs build",
+        "gh-deploy",
+        "GitHub Pages",
+        "mkdocs.yml",
+        "Material theme",
+        "logo not showing",
+        "favicon"
+      ],
+      "action": "store_memory",
+      "tags": ["mkdocs", "documentation", "github-pages"],
+      "priority": "high"
+    }
+  },
+  "auto_retrieve_triggers": {
+    "mkdocs_setup": {
+      "patterns": [
+        "mkdocs",
+        "documentation site",
+        "GitHub Pages",
+        "static site",
+        "Material theme"
+      ],
+      "action": "retrieve_memory",
+      "search_tags": ["mkdocs", "documentation", "github-pages"]
+    }
+  },
+  "session_initialization": {
+    "enabled": false
+  },
+  "common_pitfalls": [
+    "SVG files corrupted by write_file tool – use bash heredoc instead",
+    "Logo must be in docs/assets/, not repo-root assets/",
+    "SVG needs transparent background for header visibility",
+    "MkDocs 2.0 breaks mkdocs-material – pin versions",
+    "CHANGELOG needs symlink into docs/ for MkDocs nav",
+    "GitHub Pages source branch must be set to gh-pages in repo Settings"
+  ],
+  "quick_setup": {
+    "install": "pip install 'mkdocs>=1.5,<2.0' 'mkdocs-material>=9.5,<10'",
+    "new_site": "mkdocs new .",
+    "serve": "mkdocs serve",
+    "deploy": "mkdocs gh-deploy --force",
+    "logo": "cat > docs/assets/logo.svg << 'EOF' ... EOF"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-02-23",
+    "applies_to_tools": ["mkdocs", "documentation", "github-pages"],
+    "priority": "medium",
+    "author": "hkr"
+  }
+}
