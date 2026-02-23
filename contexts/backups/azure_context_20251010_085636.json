@@ -3,20 +3,6 @@
   "description": "Azure-specific context rules and naming conventions",
   "auto_convert": true,
   "syntax_rules": {
-    "cli_usage": {
-      "command_format": "az [service] [subcommand] [options]",
-      "common_options": [
-        "--output table|json|yaml|tsv",
-        "--query 'JMESPath query'",
-        "--resource-group RESOURCE_GROUP_NAME"
-      ],
-      "best_practices": [
-        "Use --output table for human-readable output",
-        "Use --output json for programmatic processing",
-        "Use --query to filter results with JMESPath",
-        "Always specify --resource-group when targeting specific resources"
-      ]
-    },
     "resource_naming": {
       "format": "prefix-purpose-environment-location-instance",
       "prefixes": {
@@ -81,10 +67,6 @@
       "min_tls_version": "1.2",
       "disable_public_access": true,
       "enable_private_endpoints": true
-    },
-    "cli_operations": {
-      "auto_approve_read_operations": true,
-      "require_approval_for_write_operations": true
     }
   },
   "auto_corrections": {
@@ -103,14 +85,6 @@
     "tag_formatting": {
       "pattern": "\"([eE]nvironment)\":\\s*\"([dD]ev|[sS]taging|[pP]rod)\"",
       "replacement": "\"Environment\": \"$2\""
-    },
-    "jmespath_instead_of_jq": {
-      "pattern": "az .+ --output json \\| jq",
-      "replacement": "Use az --query 'JMESPath' instead of piping to jq"
-    },
-    "jmespath_instead_of_grep": {
-      "pattern": "az .+ \\| grep",
-      "replacement": "Use az --query \"[?contains(name, 'pattern')]\" instead of grep"
     }
   },
   "best_practices": {
@@ -162,7 +136,7 @@
   },
   "metadata": {
     "version": "1.0.0",
-    "last_updated": "2025-10-10T08:56:45.945458",
+    "last_updated": "2025-10-10T08:56:20.882368",
     "applies_to_tools": [
       "mcp__azure-mcp__*",
       "bash:az",
@@ -265,60 +239,6 @@
         "kapazität|capacity": "capacity_report",
         "kunde|customer": "customer_overview_report"
       }
-    },
-    "sftp_storage_request": {
-      "action": "search_and_execute_workflow",
-      "patterns": [
-        ".*sftp.*storage.*account.*",
-        ".*storage.*sftp.*",
-        ".*create.*sftp.*",
-        ".*temporary.*storage.*customer.*",
-        ".*file.*exchange.*azure.*",
-        ".*data.*transfer.*customer.*",
-        ".*external.*storage.*temporary.*"
-      ],
-      "search_tags": [
-        "azure",
-        "sftp",
-        "storage",
-        "temporary"
-      ],
-      "confidence_threshold": 0.75,
-      "workflow_mapping": {
-        "sftp|storage": "sftp_storage_workflows"
-      },
-      "suggested_actions": [
-        "Review sftp_storage_workflows in azure context",
-        "Gather prerequisites: customer name, location, subscription",
-        "Follow step_by_step_workflow for complete setup",
-        "Apply temporary tags for lifecycle management",
-        "Provide connection information using template"
-      ]
-    },
-    "sftp_troubleshooting": {
-      "action": "search_and_suggest",
-      "patterns": [
-        ".*sftp.*not.*working.*",
-        ".*sftp.*error.*",
-        ".*sftp.*connection.*failed.*",
-        ".*sftp.*authentication.*",
-        ".*cannot.*enable.*sftp.*",
-        ".*hierarchical.*namespace.*"
-      ],
-      "search_tags": [
-        "azure",
-        "sftp",
-        "troubleshooting",
-        "solution"
-      ],
-      "confidence_threshold": 0.8,
-      "suggested_checks": [
-        "Verify hierarchical namespace is enabled (cannot be added later)",
-        "Check username format: [account].[user]@[account].blob.core.windows.net",
-        "Confirm local user has correct permissions (rwdlc)",
-        "Verify home-directory matches container name",
-        "Check that SFTP is explicitly enabled on storage account"
-      ]
     }
   },
   "session_initialization": {
