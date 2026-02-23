@@ -1,7 +1,7 @@
 # MCP Context Provider
 
 <div align="center">
-  <img src="assets/logo.svg" alt="MCP Context Provider" width="500"/>
+  <img src="assets/logo.svg" alt="MCP Context Provider" width="200"/>
 </div>
 
 > **Persistent tool context for Claude Desktop** – eliminate context loss between chat sessions.
