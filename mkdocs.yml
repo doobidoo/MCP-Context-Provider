@@ -7,8 +7,8 @@ edit_uri: edit/main/docs/
 
 theme:
   name: material
-  logo: assets/MCP-CONTEXT-PROVIDER.png
-  favicon: assets/MCP-CONTEXT-PROVIDER.png
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
   palette:
     - scheme: default
       primary: indigo
