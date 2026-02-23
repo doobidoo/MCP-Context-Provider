@@ -68,6 +68,7 @@ nav:
     - Usage Examples: EXAMPLES.md
     - Phase 3 Examples: phase3/EXAMPLES.md
     - Workflow Troubleshooting: WORKFLOW_TROUBLESHOOTING.md
+  - Contexts Reference: contexts-reference.md
   - Reference:
     - Troubleshooting: guides/TROUBLESHOOTING.md
     - Changelog: CHANGELOG.md
