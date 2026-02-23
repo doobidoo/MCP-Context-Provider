@@ -88,22 +88,7 @@
       "format": "''{}''",
       "avoid": [
         "`{}`"
-      ],
-      "limitations": {
-        "description": "Inline monospace ''..'' has markup conflicts with certain characters",
-        "problematic_content": [
-          "Curly braces {} - conflicts with DokuWiki syntax",
-          "Single quotes ' - can break the ''..'' delimiter",
-          "Complex shell commands with mixed quotes",
-          "JSON snippets or objects"
-        ],
-        "solution": "Use <code> blocks instead of inline ''..'' for complex content",
-        "examples": {
-          "bad": "''curl -d '{}'%%''%%'' (markup conflict with {})",
-          "good": "<code bash>\ncurl -X POST url -d '{}'\n</code>"
-        },
-        "rule": "If content contains {}, complex quotes, or is longer than ~60 chars, use <code> block"
-      }
+      ]
     },
     "tags": {
       "format": "{{tag>{}}}",
@@ -181,7 +166,7 @@
   },
   "metadata": {
     "version": "1.0.0",
-    "last_updated": "2026-01-29T12:00:00.000000",
+    "last_updated": "2025-12-18T17:12:44.914606",
     "applies_to_tools": [
       "dokuwiki:core_savePage",
       "dokuwiki:core_appendPage",
@@ -275,49 +260,6 @@
           "message": "DokuWiki context loaded. Found {recent_wiki.count} wiki-related items."
         }
       ]
-    }
-  },
-  "editing_best_practices": {
-    "description": "Best practices for editing existing DokuWiki pages",
-    "rules": {
-      "incremental_changes": {
-        "description": "NEVER rewrite entire pages at once. Make small, targeted changes only.",
-        "reason": "Large rewrites risk losing content, breaking formatting, and removing intentional structure.",
-        "approach": [
-          "Make ONE type of change at a time (e.g., only fix links, or only add tags)",
-          "Preserve existing structure and formatting",
-          "Test changes incrementally",
-          "Ask before making major structural changes"
-        ]
-      },
-      "preserve_existing": {
-        "description": "Respect the existing page structure and style",
-        "rules": [
-          "Keep the original heading hierarchy",
-          "Don't change formatting conventions used on the page",
-          "Don't remove content unless explicitly asked",
-          "Don't 'clean up' sections that weren't mentioned"
-        ]
-      },
-      "safe_changes": {
-        "description": "Changes that are generally safe to make",
-        "examples": [
-          "Adding tags to code blocks",
-          "Fixing broken links",
-          "Adding new content at the end",
-          "Correcting typos"
-        ]
-      },
-      "dangerous_changes": {
-        "description": "Changes that require explicit user approval",
-        "examples": [
-          "Restructuring sections",
-          "Changing heading levels",
-          "Removing duplicate entries",
-          "Converting link syntax across entire page",
-          "Reformatting lists"
-        ]
-      }
     }
   }
 }

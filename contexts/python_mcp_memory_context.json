@@ -1,0 +1,138 @@
+{
+  "tool_category": "python",
+  "auto_convert": false,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-10-01T14:31:55.247433",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "python",
+      "mcp-memory",
+      "memory-service"
+    ],
+    "priority": "high"
+  },
+  "description": "Python and MCP Memory Service specific context rules for development",
+  "syntax_rules": {
+    "imports": {
+      "pattern": "Use absolute imports for MCP Memory Service modules",
+      "examples": [
+        "from mcp_memory_service.storage import CloudflareStorage",
+        "from mcp_memory_service.server import create_server"
+      ]
+    },
+    "typing": {
+      "pattern": "Always use type hints with Python 3.10+ syntax",
+      "examples": [
+        "def store_memory(content: str, tags: list[str] | None = None) -> dict[str, Any]:",
+        "async def retrieve_memories(query: str, limit: int = 5) -> list[Memory]:"
+      ]
+    },
+    "async_patterns": {
+      "pattern": "Use async/await for all I/O operations in MCP servers",
+      "examples": [
+        "async def handle_tool(name: str, arguments: dict) -> Any:",
+        "await storage.store(content, metadata)"
+      ]
+    },
+    "error_handling": {
+      "pattern": "Use structured error responses for MCP tools",
+      "examples": [
+        "raise McpError(ErrorCode.INTERNAL_ERROR, f'Storage failed: {e}')",
+        "return {'error': str(e), 'status': 'failed'}"
+      ]
+    }
+  },
+  "preferences": {
+    "code_style": {
+      "line_length": 120,
+      "use_black": true,
+      "use_ruff": true,
+      "docstring_style": "google"
+    },
+    "testing": {
+      "framework": "pytest",
+      "min_coverage": 80,
+      "use_async_tests": true
+    },
+    "development": {
+      "package_manager": "uv",
+      "python_version": "3.10+",
+      "use_type_checking": true
+    }
+  },
+  "auto_corrections": {
+    "import_style": {
+      "from": "import mcp_memory_service.storage",
+      "to": "from mcp_memory_service.storage import SpecificClass"
+    },
+    "async_syntax": {
+      "from": "def handle_tool",
+      "to": "async def handle_tool"
+    },
+    "type_hints": {
+      "from": "def store(content, tags)",
+      "to": "def store(content: str, tags: list[str] | None = None)"
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "recall_memory",
+          "parameters": {
+            "query": "mcp-memory-service recent changes",
+            "n_results": 5
+          },
+          "description": "Load recent MCP Memory Service changes"
+        },
+        {
+          "action": "search_by_tag",
+          "parameters": {
+            "tags": [
+              "mcp-memory-service",
+              "in-progress"
+            ]
+          },
+          "description": "Find ongoing MCP Memory Service tasks"
+        }
+      ]
+    }
+  },
+  "auto_store_triggers": {
+    "python_code": {
+      "tags": [
+        "python",
+        "mcp",
+        "code"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "async def",
+        "await",
+        "from mcp_memory_service",
+        "McpError",
+        "storage.store"
+      ],
+      "confidence_threshold": 0.8
+    }
+  },
+  "auto_retrieve_triggers": {
+    "python_mcp_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "mcp server",
+        "memory service",
+        "python async",
+        "mcp tool handler"
+      ],
+      "search_tags": [
+        "python",
+        "mcp",
+        "memory-service"
+      ],
+      "confidence_threshold": 0.7
+    }
+  }
+}

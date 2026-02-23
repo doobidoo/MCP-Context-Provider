@@ -1,0 +1,306 @@
+{
+  "tool_category": "writing",
+  "auto_convert": false,
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-12-02T10:24:04.705369",
+    "created_by": "dynamic_context_management",
+    "applies_to_tools": [
+      "text_editing",
+      "writing",
+      "rewriting"
+    ],
+    "priority": "high"
+  },
+  "description": "Rewrites AI-sounding text to clear, specific human voice. Removes buzzwords, clich\u00c3\u00a9s, and formulaic patterns while preserving original content, ideas, and structure.",
+  "syntax_rules": {
+    "banned_words": {
+      "description": "Words that must be removed or replaced with short, concrete language",
+      "tier1_overused": [
+        "delve",
+        "realm",
+        "harness",
+        "unlock",
+        "tapestry",
+        "paradigm",
+        "landscape",
+        "intricate",
+        "showcasing",
+        "crucial",
+        "pivotal",
+        "meticulously",
+        "vibrant",
+        "unparalleled",
+        "underscore",
+        "leverage",
+        "synergy",
+        "testament",
+        "commendable",
+        "meticulous",
+        "highlight",
+        "emphasize",
+        "boast",
+        "align",
+        "foster",
+        "showcase",
+        "enhance",
+        "holistic",
+        "garner",
+        "accentuate"
+      ],
+      "tier2_tech_hype": [
+        "cutting-edge",
+        "revolutionize",
+        "groundbreaking",
+        "game-changer",
+        "pioneering",
+        "trailblazing",
+        "unleash",
+        "versatile",
+        "transformative",
+        "redefine",
+        "seamless",
+        "optimize",
+        "scalable",
+        "robust",
+        "breakthrough",
+        "empower",
+        "streamline",
+        "innovative",
+        "potential",
+        "findings",
+        "surpass"
+      ],
+      "tier3_ai_marketing": [
+        "intelligent",
+        "smart",
+        "next-gen",
+        "frictionless",
+        "elevate",
+        "adaptive",
+        "effortless",
+        "data-driven",
+        "insightful",
+        "proactive",
+        "mission-critical",
+        "visionary",
+        "disruptive",
+        "reimagine",
+        "agile",
+        "customizable",
+        "personalized",
+        "unprecedented",
+        "intuitive",
+        "leading-edge",
+        "synergize",
+        "democratize",
+        "automate",
+        "accelerate",
+        "state-of-the-art",
+        "dynamic",
+        "reliable",
+        "efficient",
+        "cloud-native",
+        "immersive",
+        "predictive",
+        "transparent",
+        "proprietary",
+        "integrated",
+        "plug-and-play",
+        "turnkey",
+        "future-proof",
+        "AI-powered",
+        "next-generation",
+        "always-on",
+        "hyper-personalized",
+        "results-driven",
+        "machine-first",
+        "paradigm-shifting"
+      ]
+    },
+    "banned_patterns": {
+      "in_a_world_where": {
+        "detect": "In a world where [scary/overwhelming change], [virtue/edge] becomes [currency/advantage]",
+        "rewrite_options": [
+          "Today, [specific change]. So [practical implication for reader].",
+          "Because [concrete change], do [specific action] to get [specific result]."
+        ]
+      },
+      "most_people_vs_few": {
+        "detect": "Most people [lazy thing]. The few who win [disciplined thing].",
+        "rewrite_options": [
+          "Among [group], [specific stat/observation]. What works: [one tactic].",
+          "Personal stance: I do [specific practice] to avoid [specific downside]."
+        ]
+      },
+      "stop_start_switch": {
+        "detect": "Stop [old habit]. Start [new habit].",
+        "rewrite_options": [
+          "If you're doing [X], switch to [Y] when [condition], because [reason].",
+          "Replace [X] with [Y]: [1-3 concrete steps]."
+        ]
+      },
+      "journey_narrative": {
+        "detect": "The journey from [A] to [B] is/was [superlative]",
+        "rewrite_options": [
+          "Moving from [A] to [B] took [time/effort]. Here's what changed: [specifics]."
+        ]
+      },
+      "embrace_the_future": {
+        "detect": "Embrace [trend/technology] to stay ahead/competitive",
+        "rewrite_options": [
+          "Use [specific tool/method] for [specific benefit]. Example: [concrete case]."
+        ]
+      }
+    },
+    "replacement_guidance": {
+      "leverage": [
+        "use",
+        "apply",
+        "rely on"
+      ],
+      "utilize": [
+        "use"
+      ],
+      "optimize": [
+        "improve",
+        "speed up",
+        "fix"
+      ],
+      "streamline": [
+        "simplify",
+        "cut steps from",
+        "shorten"
+      ],
+      "empower": [
+        "let",
+        "help",
+        "give [person] control over"
+      ],
+      "transformative": [
+        "useful",
+        "changes how we [verb]"
+      ],
+      "seamless": [
+        "smooth",
+        "without [specific friction]"
+      ],
+      "robust": [
+        "stable",
+        "handles [specific edge case]"
+      ],
+      "scalable": [
+        "grows with [specific metric]"
+      ],
+      "innovative": [
+        "new",
+        "different because [reason]"
+      ],
+      "cutting-edge": [
+        "recent",
+        "uses [specific tech]"
+      ],
+      "game-changer": [
+        "matters because [specific reason]"
+      ],
+      "paradigm": [
+        "approach",
+        "method",
+        "way of thinking"
+      ],
+      "landscape": [
+        "market",
+        "field",
+        "situation"
+      ],
+      "ecosystem": [
+        "system",
+        "tools",
+        "environment"
+      ],
+      "synergy": [
+        "combination",
+        "overlap",
+        "shared benefit"
+      ],
+      "holistic": [
+        "complete",
+        "full",
+        "end-to-end"
+      ],
+      "dynamic": [
+        "changing",
+        "active",
+        "responsive to [trigger]"
+      ]
+    }
+  },
+  "preferences": {
+    "preserve_content": true,
+    "preserve_pov": true,
+    "preserve_tense": true,
+    "preserve_structure": true,
+    "output_only_edited_text": true,
+    "no_explanatory_notes": true
+  },
+  "auto_corrections": {
+    "delve into": "look at",
+    "delve deeper": "dig into",
+    "it's important to note": "[delete or state the fact directly]",
+    "it's worth noting": "[delete or state the fact directly]",
+    "at the end of the day": "[delete]",
+    "in today's fast-paced world": "[delete or be specific about what changed]",
+    "navigate the complexities": "handle",
+    "unlock the potential": "get more from",
+    "harness the power": "use",
+    "in this article": "[delete - reader knows where they are]",
+    "without further ado": "[delete]"
+  },
+  "auto_store_triggers": {
+    "writing_edits": {
+      "tags": [
+        "writing",
+        "anti-ai",
+        "rewrite"
+      ],
+      "action": "store_with_metadata",
+      "patterns": [
+        "rewrite",
+        "rephrase",
+        "make it sound human",
+        "remove buzzwords",
+        "anti-ai"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "auto_retrieve_triggers": {
+    "writing_help": {
+      "action": "search_and_suggest",
+      "patterns": [
+        "sounds too AI",
+        "rewrite this",
+        "make it natural",
+        "too corporate",
+        "buzzword"
+      ],
+      "search_tags": [
+        "writing",
+        "anti-ai",
+        "rewrite"
+      ],
+      "confidence_threshold": 0.7
+    }
+  },
+  "session_initialization": {
+    "enabled": true,
+    "actions": {
+      "on_startup": [
+        {
+          "action": "notify",
+          "message": "Anti-AI voice context loaded. Will detect and replace AI-sounding language."
+        }
+      ]
+    }
+  }
+}
