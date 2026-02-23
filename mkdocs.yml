@@ -1,0 +1,82 @@
+site_name: MCP Context Provider
+site_description: Persistent tool context for Claude Desktop – eliminate context loss between chat sessions
+site_url: https://doobidoo.github.io/MCP-Context-Provider/
+repo_url: https://github.com/doobidoo/MCP-Context-Provider
+repo_name: doobidoo/MCP-Context-Provider
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  logo: assets/MCP-CONTEXT-PROVIDER.png
+  favicon: assets/MCP-CONTEXT-PROVIDER.png
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: guides/QUICKSTART.md
+    - Installation: guides/INSTALLATION.md
+  - How It Works:
+    - Architecture: guides/CONTEXT_GUIDE.md
+    - Developer Guide: guides/DEVELOPER_GUIDE.md
+  - Features:
+    - Phase 1 – Session Init: phase3/LEARNING_GUIDE.md
+    - Phase 2 – Dynamic Context: guides/CONTEXT_GUIDE.md
+    - Phase 3 – Intelligent Learning: phase3/LEARNING_GUIDE.md
+    - API Reference: phase3/API_REFERENCE.md
+  - Examples:
+    - Usage Examples: EXAMPLES.md
+    - Phase 3 Examples: phase3/EXAMPLES.md
+    - Workflow Troubleshooting: WORKFLOW_TROUBLESHOOTING.md
+  - Reference:
+    - Troubleshooting: guides/TROUBLESHOOTING.md
+    - Changelog: CHANGELOG.md
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/doobidoo/MCP-Context-Provider
+
+copyright: Copyright &copy; 2025 doobidoo – MIT License
