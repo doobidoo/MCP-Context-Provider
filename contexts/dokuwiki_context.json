@@ -126,11 +126,11 @@
     ],
     "manual_date_format": "YYYY-MM-DD",
     "url_pattern": {
-      "base_url": "https://<INTERNAL_IP>/dmi/doku.php/",
-      "format": "https://<INTERNAL_IP>/dmi/doku.php/{namespace}:{page}",
+      "base_url": "https://<INTERNAL_IP>/wiki/doku.php/",
+      "format": "https://<INTERNAL_IP>/wiki/doku.php/{namespace}:{page}",
       "separator": ":",
-      "description": "DokuWiki URLs use colons (:) as namespace separators, not slashes. Base URL is internal IP <INTERNAL_IP>, NOT public domain.",
-      "example": "https://<INTERNAL_IP>/dmi/doku.php/method:cloud:troubleshooting:azure-storage-sftp",
+      "description": "DokuWiki URLs use colons (:) as namespace separators, not slashes. Base URL is internal IP, NOT public domain.",
+      "example": "https://<INTERNAL_IP>/wiki/doku.php/method:cloud:troubleshooting:azure-storage-sftp",
       "avoid": [
         "<PUBLIC_WIKI_DOMAIN>",
         "namespace/page (use namespace:page instead)"

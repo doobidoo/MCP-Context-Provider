@@ -60,6 +60,9 @@ claude_desktop_config.json
 *.bak
 *.backup
 
+# Context backups (may contain sensitive data)
+contexts/backups/
+
 # Build artifacts
 dxt/
 *.dxt

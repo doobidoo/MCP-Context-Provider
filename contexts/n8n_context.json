@@ -8,11 +8,11 @@
     "applies_to_tools": ["automation:*", "n8n:*"],
     "priority": "high"
   },
-  "description": "n8n workflow automation platform - configuration, deployment, and production gotchas  (v2.8+)",
+  "description": "n8n workflow automation platform - configuration, deployment, and production gotchas (v2.8+)",
   "preferences": {
     "instance_url": "https://n8n.example.com",
     "vm": "<VM_IP> (vm-internal-tools)",
-    "ssh_command": "ssh -i ~/.ssh/internal-tools.pem azureuser@<VM_IP>",
+    "ssh_command": "ssh -i ~/.ssh/internal-tools.pem <USER>@<VM_IP>",
     "container_name": "n8n",
     "compose_file": "/opt/docker/docker-compose.yml",
     "data_dir": "/home/node/.n8n",
@@ -95,7 +95,7 @@
       "description": "PREFERRED method for updating workflows already on n8n",
       "steps": [
         "1. Validate JSON locally: node -e \"JSON.parse(require('fs').readFileSync('workflow.json','utf8')); console.log('OK')\"",
-        "2. SCP to VM: scp -i ~/.ssh/internal-tools.pem workflow.json azureuser@<VM_IP>:/tmp/",
+        "2. SCP to VM: scp -i ~/.ssh/internal-tools.pem workflow.json <USER>@<VM_IP>:/tmp/",
         "3. Copy into container: sudo docker cp /tmp/workflow.json n8n:/tmp/",
         "4. Write update script (see template), copy in, and run",
         "5. Restart: sudo docker restart n8n",
@@ -141,7 +141,7 @@
   },
   "xml_rpc_integration": {
     "description": "DokuWiki XML-RPC integration patterns for n8n",
-    "endpoint": "http://dokuwiki/lib/exe/xmlrpc.php (Docker internal DNS)",
+    "endpoint": "http://<DOKUWIKI_HOST>/lib/exe/xmlrpc.php (Docker internal DNS)",
     "auth": "httpBasicAuth credential (<CREDENTIAL_NAME>)",
     "common_methods": {
       "getRecentChanges": "wiki.getRecentChanges - param: Unix timestamp as <int>",
