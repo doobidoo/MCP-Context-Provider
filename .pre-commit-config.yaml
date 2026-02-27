@@ -45,7 +45,7 @@ repos:
     hooks:
       - id: validate-context-structure
         name: Validate context file structure
-        entry: python
+        entry: python3
         language: system
         files: ^contexts/.*\.json$
         args: [scripts/validate_contexts.py]
@@ -54,7 +54,7 @@ repos:
 
       - id: test-build-process
         name: Test DXT build process
-        entry: python
+        entry: python3
         language: system
         files: ^(context_provider_server\.py|contexts/.*\.json|scripts/build_dxt\.py)$
         args: [scripts/test_build.py]
@@ -63,7 +63,7 @@ repos:
 
       - id: version-consistency-check
         name: Check version consistency
-        entry: python
+        entry: python3
         language: system
         files: ^(package\.json|scripts/build_dxt\.py|CHANGELOG\.md)$
         args: [scripts/check_versions.py]
