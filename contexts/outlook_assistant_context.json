@@ -1,48 +1,10 @@
 {
-  "tool_category": "outlook",
   "auto_convert": false,
-  "metadata": {
-    "version": "1.0.0",
-    "last_updated": "2025-10-07T08:15:49.485609",
-    "created_by": "dynamic_context_management",
-    "applies_to_tools": [
-      "outlook-assistant"
-    ],
-    "priority": "high"
-  },
-  "description": "Outlook Assistant automatic authentication and workflow management",
-  "syntax_rules": {
-    "authentication": {
-      "check_status_first": true,
-      "prompt_url_format": "http://localhost:3333/auth?client_id=...",
-      "action_after_auth": "verify_status"
-    },
-    "email_workflow": {
-      "step_1": "Draft email content in HTML or Plain Text format (NO MARKDOWN)",
-      "step_2": "Present to user for approval",
-      "step_3": "Wait for explicit confirmation",
-      "step_4": "Send email using outlook-assistant:send-email"
-    },
-    "email_formatting": {
-      "allowed_formats": [
-        "HTML",
-        "Plain Text"
-      ],
-      "forbidden": "Markdown (## headers, ** bold, - lists)",
-      "html_structure": "Use proper HTML tags: <h2>, <strong>, <ul><li>, <br>, <p>",
-      "plain_text_structure": "Use line breaks, spacing, and UPPERCASE for emphasis"
-    }
-  },
-  "preferences": {
-    "auth_check_on_start": true,
-    "draft_before_send": true,
-    "auto_authenticate_prompt": true
-  },
   "auto_corrections": {
     "markdown_in_email": {
-      "pattern": "## |### |\\*\\*|\\* |- ",
+      "correction": "Convert to HTML (<h2>, <strong>, <ul>) or Plain Text (line breaks, UPPERCASE)",
       "error": "Email contains Markdown formatting which will not render in email clients",
-      "correction": "Convert to HTML (<h2>, <strong>, <ul>) or Plain Text (line breaks, UPPERCASE)"
+      "pattern": "## |### |\\*\\*|\\* |- "
     },
     "send-email": {
       "before": "Always present email as draft first, never send directly. Ensure NO Markdown formatting.",
@@ -50,37 +12,10 @@
       "suggest": "Present email content for approval before sending. Check: No Markdown syntax in body."
     }
   },
-  "session_initialization": {
-    "enabled": true,
-    "actions": [
-      {
-        "type": "tool_call",
-        "tool": "outlook-assistant:check-auth-status",
-        "description": "Check Outlook authentication status on session start"
-      }
-    ],
-    "trigger": "session_start"
-  },
-  "auto_store_triggers": {
-    "email_actions": {
-      "tags": [
-        "outlook",
-        "email",
-        "communication"
-      ],
-      "action": "store_with_metadata",
-      "patterns": [
-        "sent email",
-        "drafted email",
-        "email to",
-        "mail an"
-      ],
-      "confidence_threshold": 0.8
-    }
-  },
   "auto_retrieve_triggers": {
     "email_help": {
       "action": "search_and_suggest",
+      "confidence_threshold": 0.7,
       "patterns": [
         "send email",
         "compose email",
@@ -90,8 +25,75 @@
       "search_tags": [
         "outlook",
         "email"
-      ],
-      "confidence_threshold": 0.7
+      ]
     }
-  }
+  },
+  "auto_store_triggers": {
+    "email_actions": {
+      "action": "store_with_metadata",
+      "confidence_threshold": 0.8,
+      "patterns": [
+        "sent email",
+        "drafted email",
+        "email to",
+        "mail an"
+      ],
+      "tags": [
+        "outlook",
+        "email",
+        "communication"
+      ]
+    }
+  },
+  "description": "Outlook Assistant automatic authentication and workflow management",
+  "metadata": {
+    "applies_to_tools": [
+      "outlook-assistant"
+    ],
+    "created_by": "dynamic_context_management",
+    "last_updated": "2025-10-07T08:15:49.485609",
+    "priority": "high",
+    "version": "1.0.0"
+  },
+  "preferences": {
+    "auth_check_on_start": true,
+    "auto_authenticate_prompt": true,
+    "draft_before_send": true
+  },
+  "session_initialization": {
+    "actions": {
+      "on_startup": [
+        {
+          "action": "tool_call",
+          "description": "Check Outlook authentication status on session start",
+          "tool": "outlook-assistant:check-auth-status"
+        }
+      ]
+    },
+    "enabled": true,
+    "trigger": "session_start"
+  },
+  "syntax_rules": {
+    "authentication": {
+      "action_after_auth": "verify_status",
+      "check_status_first": true,
+      "prompt_url_format": "http://localhost:3333/auth?client_id=..."
+    },
+    "email_formatting": {
+      "allowed_formats": [
+        "HTML",
+        "Plain Text"
+      ],
+      "forbidden": "Markdown (## headers, ** bold, - lists)",
+      "html_structure": "Use proper HTML tags: <h2>, <strong>, <ul><li>, <br>, <p>",
+      "plain_text_structure": "Use line breaks, spacing, and UPPERCASE for emphasis"
+    },
+    "email_workflow": {
+      "step_1": "Draft email content in HTML or Plain Text format (NO MARKDOWN)",
+      "step_2": "Present to user for approval",
+      "step_3": "Wait for explicit confirmation",
+      "step_4": "Send email using outlook-assistant:send-email"
+    }
+  },
+  "tool_category": "outlook"
 }
