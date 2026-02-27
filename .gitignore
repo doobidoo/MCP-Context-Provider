@@ -63,6 +63,22 @@ claude_desktop_config.json
 # Context backups (may contain sensitive data)
 contexts/backups/
 
+# Credentials and secrets
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+credentials.json
+service-account*.json
+*_credentials.json
+*.credential
+.htpasswd
+id_rsa
+id_ed25519
+*.pub
+
 # Build artifacts
 dxt/
 *.dxt

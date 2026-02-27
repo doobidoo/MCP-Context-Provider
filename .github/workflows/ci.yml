@@ -162,25 +162,72 @@ jobs:
 
   security-scan:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-    - name: Security scan for secrets
+    - name: TruffleHog secret scan
       uses: trufflesecurity/trufflehog@main
       with:
         path: ./
-        base: main
-        head: HEAD
-        extra_args: --debug --only-verified
+        base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        head: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        extra_args: --debug
+
+    - name: Gitleaks secret scan
+      uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Custom pattern check
+      run: |
+        echo "🔍 Scanning for project-specific secret patterns..."
+        EXIT_CODE=0
+
+        # Azure Subscription IDs (real UUIDs, not placeholders)
+        if grep -rn --include='*.json' --include='*.py' --include='*.yaml' --include='*.yml' --include='*.md' \
+          -E '\-\-subscription\s+[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' \
+          --exclude-dir=.git --exclude='.gitleaks.toml' . ; then
+          echo "❌ Found Azure Subscription IDs"
+          EXIT_CODE=1
+        fi
+
+        # Internal RFC1918 IPs in connection contexts
+        if grep -rn --include='*.json' --include='*.py' \
+          -E '(host|server|address|endpoint|ssh).{0,10}(10\.[0-9]+\.[0-9]+\.[0-9]+|172\.(1[6-9]|2[0-9]|3[01])\.[0-9]+\.[0-9]+|192\.168\.[0-9]+\.[0-9]+)' \
+          --exclude-dir=.git --exclude='.gitleaks.toml' . ; then
+          echo "❌ Found internal IPs in connection contexts"
+          EXIT_CODE=1
+        fi
+
+        # Company domains
+        if grep -rn --include='*.json' --include='*.py' \
+          -iE '[a-z0-9.-]+\.(jivs\.com|datamigration\.ch)' \
+          --exclude-dir=.git --exclude='.gitleaks.toml' . ; then
+          echo "❌ Found company-specific domains"
+          EXIT_CODE=1
+        fi
+
+        # Azure Resource IDs with real subscriptions
+        if grep -rn --include='*.json' --include='*.py' \
+          -E '/subscriptions/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/' \
+          --exclude-dir=.git --exclude='.gitleaks.toml' . ; then
+          echo "❌ Found Azure Resource IDs with real subscription UUIDs"
+          EXIT_CODE=1
+        fi
+
+        if [ $EXIT_CODE -eq 0 ]; then
+          echo "✅ No project-specific secret patterns found"
+        fi
+        exit $EXIT_CODE
 
     - name: Check for sensitive files
       run: |
         echo "🔍 Checking for sensitive files..."
 
-        # Check for common sensitive file patterns
         SENSITIVE_PATTERNS=(
           "*.key"
           "*.pem"
@@ -190,6 +237,8 @@ jobs:
           "*secret*"
           "*.env"
           ".env.*"
+          "credentials.json"
+          "service-account*.json"
         )
 
         for pattern in "${SENSITIVE_PATTERNS[@]}"; do

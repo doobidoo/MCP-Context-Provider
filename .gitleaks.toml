@@ -1,0 +1,103 @@
+# Gitleaks configuration for MCP Context Provider
+# Extends default rules with project-specific secret detection
+# See: https://github.com/gitleaks/gitleaks
+
+title = "MCP Context Provider - Secret Detection"
+
+[extend]
+# Use all default gitleaks rules as baseline
+useDefault = true
+
+# =============================================================================
+# Project-Specific Rules
+# =============================================================================
+
+[[rules]]
+id = "azure-subscription-id"
+description = "Azure Subscription ID (real UUID after --subscription)"
+regex = '''--subscription\s+[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'''
+tags = ["azure", "subscription"]
+keywords = ["--subscription"]
+
+[[rules]]
+id = "internal-rfc1918-ip"
+description = "Internal RFC1918 IP used as hostname or in connection strings"
+regex = '''(?:host(?:name)?|server|ip|address|endpoint|url|ssh|@)\s*[:=]\s*["']?(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})["']?'''
+tags = ["network", "internal-ip"]
+keywords = ["host", "server", "address", "endpoint"]
+
+[[rules]]
+id = "company-domain"
+description = "Company-specific internal domains"
+regex = '''(?i)[\w.-]+\.(?:jivs\.com|datamigration\.ch)'''
+tags = ["domain", "internal"]
+keywords = ["jivs.com", "datamigration.ch"]
+
+[[rules]]
+id = "ssh-connection-string"
+description = "SSH connection string with real user@host"
+regex = '''ssh\s+(?:-[A-Za-z]\s+\S+\s+)*[\w.-]+@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[\w.-]+\.(?:com|ch|net|org|io))'''
+tags = ["ssh", "credentials"]
+keywords = ["ssh"]
+
+[[rules]]
+id = "n8n-workflow-id"
+description = "n8n workflow IDs (numeric IDs that could expose internal automation)"
+regex = '''"workflow_id"\s*:\s*"\d{3,}"'''
+tags = ["n8n", "workflow"]
+keywords = ["workflow_id"]
+
+[[rules]]
+id = "customer-resource-name"
+description = "Customer names in Azure resource identifiers (rg-xxx, tmp-xxx patterns)"
+regex = '''(?i)(?:rg-|tmp|vm-|nsg-|vnet-)(?:jivs|datamig|kunde|client|prod)[a-z0-9-]*'''
+tags = ["azure", "customer"]
+keywords = ["rg-", "tmp", "vm-", "nsg-", "vnet-"]
+
+[[rules]]
+id = "azure-resource-id"
+description = "Azure Resource IDs containing real subscription UUIDs"
+regex = '''/subscriptions/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/'''
+tags = ["azure", "resource-id"]
+keywords = ["/subscriptions/"]
+
+# =============================================================================
+# Global Allowlist
+# =============================================================================
+
+[allowlist]
+description = "Known safe patterns and placeholder values"
+
+# Files that are safe to ignore
+paths = [
+    '''\.gitleaks\.toml$''',
+    '''\.pre-commit-config\.yaml$''',
+    '''CHANGELOG\.md$''',
+    '''docs/.*\.md$''',
+    '''mkdocs\.yml$''',
+]
+
+# Known placeholder values that are not real secrets
+regexes = [
+    # Placeholder UUIDs
+    '''xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx''',
+    '''00000000-0000-0000-0000-000000000000''',
+    '''12345678-1234-1234-1234-123456789012''',
+    # Sanitized markers from cleanup
+    '''<INTERNAL_IP>''',
+    '''<AZURE_SUBSCRIPTION_ID>''',
+    '''<REDACTED>''',
+    '''<REMOVED>''',
+    # Example/documentation domains
+    '''example\.com''',
+    '''acmecorp''',
+    '''contoso''',
+    '''localhost''',
+    '''127\.0\.0\.1''',
+    # Test fixtures
+    '''test[-_]?secret''',
+    '''dummy[-_]?key''',
+    '''fake[-_]?token''',
+    # Azure resource names (not secrets, just naming conventions)
+    '''kv-secrets-prod''',
+]
