@@ -683,7 +683,9 @@ class ContextProvider:
             self.session_status
         )
         if learning_result["success"]:
-            self.session_status["learning_insights"] = learning_result["insights_gained"]
+            self.session_status["learning_insights"] = learning_result[
+                "insights_gained"
+            ]
             print(
                 f"Session learning completed: {len(learning_result['insights_gained'])} insights generated",
                 file=sys.stderr,
