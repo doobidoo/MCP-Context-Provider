@@ -25,6 +25,13 @@ repos:
       - id: end-of-file-fixer
         description: "Ensure files end with newline"
 
+  # Secret detection
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.2
+    hooks:
+      - id: gitleaks
+        description: "Detect secrets before they reach the repo"
+
   # Python code quality
   - repo: https://github.com/psf/black
     rev: 23.7.0
