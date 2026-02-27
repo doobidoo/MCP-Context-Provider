@@ -19,10 +19,10 @@
         "project"
       ],
       "project_suggestions": {
-        "CV": "TalentSearch",
-        "OCC": "Operations-Control-Center",
+        "CV": "Recruiting",
+        "OCC": "Operations-Center",
         "Docker": "Infrastructure",
-        "Azure": "Azure-Operations",
+        "Azure": "Cloud-Operations",
         "Database": "Database-Management",
         "Security": "Security-Operations",
         "Migration": "Data-Migration",
