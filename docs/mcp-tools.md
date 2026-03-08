@@ -232,7 +232,7 @@ _No parameters._
 
 ```json
 {
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0",
   "contexts_loaded": 8,
   "instincts_loaded": 3,
   "errors": [],

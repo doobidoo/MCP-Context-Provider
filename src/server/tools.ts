@@ -267,7 +267,7 @@ export function registerAllTools(
     async () => {
       try {
         return ok({
-          version: '2.0.0-alpha.1',
+          version: '2.0.0',
           contexts_loaded: engine.getContexts().size,
           instincts_loaded: engine.getAllInstincts().length,
           errors: engine.getLoadErrors(),

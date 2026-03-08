@@ -99,7 +99,7 @@ graph TD
 
 ## Version
 
-Current release: **v2.0.0-alpha.1**
+Current release: **v2.0.0**
 
 ## License
 

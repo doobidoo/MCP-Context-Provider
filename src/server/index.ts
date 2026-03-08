@@ -56,7 +56,7 @@ async function main(): Promise<void> {
   // 5. Create MCP server
   const server = new McpServer({
     name: 'mcp-context-provider',
-    version: '2.0.0-alpha.1',
+    version: '2.0.0',
   });
 
   // 6. Register all tools
