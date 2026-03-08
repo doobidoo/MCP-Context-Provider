@@ -5,7 +5,7 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0-alpha.1] - 2026-03-08
+## [2.0.0] - 2026-03-08
 
 ### Changed
 - **Complete TypeScript Rewrite**: Ground-up rewrite from Python to TypeScript
@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Zod schema validation for both YAML instincts and JSON contexts
 
 ### Added
+- **MCP Server**: Full stdio + HTTP transport via `@modelcontextprotocol/sdk`
+  - 13 MCP tools: context/instinct queries, registry management, memory bridge
+  - `mcp-context-provider` binary entry point
 - **Instinct Engine**: Confidence-scored learned rules (0.0–1.0) with human approval workflow
   - YAML-based instinct files with Zod validation
   - Regex + substring trigger pattern matching
@@ -31,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Instinct sync (push/pull), orphan detection, semantic discovery
   - Configurable base URL, API key, timeout
 - **`/instill` Skill**: Claude Code skill for extracting instincts from sessions
+- **GitHub Pages Documentation**: Complete v2 docs site with architecture diagrams
 - **Test Suite**: 61 vitest tests across 5 suites — all passing
 
 ### Removed
