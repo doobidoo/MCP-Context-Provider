@@ -52,8 +52,9 @@ test_phase3_learning.py
 claude_desktop_config_with_context.json
 claude_desktop_config.json
 
-# Claude Desktop
-.claude/
+# Claude Desktop (keep skills tracked)
+.claude/*
+!.claude/skills/
 
 # Temporary files
 *.tmp
@@ -79,7 +80,11 @@ id_rsa
 id_ed25519
 *.pub
 
+# Node.js
+node_modules/
+
 # Build artifacts
+dist/
 dxt/
 *.dxt
 dxt_manifest_template.json
