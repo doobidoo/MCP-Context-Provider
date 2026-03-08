@@ -37,23 +37,54 @@ npm test        # 61 tests across 5 suites
 
 ## Architecture
 
+```mermaid
+graph TD
+    E[Engine] --> C[Contexts<br/><i>static</i>]
+    E --> I[Instincts<br/><i>learned</i>]
+
+    C --> CL["JSON *_context.json<br/>glob tool matching<br/>priority-sorted"]
+    I --> IL["YAML *.instincts.yaml<br/>regex trigger patterns<br/>confidence-scored"]
+
+    CL --> IP[InjectionPayload<br/><code>context_rules + instinct_rules</code>]
+    IL --> IP
+
+    IP --> MB["Memory Bridge<br/><i>optional</i><br/>mcp-memory-service sync"]
+
+    style E fill:#4f46e5,stroke:#3730a3,color:#fff,font-weight:bold
+    style C fill:#0891b2,stroke:#0e7490,color:#fff
+    style I fill:#d97706,stroke:#b45309,color:#fff
+    style CL fill:#e0f2fe,stroke:#0ea5e9
+    style IL fill:#fef3c7,stroke:#f59e0b
+    style IP fill:#10b981,stroke:#059669,color:#fff,font-weight:bold
+    style MB fill:#6366f1,stroke:#4f46e5,color:#fff
 ```
-                    Engine
-                   /      \
-          Contexts          Instincts
-         (static)          (learned)
-            |                  |
-    JSON *_context.json   YAML *.instincts.yaml
-    glob tool matching    regex trigger patterns
-    priority-sorted       confidence-scored
-            |                  |
-            \      merge      /
-             \      |        /
-          InjectionPayload
-       (context_rules + instinct_rules)
-                   |
-            Memory Bridge (optional)
-           mcp-memory-service sync
+
+```mermaid
+graph LR
+    subgraph CLI["CLI (mcp-cp)"]
+        A[approve] --> R[Registry]
+        RJ[reject] --> R
+        T[tune] --> R
+        O[outcome] --> R
+    end
+
+    R --> YML["*.instincts.yaml"]
+    YML --> ENG[Engine]
+    ENG --> INJ[Injection]
+
+    subgraph Bridge["Memory Bridge"]
+        SYNC["sync ↔ memory"]
+        DISC["discover related"]
+    end
+
+    YML --> SYNC
+    SYNC --> MEM[(mcp-memory-service)]
+
+    style CLI fill:#f8fafc,stroke:#94a3b8
+    style Bridge fill:#f8fafc,stroke:#94a3b8
+    style ENG fill:#4f46e5,stroke:#3730a3,color:#fff
+    style MEM fill:#6366f1,stroke:#4f46e5,color:#fff
+    style INJ fill:#10b981,stroke:#059669,color:#fff
 ```
 
 ### Three Subsystems
