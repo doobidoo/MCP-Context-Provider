@@ -53,13 +53,12 @@ export class ContextLoader {
         const { context } = result.value;
         contexts.set(context.tool_category, context);
       } else {
-        // Extract filename from error if possible
         const errorMsg =
           result.reason instanceof Error
             ? result.reason.message
             : String(result.reason);
-        errors.push({ file: 'unknown', error: errorMsg });
-      }
+        const file = errorMsg.split(':')[0] ?? 'unknown';
+        errors.push({ file, error: errorMsg });
     }
 
     return { contexts, errors };
