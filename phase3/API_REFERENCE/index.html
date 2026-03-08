@@ -37,17 +37,8 @@
 
     
     
-<script type="importmap">
-{
-  "imports": {
-    "https://unpkg.com/mermaid@11/dist/mermaid.min.js": "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"
-  }
-}
-</script>
-
       
     
-
     
       
         
@@ -1847,8 +1838,43 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
+
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
+<script type="module">
+// Mermaid CDN fallback: Material for MkDocs loads mermaid from unpkg.com
+// which intermittently returns 503. This script loads from jsdelivr instead.
+async function initMermaidFallback() {
+  // Wait for Material's built-in mermaid loader to try first
+  await new Promise(resolve => setTimeout(resolve, 1500));
+
+  // Check for unrendered mermaid blocks (no SVG inside = not rendered)
+  const blocks = document.querySelectorAll('.mermaid');
+  const unrendered = Array.from(blocks).filter(
+    el => !el.querySelector('svg') && !el.shadowRoot
+  );
+
+  if (unrendered.length === 0) return;
+
+  // Load mermaid from jsdelivr
+  const { default: mermaid } = await import(
+    'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
+  );
+
+  // Detect current color scheme for correct theme
+  const scheme = document.body.getAttribute('data-md-color-scheme');
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: scheme === 'slate' ? 'dark' : 'default'
+  });
+
+  // Render all unrendered mermaid blocks
+  await mermaid.run({ nodes: unrendered });
+}
+
+initMermaidFallback().catch(err => console.warn('Mermaid fallback:', err));
+</script>
+
   </body>
 </html>
