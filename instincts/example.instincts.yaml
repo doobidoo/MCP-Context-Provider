@@ -1,0 +1,72 @@
+version: "1.0"
+
+instincts:
+  git-conventional-commits:
+    id: git-conventional-commits
+    rule: >-
+      Use conventional commit prefixes: feat, fix, chore, docs, refactor, test, ci.
+      Keep subject line under 72 chars. Body explains why, not what.
+    domain: git
+    tags: [git, commits, conventions]
+    trigger_patterns:
+      - "git commit"
+      - "commit message"
+      - "commit.*convention"
+    confidence: 0.85
+    min_confidence: 0.5
+    usage_count: 12
+    approved_by: human
+    active: true
+    created_at: "2026-03-07T18:00:00Z"
+    outcome_log:
+      - timestamp: "2026-03-07T18:30:00Z"
+        result: positive
+        delta_confidence: 0.05
+        note: "User followed suggestion without edits"
+      - timestamp: "2026-03-07T19:15:00Z"
+        result: positive
+        delta_confidence: 0.03
+        note: "Commit passed pre-commit hook on first try"
+
+  typescript-strict-null:
+    id: typescript-strict-null
+    rule: >-
+      Always enable strictNullChecks. Use explicit null unions (T | null)
+      instead of optional chaining as default. Guard with early returns.
+    domain: typescript
+    tags: [typescript, strict, null-safety]
+    trigger_patterns:
+      - "tsconfig"
+      - "strictNullChecks"
+      - "null.*check"
+      - "undefined.*error"
+    confidence: 0.72
+    min_confidence: 0.5
+    usage_count: 5
+    approved_by: human
+    outcome_log:
+      - timestamp: "2026-03-06T10:00:00Z"
+        result: positive
+        delta_confidence: 0.08
+        note: "Caught potential null deref in PR review"
+      - timestamp: "2026-03-07T14:00:00Z"
+        result: neutral
+        delta_confidence: 0.0
+        note: "Already had strict mode enabled"
+
+  docker-multi-stage:
+    id: docker-multi-stage
+    rule: >-
+      Use multi-stage Docker builds. First stage for dependencies and build,
+      final stage copies only artifacts. Pin base image versions.
+    domain: docker
+    tags: [docker, build, optimization]
+    trigger_patterns:
+      - "Dockerfile"
+      - "docker.*build"
+      - "container.*image"
+    confidence: 0.60
+    min_confidence: 0.5
+    usage_count: 3
+    approved_by: auto
+    outcome_log: []
