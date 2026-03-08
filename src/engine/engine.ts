@@ -171,7 +171,7 @@ export class Engine {
     const context_rules: InjectionRule[] = contextMatches.map((m) => ({
       source: 'context' as const,
       id: m.context.tool_category,
-      content: m.context.description,
+      content: JSON.stringify(m.context),
       confidence: 1.0,
       matched_by: m.matched_pattern,
     }));
