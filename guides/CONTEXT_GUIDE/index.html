@@ -1518,12 +1518,75 @@
       
     
 <script type="module">
-// Mermaid CDN fallback: Material for MkDocs loads mermaid from unpkg.com
-// which intermittently returns 503. When the import fails, Material strips
-// the "mermaid" class from <pre> blocks but leaves raw code visible.
-// This script detects unrendered mermaid blocks by content and renders them
-// using mermaid loaded from jsdelivr.
+// ==========================================================================
+// Workaround: Material for MkDocs loads mermaid from unpkg.com which
+// intermittently returns 503. The failed dynamic import() causes:
+//   1. Mermaid blocks show raw code (class "mermaid" gets stripped)
+//   2. Palette toggle event listeners never attach (dark mode broken)
+// This script fixes both issues.
+// ==========================================================================
 
+// --- Palette toggle fix ---------------------------------------------------
+// Material's palette toggle relies on JS event listeners that may not attach
+// when the mermaid import fails. This re-implements the toggle logic.
+function fixPaletteToggle() {
+  const palette = document.querySelector('[data-md-component="palette"]');
+  if (!palette) return;
+
+  const radios = palette.querySelectorAll('input[name="__palette"]');
+  const labels = palette.querySelectorAll('label');
+
+  function applyPalette(radio) {
+    const scheme = radio.getAttribute('data-md-color-scheme');
+    const primary = radio.getAttribute('data-md-color-primary');
+    const accent = radio.getAttribute('data-md-color-accent');
+
+    document.body.setAttribute('data-md-color-switching', '');
+    document.body.setAttribute('data-md-color-scheme', scheme);
+    document.body.setAttribute('data-md-color-primary', primary);
+    document.body.setAttribute('data-md-color-accent', accent);
+
+    // Toggle label visibility (show the opposite toggle)
+    for (const label of labels) {
+      label.hidden = label.htmlFor === radio.id;
+    }
+
+    // Persist preference
+    try {
+      localStorage.setItem('__md_palette', JSON.stringify({
+        scheme, primary, accent
+      }));
+    } catch (e) { /* private browsing */ }
+
+    // Remove transition marker after animation
+    requestAnimationFrame(() => {
+      document.body.removeAttribute('data-md-color-switching');
+    });
+  }
+
+  // Listen for radio changes
+  for (const radio of radios) {
+    radio.addEventListener('change', () => {
+      if (radio.checked) applyPalette(radio);
+    });
+  }
+
+  // Also listen for label clicks (in case radios don't fire change)
+  for (const label of labels) {
+    label.addEventListener('click', () => {
+      const radio = document.getElementById(label.htmlFor);
+      if (radio && !radio.checked) {
+        radio.checked = true;
+        applyPalette(radio);
+      }
+    });
+  }
+}
+
+// Run palette fix immediately (no need to wait)
+fixPaletteToggle();
+
+// --- Mermaid CDN fallback -------------------------------------------------
 const MERMAID_KEYWORDS = [
   'graph ', 'graph\n', 'flowchart ', 'sequenceDiagram', 'classDiagram',
   'stateDiagram', 'erDiagram', 'gantt', 'pie ', 'gitgraph',
@@ -1559,8 +1622,7 @@ async function initMermaidFallback() {
     theme: scheme === 'slate' ? 'dark' : 'default'
   });
 
-  // Restore the mermaid class so mermaid.run() can find them,
-  // and set textContent directly (strip any <code> wrapper)
+  // Restore the mermaid class and set textContent directly (strip <code> wrapper)
   for (const el of unrendered) {
     const diagramText = el.textContent;
     el.className = 'mermaid';
