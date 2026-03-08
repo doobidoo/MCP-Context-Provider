@@ -1,43 +1,88 @@
-# MCP Context Provider
+# MCP Context Provider v2
 
 <div align="center">
   <img src="assets/logo.svg" alt="MCP Context Provider" width="200"/>
 </div>
 
-> **Persistent tool context for Claude Desktop** – eliminate context loss between chat sessions.
+> **Persistent context and learned instincts for Claude Code** — static rules meet confidence-scored intelligence.
 
-The MCP Context Provider acts as a **persistent neural core** for your AI interactions. Instead of re-establishing your preferred rules, naming conventions, and syntax preferences in every new chat, the server automatically injects them at startup – available in all sessions without any manual effort.
+The MCP Context Provider delivers two complementary systems:
 
-## What it does
+- **Contexts** (static) — Manually authored tool-specific rules (200–1000 tokens), always injected at full confidence
+- **Instincts** (learned) — Distilled from sessions, confidence-scored (0.0–1.0), human-approved before activation
 
-When you work with Claude Desktop across multiple sessions, context gets lost. You repeatedly explain the same naming conventions, syntax preferences, and workflow rules. The Context Provider solves this by maintaining a persistent configuration layer between Claude and your tools.
+## What's new in v2
 
-- **Automatic injection**: Tool-specific rules flow into every conversation at startup
-- **Auto-corrections**: Syntax transformations run automatically (e.g. Markdown → DokuWiki)
-- **Tool-specific rules**: Azure naming, Terraform patterns, Git conventions, DokuWiki syntax – each tool gets its own context
-- **Intelligent learning**: v1.6.0+ adds memory-driven optimization and self-improving contexts (Phase 3)
+v2 is a **complete TypeScript rewrite** from the Python v1.x codebase. Key changes:
+
+| | v1.x (Python) | v2.x (TypeScript) |
+|---|---|---|
+| Runtime | Python MCP server | Node.js MCP server |
+| Rules | Static JSON contexts only | JSON contexts + YAML instincts |
+| Learning | Phase 1/2/3 system | Instinct Engine with confidence scoring |
+| Transport | stdio only | stdio (default) + Streamable HTTP |
+| CLI | None | `mcp-cp` approval registry |
+| Memory | Simulated integration | Real mcp-memory-service bridge |
 
 ## Quick Start
 
 ```bash
 git clone https://github.com/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
-./scripts/install.sh
+npm install && npm run build
 ```
 
-Then add to your `claude_desktop_config.json` and restart Claude Desktop. See [Quick Start](guides/QUICKSTART.md) for full instructions.
+Add to your `.mcp.json`:
 
-## Version
+```json
+{
+  "mcpServers": {
+    "context-provider": {
+      "command": "node",
+      "args": ["dist/server/index.js"],
+      "cwd": "/path/to/MCP-Context-Provider",
+      "env": {
+        "CONTEXTS_PATH": "./contexts",
+        "INSTINCTS_PATH": "./instincts"
+      }
+    }
+  }
+}
+```
 
-Current release: **v1.8.4**
+Restart Claude Code. See [Getting Started](getting-started.md) for full instructions.
 
 ## Architecture
 
-```
-Startup → Load Context Files → Register MCP Tools → Context Available in All Chats
+```mermaid
+graph TD
+    E[Engine] --> C[Contexts<br/><i>static</i>]
+    E --> I[Instincts<br/><i>learned</i>]
+
+    C --> CL["JSON *_context.json<br/>glob tool matching<br/>priority-sorted"]
+    I --> IL["YAML *.instincts.yaml<br/>regex trigger patterns<br/>confidence-scored"]
+
+    CL --> IP[InjectionPayload<br/>context_rules + instinct_rules]
+    IL --> IP
+
+    IP --> MB["Memory Bridge<br/><i>optional</i><br/>mcp-memory-service sync"]
+
+    style E fill:#4f46e5,stroke:#3730a3,color:#fff,font-weight:bold
+    style C fill:#0891b2,stroke:#0e7490,color:#fff
+    style I fill:#d97706,stroke:#b45309,color:#fff
+    style CL fill:#e0f2fe,stroke:#0ea5e9
+    style IL fill:#fef3c7,stroke:#f59e0b
+    style IP fill:#10b981,stroke:#059669,color:#fff,font-weight:bold
+    style MB fill:#6366f1,stroke:#4f46e5,color:#fff
 ```
 
-Context files are plain JSON, stored in `contexts/`. Easy to version-control, share across teams, and extend.
+## Three Subsystems
+
+| Subsystem | Purpose |
+|-----------|---------|
+| **Engine** | Loads, matches, and merges contexts + instincts into injection payloads |
+| **CLI** (`mcp-cp`) | Approval registry for instinct lifecycle management |
+| **Memory Bridge** | Syncs instincts to mcp-memory-service via HTTP API |
 
 ## Available Contexts (built-in)
 
@@ -50,7 +95,12 @@ Context files are plain JSON, stored in `contexts/`. Easy to version-control, sh
 | `general_preferences` | Cross-tool preferences and workflow standards |
 | `applescript` | AppleScript patterns and best practices |
 | `memory` | MCP Memory Service auto-store/retrieve triggers |
+| `date_awareness` | Temporal context and scheduling awareness |
+
+## Version
+
+Current release: **v2.0.0-alpha.1**
 
 ## License
 
-MIT License – see [LICENSE](https://github.com/doobidoo/MCP-Context-Provider/blob/main/LICENSE)
+Apache License 2.0 — see [LICENSE](https://github.com/doobidoo/MCP-Context-Provider/blob/main/LICENSE)
