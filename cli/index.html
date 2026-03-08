@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://doobidoo.github.io/MCP-Context-Provider/contexts-reference/">
+        <link rel="canonical" href="https://doobidoo.github.io/MCP-Context-Provider/cli/">
       
       
-        <link rel="prev" href="../cli/">
+        <link rel="prev" href="../mcp-tools/">
       
       
-        <link rel="next" href="../CHANGELOG/">
+        <link rel="next" href="../contexts-reference/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Contexts Reference - MCP Context Provider</title>
+        <title>CLI Reference - MCP Context Provider</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#contexts-reference" class="md-skip">
+        <a href="#cli-reference-mcp-cp" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Contexts Reference
+              CLI Reference
             
           </span>
         </div>
@@ -298,9 +298,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../cli/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -317,11 +319,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../contexts-reference/" class="md-tabs__link">
         
   
   
@@ -515,33 +515,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    CLI Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -561,7 +534,7 @@
   <span class="md-ellipsis">
     
   
-    Contexts Reference
+    CLI Reference
   
 
     
@@ -579,7 +552,7 @@
   <span class="md-ellipsis">
     
   
-    Contexts Reference
+    CLI Reference
   
 
     
@@ -605,10 +578,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Installation
       
     </span>
   </a>
@@ -616,22 +589,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#memory-contexts" class="md-nav__link">
+  <a href="#global-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Memory Contexts
+        Global Options
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Memory Contexts">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#memory_contextjson-mcp-memory-auto-trigger" class="md-nav__link">
+  <a href="#list-ls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_context.json – MCP Memory Auto-Trigger
+        list / ls
       
     </span>
   </a>
@@ -639,10 +623,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#python_mcp_memory_contextjson-mcp-memory-service-development" class="md-nav__link">
+  <a href="#show-id-inspect-id" class="md-nav__link">
     <span class="md-ellipsis">
       
-        python_mcp_memory_context.json – MCP Memory Service Development
+        show &lt;id&gt; / inspect &lt;id&gt;
       
     </span>
   </a>
@@ -650,10 +634,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#shodh_memory_contextjson-shodh-episodic-memory" class="md-nav__link">
+  <a href="#approve-id" class="md-nav__link">
     <span class="md-ellipsis">
       
-        shodh_memory_context.json – SHODH Episodic Memory
+        approve &lt;id&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reject-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reject &lt;id&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tune-id-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tune &lt;id&gt; [options]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome-id-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        outcome &lt;id&gt; &lt;+|-|~&gt; [note]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-id-rm-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        remove &lt;id&gt; / rm &lt;id&gt;
       
     </span>
   </a>
@@ -666,93 +694,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#other-built-in-contexts" class="md-nav__link">
+  <a href="#instinct-lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Other Built-in Contexts
+        Instinct Lifecycle
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Other Built-in Contexts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dokuwiki_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        dokuwiki_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#azure_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        azure_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#terraform_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        terraform_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#git_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        git_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#general_preferences_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        general_preferences_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response_shortcodes_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        response_shortcodes_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-custom-contexts" class="md-nav__link">
+  <a href="#typical-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding Custom Contexts
+        Typical Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -763,6 +730,33 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contexts-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contexts Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -821,10 +815,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Installation
       
     </span>
   </a>
@@ -832,22 +826,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#memory-contexts" class="md-nav__link">
+  <a href="#global-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Memory Contexts
+        Global Options
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Memory Contexts">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#memory_contextjson-mcp-memory-auto-trigger" class="md-nav__link">
+  <a href="#list-ls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_context.json – MCP Memory Auto-Trigger
+        list / ls
       
     </span>
   </a>
@@ -855,10 +860,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#python_mcp_memory_contextjson-mcp-memory-service-development" class="md-nav__link">
+  <a href="#show-id-inspect-id" class="md-nav__link">
     <span class="md-ellipsis">
       
-        python_mcp_memory_context.json – MCP Memory Service Development
+        show &lt;id&gt; / inspect &lt;id&gt;
       
     </span>
   </a>
@@ -866,10 +871,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#shodh_memory_contextjson-shodh-episodic-memory" class="md-nav__link">
+  <a href="#approve-id" class="md-nav__link">
     <span class="md-ellipsis">
       
-        shodh_memory_context.json – SHODH Episodic Memory
+        approve &lt;id&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reject-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reject &lt;id&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tune-id-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tune &lt;id&gt; [options]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome-id-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        outcome &lt;id&gt; &lt;+|-|~&gt; [note]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-id-rm-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        remove &lt;id&gt; / rm &lt;id&gt;
       
     </span>
   </a>
@@ -882,93 +931,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#other-built-in-contexts" class="md-nav__link">
+  <a href="#instinct-lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Other Built-in Contexts
+        Instinct Lifecycle
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Other Built-in Contexts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dokuwiki_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        dokuwiki_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#azure_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        azure_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#terraform_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        terraform_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#git_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        git_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#general_preferences_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        general_preferences_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response_shortcodes_contextjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        response_shortcodes_context.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-custom-contexts" class="md-nav__link">
+  <a href="#typical-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding Custom Contexts
+        Typical Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -992,7 +980,7 @@
 
 
   
-    <a href="https://github.com/doobidoo/MCP-Context-Provider/edit/main/docs/contexts-reference.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/doobidoo/MCP-Context-Provider/edit/main/docs/cli.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1000,294 +988,206 @@
   
 
 
-<h1 id="contexts-reference">Contexts Reference<a class="headerlink" href="#contexts-reference" title="Permanent link">&para;</a></h1>
-<p>All built-in contexts are stored as JSON files in the <code>contexts/</code> directory. Each context is automatically loaded at Claude Desktop startup when <code>AUTO_LOAD_CONTEXTS=true</code> is set.</p>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Context File</th>
-<th>Category</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>dokuwiki_context.json</code></td>
-<td><code>dokuwiki</code></td>
-<td>Markdown → DokuWiki auto-conversion</td>
-</tr>
-<tr>
-<td><code>azure_context.json</code></td>
-<td><code>azure</code></td>
-<td>Azure resource naming conventions</td>
-</tr>
-<tr>
-<td><code>terraform_context.json</code></td>
-<td><code>terraform</code></td>
-<td>Terraform patterns and best practices</td>
-</tr>
-<tr>
-<td><code>git_context.json</code></td>
-<td><code>git</code></td>
-<td>Conventional commits and branch naming</td>
-</tr>
-<tr>
-<td><code>general_preferences_context.json</code></td>
-<td><code>general_preferences</code></td>
-<td>Cross-tool preferences and standards</td>
-</tr>
-<tr>
-<td><code>memory_context.json</code></td>
-<td><code>memory</code></td>
-<td>MCP Memory Service auto-store/retrieve</td>
-</tr>
-<tr>
-<td><code>python_mcp_memory_context.json</code></td>
-<td><code>python-mcp-memory</code></td>
-<td>MCP Memory Service development patterns</td>
-</tr>
-<tr>
-<td><code>shodh_memory_context.json</code></td>
-<td><code>memory</code></td>
-<td>SHODH episodic memory management</td>
-</tr>
-<tr>
-<td><code>applescript_context.json</code></td>
-<td><code>applescript</code></td>
-<td>AppleScript patterns</td>
-</tr>
-<tr>
-<td><code>n8n_context.json</code></td>
-<td><code>n8n</code></td>
-<td>n8n workflow automation</td>
-</tr>
-<tr>
-<td><code>ios_shortcuts_context.json</code></td>
-<td><code>ios_shortcuts</code></td>
-<td>iOS Shortcuts integration</td>
-</tr>
-<tr>
-<td><code>response_shortcodes_context.json</code></td>
-<td><code>response_shortcodes</code></td>
-<td>G/I Cycle shortcodes (<code>/GRADE</code>, <code>/I</code>)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="memory-contexts">Memory Contexts<a class="headerlink" href="#memory-contexts" title="Permanent link">&para;</a></h2>
-<p>The Context Provider ships with three memory-related contexts covering different layers of the memory ecosystem.</p>
-<hr />
-<h3 id="memory_contextjson-mcp-memory-auto-trigger"><code>memory_context.json</code> – MCP Memory Auto-Trigger<a class="headerlink" href="#memory_contextjson-mcp-memory-auto-trigger" title="Permanent link">&para;</a></h3>
-<p><strong>Category</strong>: <code>memory</code><br />
-<strong>Purpose</strong>: Proactive storage and retrieval rules for the <a href="https://github.com/doobidoo/mcp-memory-service">MCP Memory Service</a>. Defines when Claude should automatically store memories and when to proactively retrieve them based on conversation patterns.</p>
-<p><strong>Session Initialization</strong>: On startup, loads recent activity (last 24h) and retrieves any open tasks tagged <code>in-progress</code>, <code>active</code>, or <code>follow-up</code>.</p>
-<p><strong>Auto-Store Triggers</strong> — Claude stores a memory when it detects:</p>
-<table>
-<thead>
-<tr>
-<th>Trigger</th>
-<th>Example Patterns</th>
-<th>Tags Applied</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Decisions</td>
-<td>"I decided to", "We agreed that", "Let's go with"</td>
-<td><code>decision</code>, <code>{project}</code></td>
-</tr>
-<tr>
-<td>Technical solutions</td>
-<td>"The fix was", "The solution is", "To resolve this"</td>
-<td><code>solution</code>, <code>technical</code></td>
-</tr>
-<tr>
-<td>Completed activities</td>
-<td>"I completed", "I implemented", "I resolved"</td>
-<td><code>activity</code>, <code>completed</code></td>
-</tr>
-<tr>
-<td>Future tasks</td>
-<td>"I need to", "TODO:", "Remember to"</td>
-<td><code>todo</code>, <code>in-progress</code></td>
-</tr>
-<tr>
-<td>Preferences</td>
-<td>"I prefer", "I always", "My preference is"</td>
-<td><code>preference</code>, <code>personal</code></td>
-</tr>
-<tr>
-<td>Learning moments</td>
-<td>"I learned that", "It turns out", "The issue was"</td>
-<td><code>learning</code>, <code>insight</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Auto-Retrieve Triggers</strong> — Claude retrieves memories when it detects:</p>
-<ul>
-<li>Temporal queries: "What did I do last week", "Yesterday", "Earlier today"</li>
-<li>Continuation: "Continue with", "Where were we", "Pick up where"</li>
-<li>Problem solving: "How did I fix", "What was the solution for"</li>
-</ul>
-<p><strong>Smart Tagging</strong>: Automatically detects project names, tool names (Terraform, Docker, Azure, Git, Python, etc.), and adds temporal tags (day, month, year).</p>
-<hr />
-<h3 id="python_mcp_memory_contextjson-mcp-memory-service-development"><code>python_mcp_memory_context.json</code> – MCP Memory Service Development<a class="headerlink" href="#python_mcp_memory_contextjson-mcp-memory-service-development" title="Permanent link">&para;</a></h3>
-<p><strong>Category</strong>: <code>python-mcp-memory</code><br />
-<strong>Purpose</strong>: Specialized context for <strong>developing and extending the MCP Memory Service itself</strong>. Provides FastAPI patterns, MCP protocol conventions, storage backend configurations, and Cloudflare integration rules. Activate this when working on the <a href="https://github.com/doobidoo/mcp-memory-service">mcp-memory-service</a> codebase.</p>
-<p><strong>Session Initialization</strong>: Loads last 7 days of MCP Memory Service development activity, retrieves architecture and backend config context, and surfaces any open <code>mcp-memory-service</code> tasks.</p>
-<p><strong>Auto-Store Triggers</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Trigger</th>
-<th>Example Patterns</th>
-<th>Tags Applied</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>MCP protocol changes</td>
-<td>"tool handler", "JSON-RPC", "stdio transport"</td>
-<td><code>mcp-protocol</code>, <code>mcp-memory-service</code></td>
-</tr>
-<tr>
-<td>Storage backend config</td>
-<td>"Cloudflare backend", "SQLite-vec", "Vectorize index"</td>
-<td><code>storage-backend</code>, <code>configuration</code></td>
-</tr>
-<tr>
-<td>Cloudflare setup</td>
-<td>"CLOUDFLARE_API_TOKEN", "Workers AI", "D1 setup"</td>
-<td><code>cloudflare</code>, <code>setup</code></td>
-</tr>
-<tr>
-<td>Hybrid backend</td>
-<td>"dual storage", "background sync", "graceful fallback"</td>
-<td><code>hybrid-backend</code>, <code>sync</code></td>
-</tr>
-<tr>
-<td>FastAPI implementation</td>
-<td>"API endpoint", "async route", "SSE events"</td>
-<td><code>fastapi</code>, <code>api</code></td>
-</tr>
-<tr>
-<td>Troubleshooting solutions</td>
-<td>"fixed by", "root cause", "resolved by"</td>
-<td><code>troubleshooting</code>, <code>solution</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Auto-Retrieve Triggers</strong>:</p>
-<ul>
-<li>Backend errors → searches <code>cloudflare</code>, <code>storage-backend</code>, <code>troubleshooting</code></li>
-<li>MCP connection issues → searches <code>mcp-protocol</code>, <code>connection</code></li>
-<li>Async errors → searches <code>async</code>, <code>troubleshooting</code>, <code>python</code></li>
-<li>Performance issues → searches <code>performance</code>, <code>optimization</code></li>
-</ul>
-<p><strong>Code Style Rules</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Type hints required, async preferred, Python 3.10+</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_store_memory</span><span class="p">(</span><span class="n">arguments</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TextContent</span><span class="p">]:</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">...</span>
+<h1 id="cli-reference-mcp-cp">CLI Reference — <code>mcp-cp</code><a class="headerlink" href="#cli-reference-mcp-cp" title="Permanent link">&para;</a></h1>
+<p>The <code>mcp-cp</code> command-line tool manages the instinct approval registry. It reads and writes YAML instinct files directly on disk.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>After building the project, <code>mcp-cp</code> is available as a bin entry:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>npm<span class="w"> </span>run<span class="w"> </span>build
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>npx<span class="w"> </span>mcp-cp<span class="w"> </span>--help
 </code></pre></div>
-<p><strong>Preferences</strong>: <code>uv</code> as package manager, <code>pytest</code> for tests, <code>black</code> formatter, <code>ruff</code> linter, Google docstrings, 80% minimum test coverage.</p>
-<hr />
-<h3 id="shodh_memory_contextjson-shodh-episodic-memory"><code>shodh_memory_context.json</code> – SHODH Episodic Memory<a class="headerlink" href="#shodh_memory_contextjson-shodh-episodic-memory" title="Permanent link">&para;</a></h3>
-<p><strong>Category</strong>: <code>memory</code><br />
-<strong>Purpose</strong>: Context rules for the <a href="https://github.com/doobidoo/shodh-memory">SHODH Cloudflare Memory</a> backend — a separate memory system focused on episodic memory with emotional metadata, credibility scoring, and associative retrieval. Used as the backend for the SecondBrain app.</p>
-<p><strong>Key Differentiators vs. <code>memory_context.json</code></strong>:</p>
-<ul>
-<li><strong>Episodic grouping</strong>: Related memories are grouped into episodes (30min timeout)</li>
-<li><strong>Emotional metadata</strong>: Auto-detects valence/arousal from conversation patterns (joy, frustration, satisfaction, concern)</li>
-<li><strong>Credibility scoring</strong>: Each memory gets a credibility score (user-stated=1.0, ai-generated=0.7, inferred=0.5)</li>
-<li><strong>Typed memories</strong>: Observation, Decision, Learning, Error, Discovery, Pattern, Context, Task</li>
-</ul>
-<p><strong>Memory Types</strong>:</p>
+<p>Or link it globally:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npm<span class="w"> </span>link
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mcp-cp<span class="w"> </span>--help
+</code></pre></div>
+<h2 id="global-options">Global Options<a class="headerlink" href="#global-options" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Type</th>
-<th>When Used</th>
+<th>Option</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>Decision</code></td>
-<td>"decided to", "we agreed", "going with"</td>
+<td><code>--path &lt;dir&gt;</code></td>
+<td>Instincts directory (default: <code>./instincts</code>)</td>
 </tr>
 <tr>
-<td><code>Learning</code></td>
-<td>"I learned", "lesson learned", "key insight"</td>
-</tr>
-<tr>
-<td><code>Error</code></td>
-<td>"fixed the", "resolved by", "workaround is"</td>
-</tr>
-<tr>
-<td><code>Discovery</code></td>
-<td>"I discovered", "it turns out", "TIL"</td>
-</tr>
-<tr>
-<td><code>Pattern</code></td>
-<td>"best practice", "always do", "rule of thumb"</td>
-</tr>
-<tr>
-<td><code>Task</code></td>
-<td>"TODO:", "don't forget", "action item"</td>
-</tr>
-<tr>
-<td><code>Context</code></td>
-<td>"working on", "focusing on", "today's goal"</td>
-</tr>
-<tr>
-<td><code>Observation</code></td>
-<td>"I noticed", "worth noting"</td>
+<td><code>--help</code></td>
+<td>Show help</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Proactive Context</strong>: Calls <code>proactive_context</code> on every message with a surface threshold of 0.65 — memories are surfaced automatically without explicit retrieval requests.</p>
-<hr />
-<h2 id="other-built-in-contexts">Other Built-in Contexts<a class="headerlink" href="#other-built-in-contexts" title="Permanent link">&para;</a></h2>
-<h3 id="dokuwiki_contextjson"><code>dokuwiki_context.json</code><a class="headerlink" href="#dokuwiki_contextjson" title="Permanent link">&para;</a></h3>
-<p>Handles automatic Markdown → DokuWiki syntax conversion. Converts headers (<code># Title</code> → <code>====== Title ======</code>), code blocks (<code>```</code> → <code>&lt;code&gt;</code>), links, tables, and note blocks. See <a href="../EXAMPLES/">Examples</a> for detailed conversion examples.</p>
-<h3 id="azure_contextjson"><code>azure_context.json</code><a class="headerlink" href="#azure_contextjson" title="Permanent link">&para;</a></h3>
-<p>Enforces Azure resource naming conventions, required tags (Environment, Owner, CostCenter), security defaults (TLS 1.2, HTTPS-only), and location normalization (<code>West Europe</code> → <code>westeurope</code>).</p>
-<h3 id="terraform_contextjson"><code>terraform_context.json</code><a class="headerlink" href="#terraform_contextjson" title="Permanent link">&para;</a></h3>
-<p>Enforces snake_case variable names, required descriptions, validation blocks, module structure, and proper tagging patterns for Azure Terraform deployments.</p>
-<h3 id="git_contextjson"><code>git_context.json</code><a class="headerlink" href="#git_contextjson" title="Permanent link">&para;</a></h3>
-<p>Enforces Conventional Commits format (<code>feat:</code>, <code>fix:</code>, <code>chore:</code>), branch naming conventions (<code>feature/</code>, <code>bugfix/</code>, <code>hotfix/</code>), and pull request template standards.</p>
-<h3 id="general_preferences_contextjson"><code>general_preferences_context.json</code><a class="headerlink" href="#general_preferences_contextjson" title="Permanent link">&para;</a></h3>
-<p>Cross-tool preferences including the G/I Cycle trigger (<code>/GRADE</code> → <code>/I</code> for iterative output improvement) and general response style preferences.</p>
-<h3 id="response_shortcodes_contextjson"><code>response_shortcodes_context.json</code><a class="headerlink" href="#response_shortcodes_contextjson" title="Permanent link">&para;</a></h3>
-<p>Defines shortcodes for structured output review:</p>
-<ul>
-<li><code>/GRADE</code> — grades output with point deductions</li>
-<li><code>/I</code> — improves output, addressing deductions</li>
-<li><code>/GRADE ANALYSIS</code> — meta-level analysis of reasoning quality</li>
-</ul>
-<hr />
-<h2 id="adding-custom-contexts">Adding Custom Contexts<a class="headerlink" href="#adding-custom-contexts" title="Permanent link">&para;</a></h2>
-<p>Create a new file <code>contexts/{toolname}_context.json</code> following the structure below, then restart Claude Desktop:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;tool_category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;toolname&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What this context does&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;auto_convert&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&quot;syntax_rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">&quot;preferences&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">&quot;auto_corrections&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">&quot;auto_store_triggers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">&quot;auto_retrieve_triggers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">&quot;session_initialization&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="nt">&quot;applies_to_tools&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;toolname&quot;</span><span class="p">],</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="nt">&quot;priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">}</span>
+<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
+<h3 id="list-ls"><code>list</code> / <code>ls</code><a class="headerlink" href="#list-ls" title="Permanent link">&para;</a></h3>
+<p>List all instincts across all YAML files with a summary table.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mcp-cp<span class="w"> </span>list
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mcp-cp<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/custom/instincts
 </code></pre></div>
-<p>See the <a href="../guides/DEVELOPER_GUIDE/">Developer Guide</a> for full field documentation.</p>
+<p>Shows each instinct's ID, domain, confidence score, active status, and approval state.</p>
+<hr />
+<h3 id="show-id-inspect-id"><code>show &lt;id&gt;</code> / <code>inspect &lt;id&gt;</code><a class="headerlink" href="#show-id-inspect-id" title="Permanent link">&para;</a></h3>
+<p>Show detailed information about a specific instinct.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mcp-cp<span class="w"> </span>show<span class="w"> </span>git-conventional-commits
+</code></pre></div>
+<p>Displays the full instinct definition including rule text, trigger patterns, tags, confidence history, and outcome log.</p>
+<hr />
+<h3 id="approve-id"><code>approve &lt;id&gt;</code><a class="headerlink" href="#approve-id" title="Permanent link">&para;</a></h3>
+<p>Approve an instinct for active use. This sets <code>approved_by</code> to <code>human</code> and activates the instinct.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>mcp-cp<span class="w"> </span>approve<span class="w"> </span>git-conventional-commits
+</code></pre></div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Instincts extracted by <code>/instill</code> start as drafts (<code>approved_by: auto</code>). They must be explicitly approved before they fire during sessions.</p>
+</div>
+<hr />
+<h3 id="reject-id"><code>reject &lt;id&gt;</code><a class="headerlink" href="#reject-id" title="Permanent link">&para;</a></h3>
+<p>Reject an instinct. Deactivates it and reduces confidence by 0.3.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mcp-cp<span class="w"> </span>reject<span class="w"> </span>noisy-instinct
+</code></pre></div>
+<p>The rejection is recorded in the instinct's <code>outcome_log</code>.</p>
+<hr />
+<h3 id="tune-id-options"><code>tune &lt;id&gt; [options]</code><a class="headerlink" href="#tune-id-options" title="Permanent link">&para;</a></h3>
+<p>Tune an instinct's parameters without fully approving or rejecting it.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Adjust confidence</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>mcp-cp<span class="w"> </span>tune<span class="w"> </span>git-conventional<span class="w"> </span>--confidence<span class="w"> </span><span class="m">0</span>.9
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Update the rule text</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>mcp-cp<span class="w"> </span>tune<span class="w"> </span>git-conventional<span class="w"> </span>--rule<span class="w"> </span><span class="s2">&quot;Always use type(scope): description format&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Set minimum confidence threshold</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>mcp-cp<span class="w"> </span>tune<span class="w"> </span>git-conventional<span class="w"> </span>--min-confidence<span class="w"> </span><span class="m">0</span>.6
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Activate or deactivate</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>mcp-cp<span class="w"> </span>tune<span class="w"> </span>git-conventional<span class="w"> </span>--active<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Update tags</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>mcp-cp<span class="w"> </span>tune<span class="w"> </span>git-conventional<span class="w"> </span>--tags<span class="w"> </span><span class="s2">&quot;git,commit,convention&quot;</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Update trigger patterns</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>mcp-cp<span class="w"> </span>tune<span class="w"> </span>git-conventional<span class="w"> </span>--triggers<span class="w"> </span><span class="s2">&quot;git commit,commit message,writing commit&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--confidence &lt;0.0-1.0&gt;</code></td>
+<td>Set confidence score</td>
+</tr>
+<tr>
+<td><code>--min-confidence &lt;0.0-1.0&gt;</code></td>
+<td>Set minimum threshold (instinct deactivates below this)</td>
+</tr>
+<tr>
+<td><code>--rule "text"</code></td>
+<td>Update the rule text</td>
+</tr>
+<tr>
+<td><code>--active true\|false</code></td>
+<td>Activate or deactivate</td>
+</tr>
+<tr>
+<td><code>--tags "a,b,c"</code></td>
+<td>Set tags (comma-separated)</td>
+</tr>
+<tr>
+<td><code>--triggers "p1,p2"</code></td>
+<td>Set trigger patterns (comma-separated)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="outcome-id-note"><code>outcome &lt;id&gt; &lt;+|-|~&gt; [note]</code><a class="headerlink" href="#outcome-id-note" title="Permanent link">&para;</a></h3>
+<p>Record an outcome event for an instinct, adjusting its confidence.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Positive outcome (+0.05 confidence)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mcp-cp<span class="w"> </span>outcome<span class="w"> </span>git-conventional<span class="w"> </span>+<span class="w"> </span><span class="s2">&quot;Helped write better commits&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Negative outcome (-0.10 confidence)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>mcp-cp<span class="w"> </span>outcome<span class="w"> </span>git-conventional<span class="w"> </span>-<span class="w"> </span><span class="s2">&quot;Too strict for quick fixes&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Neutral outcome (no change)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>mcp-cp<span class="w"> </span>outcome<span class="w"> </span>git-conventional<span class="w"> </span>~<span class="w"> </span><span class="s2">&quot;Used but no clear impact&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Result</th>
+<th>Confidence Delta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>+</code></td>
+<td>positive</td>
+<td>+0.05</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td>negative</td>
+<td>-0.10</td>
+</tr>
+<tr>
+<td><code>~</code></td>
+<td>neutral</td>
+<td>0.00</td>
+</tr>
+</tbody>
+</table>
+<p>Outcomes are logged in the instinct's <code>outcome_log</code> with a timestamp.</p>
+<hr />
+<h3 id="remove-id-rm-id"><code>remove &lt;id&gt;</code> / <code>rm &lt;id&gt;</code><a class="headerlink" href="#remove-id-rm-id" title="Permanent link">&para;</a></h3>
+<p>Permanently delete an instinct from its YAML file.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>mcp-cp<span class="w"> </span>remove<span class="w"> </span>obsolete-instinct
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This operation is permanent. The instinct is removed from the YAML file on disk.</p>
+</div>
+<hr />
+<h2 id="instinct-lifecycle">Instinct Lifecycle<a class="headerlink" href="#instinct-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    D["Draft&lt;br/&gt;(approved_by: auto)"] --&gt;|"mcp-cp approve"| A["Active&lt;br/&gt;(approved_by: human)"]
+    D --&gt;|"mcp-cp reject"| R["Rejected&lt;br/&gt;(active: false)"]
+    A --&gt;|"mcp-cp outcome +"| A2["Confidence &amp;uarr;"]
+    A --&gt;|"mcp-cp outcome -"| A3["Confidence &amp;darr;"]
+    A3 --&gt;|"below min_confidence"| I["Inactive"]
+
+    style D fill:#94a3b8,stroke:#64748b,color:#fff
+    style A fill:#10b981,stroke:#059669,color:#fff
+    style R fill:#ef4444,stroke:#dc2626,color:#fff
+    style I fill:#f59e0b,stroke:#d97706,color:#fff</code></pre>
+<h2 id="typical-workflow">Typical Workflow<a class="headerlink" href="#typical-workflow" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Extract</strong> instincts from a session using <code>/instill</code> in Claude Code</li>
+<li><strong>Review</strong> with <code>mcp-cp list</code> to see all pending drafts</li>
+<li><strong>Inspect</strong> each with <code>mcp-cp show &lt;id&gt;</code></li>
+<li><strong>Approve</strong> good instincts: <code>mcp-cp approve &lt;id&gt;</code></li>
+<li><strong>Reject</strong> unwanted ones: <code>mcp-cp reject &lt;id&gt;</code></li>
+<li><strong>Tune</strong> as needed: adjust confidence, triggers, or rule text</li>
+<li><strong>Record outcomes</strong> over time to refine confidence scores</li>
+</ol>
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># See what instincts are available</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>mcp-cp<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Inspect a specific instinct</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>mcp-cp<span class="w"> </span>show<span class="w"> </span>test-before-push
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Approve it for use</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>mcp-cp<span class="w"> </span>approve<span class="w"> </span>test-before-push
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Later, record that it helped</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>mcp-cp<span class="w"> </span>outcome<span class="w"> </span>test-before-push<span class="w"> </span>+<span class="w"> </span><span class="s2">&quot;Caught a bug before pushing&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Boost its confidence</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>mcp-cp<span class="w"> </span>tune<span class="w"> </span>test-before-push<span class="w"> </span>--confidence<span class="w"> </span><span class="m">0</span>.95
+</code></pre></div>
 
 
 
