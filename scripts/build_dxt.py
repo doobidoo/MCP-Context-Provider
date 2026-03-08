@@ -112,9 +112,9 @@ class DXTBuilder:
                         existing_data = json.load(f)
                         version = existing_data.get("version", "1.7.0")
                 except:
-                    version = "1.8.4"
+                    version = "2.0.0-alpha.1"
             else:
-                version = "1.8.4"
+                version = "2.0.0-alpha.1"
 
         # Use template if available, otherwise create basic manifest
         if self.manifest_template.exists():
