@@ -5,6 +5,39 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0-alpha.1] - 2026-03-08
+
+### Changed
+- **Complete TypeScript Rewrite**: Ground-up rewrite from Python to TypeScript
+  - New dual-concept architecture: **Contexts** (static rules) and **Instincts** (learned rules)
+  - ES2022 target, Node16 modules, strict mode throughout
+  - Zod schema validation for both YAML instincts and JSON contexts
+
+### Added
+- **Instinct Engine**: Confidence-scored learned rules (0.0–1.0) with human approval workflow
+  - YAML-based instinct files with Zod validation
+  - Regex + substring trigger pattern matching
+  - Outcome tracking with delta-confidence adjustments
+- **Context Engine**: Static tool-specific context rules migrated from v1.8.x
+  - JSON context file discovery (`*_context.json`)
+  - Glob-style tool pattern matching (`*`, `git:*`, `bash:git`)
+  - Priority-sorted matching (high > medium > low)
+- **Unified Engine**: Coordinator that loads both contexts and instincts
+  - `buildInjection(tool, input)` returns combined context + instinct rules
+  - Optional Memory Bridge integration
+- **Approval Registry CLI** (`mcp-cp`): Zero-dependency ANSI-formatted CLI
+  - Commands: list, show, approve, reject, tune, outcome, remove
+- **Memory Bridge**: HTTP integration with mcp-memory-service REST API
+  - Instinct sync (push/pull), orphan detection, semantic discovery
+  - Configurable base URL, API key, timeout
+- **`/instill` Skill**: Claude Code skill for extracting instincts from sessions
+- **Test Suite**: 61 vitest tests across 5 suites — all passing
+
+### Removed
+- Python server (`context_provider_server.py`)
+- DXT packaging system
+- Python-based CI scripts (retained for version checking compatibility)
+
 ## [1.8.4] - 2025-10-05
 
 ### Fixed

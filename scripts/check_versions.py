@@ -67,10 +67,10 @@ def extract_version_from_changelog(repo_root: Path) -> Optional[str]:
         with open(changelog_file, "r", encoding="utf-8") as f:
             content = f.read()
 
-        # Look for version patterns like [1.7.0] or ## [1.7.0]
+        # Look for version patterns like [1.7.0], [2.0.0-alpha.1], or ## [1.7.0]
         version_patterns = [
-            r"##\s*\[([0-9]+\.[0-9]+\.[0-9]+)\]",
-            r"\[([0-9]+\.[0-9]+\.[0-9]+)\]\s*-",
+            r"##\s*\[([0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.]+)?)\]",
+            r"\[([0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.]+)?)\]\s*-",
         ]
 
         for pattern in version_patterns:
