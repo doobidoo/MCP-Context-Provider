@@ -1586,15 +1586,30 @@ Sees the same content auto-converted:
     
 <script type="module">
 // Mermaid CDN fallback: Material for MkDocs loads mermaid from unpkg.com
-// which intermittently returns 503. This script loads from jsdelivr instead.
-async function initMermaidFallback() {
-  // Wait for Material's built-in mermaid loader to try first
-  await new Promise(resolve => setTimeout(resolve, 1500));
+// which intermittently returns 503. When the import fails, Material strips
+// the "mermaid" class from <pre> blocks but leaves raw code visible.
+// This script detects unrendered mermaid blocks by content and renders them
+// using mermaid loaded from jsdelivr.
 
-  // Check for unrendered mermaid blocks (no SVG inside = not rendered)
-  const blocks = document.querySelectorAll('.mermaid');
-  const unrendered = Array.from(blocks).filter(
-    el => !el.querySelector('svg') && !el.shadowRoot
+const MERMAID_KEYWORDS = [
+  'graph ', 'graph\n', 'flowchart ', 'sequenceDiagram', 'classDiagram',
+  'stateDiagram', 'erDiagram', 'gantt', 'pie ', 'gitgraph',
+  'mindmap', 'timeline', 'sankey', 'xychart', 'block-beta'
+];
+
+function isMermaidBlock(el) {
+  const text = el.textContent.trimStart();
+  return MERMAID_KEYWORDS.some(kw => text.startsWith(kw));
+}
+
+async function initMermaidFallback() {
+  // Wait for Material's built-in mermaid loader to try (and possibly fail)
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  // Find <pre> blocks that contain mermaid syntax but have no rendered SVG
+  const allPre = document.querySelectorAll('pre');
+  const unrendered = Array.from(allPre).filter(
+    el => isMermaidBlock(el) && !el.querySelector('svg')
   );
 
   if (unrendered.length === 0) return;
@@ -1611,11 +1626,19 @@ async function initMermaidFallback() {
     theme: scheme === 'slate' ? 'dark' : 'default'
   });
 
-  // Render all unrendered mermaid blocks
+  // Restore the mermaid class so mermaid.run() can find them,
+  // and set textContent directly (strip any <code> wrapper)
+  for (const el of unrendered) {
+    const diagramText = el.textContent;
+    el.className = 'mermaid';
+    el.textContent = diagramText;
+  }
+
+  // Render all mermaid blocks
   await mermaid.run({ nodes: unrendered });
 }
 
-initMermaidFallback().catch(err => console.warn('Mermaid fallback:', err));
+initMermaidFallback().catch(err => console.warn('Mermaid fallback failed:', err));
 </script>
 
   </body>
