@@ -1,5 +1,5 @@
 site_name: MCP Context Provider
-site_description: Persistent tool context for Claude Desktop – eliminate context loss between chat sessions
+site_description: Persistent context and learned instincts for Claude Code — static rules meet confidence-scored intelligence
 site_url: https://doobidoo.github.io/MCP-Context-Provider/
 repo_url: https://github.com/doobidoo/MCP-Context-Provider
 repo_name: doobidoo/MCP-Context-Provider
@@ -39,7 +39,11 @@ plugins:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
@@ -53,25 +57,12 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Getting Started:
-    - Quick Start: guides/QUICKSTART.md
-    - Installation: guides/INSTALLATION.md
-  - How It Works:
-    - Architecture: guides/CONTEXT_GUIDE.md
-    - Developer Guide: guides/DEVELOPER_GUIDE.md
-  - Features:
-    - Phase 1 – Session Init: phase3/LEARNING_GUIDE.md
-    - Phase 2 – Dynamic Context: guides/CONTEXT_GUIDE.md
-    - Phase 3 – Intelligent Learning: phase3/LEARNING_GUIDE.md
-    - API Reference: phase3/API_REFERENCE.md
-  - Examples:
-    - Usage Examples: EXAMPLES.md
-    - Phase 3 Examples: phase3/EXAMPLES.md
-    - Workflow Troubleshooting: WORKFLOW_TROUBLESHOOTING.md
+  - Getting Started: getting-started.md
+  - Architecture: architecture.md
+  - MCP Tools: mcp-tools.md
+  - CLI Reference: cli.md
   - Contexts Reference: contexts-reference.md
-  - Reference:
-    - Troubleshooting: guides/TROUBLESHOOTING.md
-    - Changelog: CHANGELOG.md
+  - Changelog: CHANGELOG.md
 
 extra:
   version:
@@ -80,4 +71,4 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/doobidoo/MCP-Context-Provider
 
-copyright: Copyright &copy; 2025 doobidoo – MIT License
+copyright: Copyright &copy; 2025–2026 doobidoo — Apache License 2.0
