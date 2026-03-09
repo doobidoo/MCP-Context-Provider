@@ -5,7 +5,7 @@
 - Node.js >= 20
 - npm
 
-## Install from Source
+## Install & Build
 
 ```bash
 git clone https://github.com/doobidoo/MCP-Context-Provider.git
@@ -21,20 +21,42 @@ npm test          # 61 tests should pass
 npm start         # Should print "Engine loaded: N contexts, N instincts"
 ```
 
-## Global CLI Installation
+## Global Installation (Recommended)
 
-To make `mcp-cp` and `mcp-context-provider` available system-wide:
+The Context Provider is designed to work **across all your projects** - it provides persistent rules for tools like Git, Terraform, Azure, DokuWiki regardless of which repo you're in. Global installation is the recommended setup.
 
 ```bash
+cd MCP-Context-Provider
 npm link
 ```
 
-This installs two commands:
+This installs two global commands:
 
 - `mcp-context-provider` — run the MCP server directly
 - `mcp-cp` — manage instincts (list, approve, reject, tune)
 
-## Claude Desktop Configuration
+### Configure for Claude Code (Global)
+
+Add to your global `~/.claude.json` under `mcpServers`:
+
+```json
+{
+  "mcpServers": {
+    "context-provider": {
+      "command": "node",
+      "args": ["/path/to/MCP-Context-Provider/dist/server/index.js"],
+      "env": {
+        "CONTEXTS_PATH": "/path/to/MCP-Context-Provider/contexts",
+        "INSTINCTS_PATH": "/path/to/MCP-Context-Provider/instincts"
+      }
+    }
+  }
+}
+```
+
+Replace `/path/to/MCP-Context-Provider` with your actual installation path. This makes the context provider available in **every Claude Code session**, regardless of which project you open.
+
+### Configure for Claude Desktop (Global)
 
 Update your `claude_desktop_config.json`:
 
@@ -59,25 +81,83 @@ Update your `claude_desktop_config.json`:
 }
 ```
 
-Replace `/path/to/MCP-Context-Provider` with your actual installation path.
+Restart Claude Desktop after saving the configuration.
 
-## Claude Code Configuration
+## Per-Project Installation (Alternative)
 
-Add to your project `.mcp.json` or global `~/.claude.json`:
+If you only want the context provider in a specific project, add a `.mcp.json` to your project root:
 
 ```json
 {
   "mcpServers": {
     "context-provider": {
       "command": "node",
-      "args": ["dist/server/index.js"],
+      "args": ["/path/to/MCP-Context-Provider/dist/server/index.js"],
       "env": {
-        "CONTEXTS_PATH": "./contexts",
-        "INSTINCTS_PATH": "./instincts"
+        "CONTEXTS_PATH": "/path/to/MCP-Context-Provider/contexts",
+        "INSTINCTS_PATH": "/path/to/MCP-Context-Provider/instincts"
       }
     }
   }
 }
+```
+
+## The `/instill` Skill
+
+`/instill` is a Claude Code skill that **extracts learned rules (instincts) from your current session**. When you notice Claude making the same mistakes, or you keep correcting the same patterns, `/instill` captures those as reusable instincts.
+
+### What it does
+
+1. **Analyzes your session** for repeated corrections, explicit preferences, workflow patterns
+2. **Extracts candidates** as compact rules (20-80 tokens each)
+3. **Presents them for review** with an interactive prompt:
+
+```
+## Instinct Candidates (3 found)
+
+### 1. `no-em-dash`
+> domain: writing | confidence: 0.7
+
+**Rule:** "Never use em-dash (—). Use colon, comma, semicolon, or rephrase."
+**Triggers:** `—`, `em-dash`
+
+### 2. `terraform-snake-case`
+> domain: terraform | confidence: 0.8
+
+**Rule:** "All Terraform resource names must use snake_case, never camelCase."
+**Triggers:** `resource`, `terraform`
+
+**Reply with:** a (accept all) | 1,2 (accept specific) | e1 (edit) | r (reject all)
+```
+
+4. **Saves accepted instincts** to `instincts/learned.instincts.yaml`
+5. Instincts are automatically injected in future sessions when their trigger patterns match
+
+### Install globally
+
+The skill must be installed as a **global Claude Code skill** to work across all projects:
+
+```bash
+mkdir -p ~/.claude/skills/instill
+cp .claude/skills/instill.md ~/.claude/skills/instill/SKILL.md
+```
+
+!!! note "Skill directory structure"
+    Global skills require the path `~/.claude/skills/<name>/SKILL.md` — a flat file like `~/.claude/skills/instill.md` will **not** be recognized.
+
+After installation, `/instill` is available in every Claude Code session. Type `/instill` to extract instincts, or `/instill git` to focus on a specific domain.
+
+### Manage instincts
+
+Use the `mcp-cp` CLI to manage saved instincts:
+
+```bash
+mcp-cp list                          # List all instincts with confidence
+mcp-cp show <id>                     # Detail view
+mcp-cp approve <id>                  # Human approval (required for activation)
+mcp-cp reject <id>                   # Deactivate an instinct
+mcp-cp tune <id> --confidence 0.8    # Adjust confidence score
+mcp-cp outcome <id> + "worked well"  # Record positive outcome
 ```
 
 ## Optional: HTTP Transport
@@ -101,7 +181,7 @@ The HTTP server exposes:
 
 ## Optional: Memory Bridge
 
-Connect to [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) for instinct persistence:
+Connect to [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) for instinct persistence across machines:
 
 ```json
 {
@@ -121,17 +201,6 @@ Connect to [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) 
 | `MEMORY_BRIDGE_URL` | (none) | Memory service base URL (enables bridge) |
 | `MEMORY_BRIDGE_API_KEY` | (none) | API key for memory service |
 | `MCP_SERVER_PORT` | `3100` | HTTP server port (only with `--http`) |
-
-## Optional: /instill Skill (Claude Code)
-
-Install the instinct distillation skill globally:
-
-```bash
-mkdir -p ~/.claude/skills/instill
-cp .claude/skills/instill.md ~/.claude/skills/instill/SKILL.md
-```
-
-Then use `/instill` in any Claude Code session to extract learned rules.
 
 ## Migration from v1.x
 
@@ -153,5 +222,3 @@ Context JSON files (`contexts/*_context.json`) are compatible. The v2 Zod schema
 - `session_initialization` requires `enabled` (boolean) and `actions` fields
 - `metadata.priority` only accepts `high`, `medium`, `low` (not `critical`)
 - `metadata.applies_to_tools` must have at least 1 element
-
-Restart Claude Desktop after updating the configuration.

@@ -21,26 +21,27 @@ The MCP Context Provider is a **context and instinct engine** for Claude Desktop
 git clone https://github.com/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 npm install && npm run build
+npm link   # recommended: makes mcp-cp and mcp-context-provider available globally
 ```
 
-Add to your Claude Desktop or Claude Code config:
+Add to your **global** Claude Code config (`~/.claude.json`) or Claude Desktop config:
 
 ```json
 {
   "mcpServers": {
     "context-provider": {
       "command": "node",
-      "args": ["dist/server/index.js"],
+      "args": ["/path/to/MCP-Context-Provider/dist/server/index.js"],
       "env": {
-        "CONTEXTS_PATH": "./contexts",
-        "INSTINCTS_PATH": "./instincts"
+        "CONTEXTS_PATH": "/path/to/MCP-Context-Provider/contexts",
+        "INSTINCTS_PATH": "/path/to/MCP-Context-Provider/instincts"
       }
     }
   }
 }
 ```
 
-See [Getting Started](getting-started/) for full instructions.
+Global installation is recommended - the context provider works across all projects. See [Installation](guides/INSTALLATION.md) for full instructions.
 
 ## Version
 
@@ -80,21 +81,28 @@ Session Start
 | `n8n` | n8n workflow automation patterns |
 | `mkdocs` | MkDocs Material documentation patterns |
 
-## Claude Code Integration
+## The `/instill` Skill
 
-Install the `/instill` skill globally to extract instincts from any session:
+`/instill` analyzes your Claude Code session and extracts **instincts** - compact, reusable rules that prevent you from repeating the same corrections across sessions.
 
-```
-~/.claude/skills/instill/SKILL.md
-```
+**Example:** You keep telling Claude "don't use em-dash". After running `/instill`, it captures this as an instinct that automatically triggers whenever Claude writes text.
 
-Manage instincts with the CLI:
+Install globally (one-time setup):
 
 ```bash
-mcp-cp list                        # List all instincts
-mcp-cp approve <id>                # Human approval
-mcp-cp tune <id> --confidence 0.8  # Tune confidence
+mkdir -p ~/.claude/skills/instill
+cp .claude/skills/instill.md ~/.claude/skills/instill/SKILL.md
 ```
+
+Then use `/instill` in any session. Manage saved instincts with the CLI:
+
+```bash
+mcp-cp list                        # List all instincts with confidence scores
+mcp-cp approve <id>                # Human approval (required for activation)
+mcp-cp tune <id> --confidence 0.8  # Adjust confidence
+```
+
+See [Installation - The /instill Skill](guides/INSTALLATION.md#the-instill-skill) for details.
 
 ## License
 
