@@ -43,7 +43,7 @@
     }
   },
   "session_initialization": {
-    "load_project_list": true,
-    "suggest_active_projects": true
+    "enabled": false,
+    "actions": {"on_startup": []}
   }
 }

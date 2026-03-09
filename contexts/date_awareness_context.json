@@ -72,7 +72,7 @@
     "applies_to_tools": [
       "*"
     ],
-    "priority": "critical",
+    "priority": "high",
     "last_updated": "2025-11-21T12:51:35.817754"
   },
   "auto_store_triggers": {

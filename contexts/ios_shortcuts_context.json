@@ -41,6 +41,7 @@
   "auto_convert": true,
   "auto_retrieve_triggers": {
     "shortcut_help": {
+      "action": "auto_detect",
       "patterns": [
         "ios shortcut",
         "kurzbefehl",
@@ -54,6 +55,7 @@
   },
   "auto_store_triggers": {
     "shortcut_detection": {
+      "action": "auto_detect",
       "patterns": [
         "WFWorkflowActionIdentifier",
         "is.workflow.actions",
@@ -126,6 +128,7 @@
     "shortcuts_js": "https://github.com/joshfarrant/shortcuts-js"
   },
   "session_initialization": {
+    "enabled": false,
     "actions": {
       "on_startup": [
         {

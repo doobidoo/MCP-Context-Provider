@@ -244,17 +244,17 @@
     "no_explanatory_notes": true
   },
   "auto_corrections": {
-    "delve into": "look at",
-    "delve deeper": "dig into",
-    "it's important to note": "[delete or state the fact directly]",
-    "it's worth noting": "[delete or state the fact directly]",
-    "at the end of the day": "[delete]",
-    "in today's fast-paced world": "[delete or be specific about what changed]",
-    "navigate the complexities": "handle",
-    "unlock the potential": "get more from",
-    "harness the power": "use",
-    "in this article": "[delete - reader knows where they are]",
-    "without further ado": "[delete]"
+    "delve into": {"pattern": "delve into", "replacement": "look at"},
+    "delve deeper": {"pattern": "delve deeper", "replacement": "dig into"},
+    "it's important to note": {"pattern": "it's important to note", "replacement": "[delete or state the fact directly]"},
+    "it's worth noting": {"pattern": "it's worth noting", "replacement": "[delete or state the fact directly]"},
+    "at the end of the day": {"pattern": "at the end of the day", "replacement": "[delete]"},
+    "in today's fast-paced world": {"pattern": "in today's fast-paced world", "replacement": "[delete or be specific about what changed]"},
+    "navigate the complexities": {"pattern": "navigate the complexities", "replacement": "handle"},
+    "unlock the potential": {"pattern": "unlock the potential", "replacement": "get more from"},
+    "harness the power": {"pattern": "harness the power", "replacement": "use"},
+    "in this article": {"pattern": "in this article", "replacement": "[delete - reader knows where they are]"},
+    "without further ado": {"pattern": "without further ado", "replacement": "[delete]"}
   },
   "auto_store_triggers": {
     "writing_edits": {
