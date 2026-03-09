@@ -49,7 +49,7 @@ const engine = new Engine({
 // ---------------------------------------------------------------------------
 
 const server = new Server(
-  { name: 'context-provider', version: '2.0.0' },
+  { name: 'context-provider', version: '2.0.0-alpha.2' },
   { capabilities: { tools: {} } },
 );
 

@@ -5,6 +5,26 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0-alpha.2] - 2026-03-09
+
+### Added
+- **Node.js MCP Server** (`src/server/index.ts`): Full MCP protocol server wrapping the V2 Engine
+  - stdio transport (default) for Claude Desktop and Claude Code
+  - HTTP transport (`--http` flag) with Streamable HTTP on configurable port (default 3100)
+  - `/health` endpoint for HTTP mode with engine status
+  - 6 MCP tools: get_tool_context, get_syntax_rules, list_available_contexts, apply_auto_corrections, build_injection, list_instincts
+- **`/instill` Skill**: Global Claude Code skill with interactive review flow (a/e/r shortcuts)
+- **`mcp-context-provider` CLI**: Global binary to run the MCP server directly
+
+### Fixed
+- **context-loader.ts**: Missing closing brace causing build failure
+- **9 context files**: Migrated to V2 Zod schema (auto_corrections format, session_initialization fields, priority enum values)
+- **tool_category collision**: azure-vm-sql-server no longer collides with azure context
+
+### Changed
+- **Documentation**: Complete rewrite of CLAUDE.md, Installation guide, and MkDocs landing page for V2
+- **Configuration**: .mcp.json and Claude Desktop config updated from Python to Node.js server
+
 ## [2.0.0-alpha.1] - 2026-03-08
 
 ### Changed
