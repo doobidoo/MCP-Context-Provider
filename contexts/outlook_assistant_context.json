@@ -2,14 +2,12 @@
   "auto_convert": false,
   "auto_corrections": {
     "markdown_in_email": {
-      "correction": "Convert to HTML (<h2>, <strong>, <ul>) or Plain Text (line breaks, UPPERCASE)",
-      "error": "Email contains Markdown formatting which will not render in email clients",
-      "pattern": "## |### |\\*\\*|\\* |- "
+      "pattern": "## |### |\\*\\*|\\* |- ",
+      "replacement": "Convert to HTML (<h2>, <strong>, <ul>) or Plain Text (line breaks, UPPERCASE)"
     },
     "send-email": {
-      "before": "Always present email as draft first, never send directly. Ensure NO Markdown formatting.",
       "pattern": "outlook-assistant:send-email",
-      "suggest": "Present email content for approval before sending. Check: No Markdown syntax in body."
+      "replacement": "Present email content for approval before sending. Check: No Markdown syntax in body."
     }
   },
   "auto_retrieve_triggers": {

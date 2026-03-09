@@ -28,6 +28,11 @@ env/
 
 # Environment variables
 .env
+
+# Private context files (infrastructure-specific, not for public repo)
+contexts/azure-vm-sql-server_context.json
+contexts/uptime-kuma_context.json
+contexts/vaultwarden_context.json
 .env.local
 
 # IDE

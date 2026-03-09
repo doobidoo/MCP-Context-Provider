@@ -59,6 +59,7 @@ export class ContextLoader {
             : String(result.reason);
         const file = errorMsg.split(':')[0] ?? 'unknown';
         errors.push({ file, error: errorMsg });
+      }
     }
 
     return { contexts, errors };

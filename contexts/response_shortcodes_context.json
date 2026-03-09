@@ -56,6 +56,7 @@
     "shortcode_behavior": "When a shortcode is detected at the beginning of a message, apply that response style throughout the entire response"
   },
   "session_initialization": {
+    "enabled": false,
     "actions": {
       "on_startup": [
         {

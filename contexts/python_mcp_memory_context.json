@@ -63,16 +63,16 @@
   },
   "auto_corrections": {
     "import_style": {
-      "from": "import mcp_memory_service.storage",
-      "to": "from mcp_memory_service.storage import SpecificClass"
+      "pattern": "import mcp_memory_service.storage",
+      "replacement": "from mcp_memory_service.storage import SpecificClass"
     },
     "async_syntax": {
-      "from": "def handle_tool",
-      "to": "async def handle_tool"
+      "pattern": "def handle_tool",
+      "replacement": "async def handle_tool"
     },
     "type_hints": {
-      "from": "def store(content, tags)",
-      "to": "def store(content: str, tags: list[str] | None = None)"
+      "pattern": "def store(content, tags)",
+      "replacement": "def store(content: str, tags: list[str] | None = None)"
     }
   },
   "session_initialization": {

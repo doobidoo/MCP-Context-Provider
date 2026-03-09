@@ -19,8 +19,8 @@
     "gh_pages_branch": "gh-pages (auto-created by gh-deploy)"
   },
   "auto_corrections": {
-    "svg_write_method": "ALWAYS use bash heredoc for SVG files, NEVER write_file – write_file corrupts SVG to 6 bytes",
-    "logo_background": "SVG logo must have transparent background (no fill on root circle) – dark fill invisible in header"
+    "svg_write_method": {"pattern": "svg_write_method", "replacement": "ALWAYS use bash heredoc for SVG files, NEVER write_file – write_file corrupts SVG to 6 bytes"},
+    "logo_background": {"pattern": "logo_background", "replacement": "SVG logo must have transparent background (no fill on root circle) – dark fill invisible in header"}
   },
   "auto_store_triggers": {
     "mkdocs_issues": {
@@ -52,7 +52,8 @@
     }
   },
   "session_initialization": {
-    "enabled": false
+    "enabled": false,
+    "actions": {"on_startup": []}
   },
   "common_pitfalls": [
     "SVG files corrupted by write_file tool – use bash heredoc instead",

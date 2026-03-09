@@ -2,17 +2,17 @@
   "tool_category": "n8n",
   "auto_convert": false,
   "metadata": {
-    "version": "2.0.0",
-    "last_updated": "2026-02-21T14:30:00.000000",
+    "version": "2.2.0",
+    "last_updated": "2026-02-24T23:00:00.000000",
     "created_by": "manual_session",
     "applies_to_tools": ["automation:*", "n8n:*"],
     "priority": "high"
   },
-  "description": "n8n workflow automation platform - configuration, deployment, and production gotchas (v2.8+)",
+  "description": "n8n workflow automation platform - configuration, deployment, and production gotchas for DMI instance (v2.8+)",
   "preferences": {
-    "instance_url": "https://n8n.example.com",
-    "vm": "<VM_IP> (vm-internal-tools)",
-    "ssh_command": "ssh -i ~/.ssh/internal-tools.pem <USER>@<VM_IP>",
+    "instance_url": "https://n8n.cloud.jivs.com",
+    "vm": "172.161.92.118 (vm-internal-tools)",
+    "ssh_command": "ssh -i ~/.ssh/internal-tools.pem azureuser@172.161.92.118",
     "container_name": "n8n",
     "compose_file": "/opt/docker/docker-compose.yml",
     "data_dir": "/home/node/.n8n",
@@ -72,8 +72,16 @@
     },
     "import_creates_duplicates": {
       "severity": "HIGH",
-      "problem": "n8n import:workflow ALWAYS creates a NEW workflow. There is no update-in-place.",
-      "fix": "Update existing workflows via SQLite database directly, then restart n8n"
+      "problem": "n8n import:workflow ALWAYS creates a NEW workflow with a new ID. There is no update-in-place via CLI.",
+      "fix": "For updates: delete old workflow from DB (webhook_entity, workflow_published_version, workflow_entity), then import:workflow fresh, then activate via update:workflow --active=true, then restart n8n.",
+      "correct_update_sequence": [
+        "1. DELETE FROM webhook_entity WHERE workflowId = 'OLD_ID'",
+        "2. DELETE FROM workflow_published_version WHERE workflowId = 'OLD_ID'",
+        "3. DELETE FROM workflow_entity WHERE id = 'OLD_ID'",
+        "4. n8n import:workflow --input=/tmp/workflow.json",
+        "5. n8n update:workflow --id=NEW_ID --active=true",
+        "6. docker restart n8n"
+      ]
     },
     "execute_cli_port_conflict": {
       "severity": "MEDIUM",
@@ -87,21 +95,73 @@
       "error_message": "SQLITE_CORRUPT: database disk image is malformed",
       "fix": "Use dump/restore: sqlite3 old.db .dump | sqlite3 new.db",
       "prevention": "Always use docker exec with node scripts to query/update from INSIDE the container"
+    },
+    "docker_cross_network_communication": {
+      "severity": "HIGH",
+      "problem": "Containers on different Docker networks (e.g. n8n and Uptime Kuma) cannot reach each other via localhost or container name",
+      "error_message": "ECONNREFUSED 127.0.0.1:PORT",
+      "fix": "Use Docker bridge gateway IP 172.17.0.1 instead of localhost. This routes through the host network.",
+      "example": "Uptime Kuma webhook URL: http://172.17.0.1:5678/webhook/uptime-kuma-alert (reaches n8n on port 5678)",
+      "note": "Only works if the target container's port is mapped to the host (e.g. -p 5678:5678)"
+    },
+    "power_automate_teams_trigger_body_empty": {
+      "severity": "CRITICAL",
+      "problem": "Power Automate 'When a Teams webhook request is received' trigger consumes the HTTP body. triggerBody() returns empty {\"\":\"\"} for ALL payload formats.",
+      "consequence": "Any subsequent action (Post card, Compose, etc.) cannot access the original request data",
+      "failed_formats": ["MessageCard", "Adaptive Card", "Plain JSON with attachments wrapper"],
+      "workaround": "Use 'When an HTTP request is received' trigger instead (premium connector) - this preserves triggerBody()"
+    },
+    "code_node_no_fetch": {
+      "severity": "HIGH",
+      "problem": "n8n Code node v2 sandbox does NOT expose global fetch() even though Node.js 22 has it natively",
+      "error_message": "fetch is not defined",
+      "fix": "Use a separate HTTP Request node after the Code node instead of making HTTP calls inside the Code node",
+      "note": "The sandbox blocks most Node.js globals. Use Code node only for data transformation, not HTTP calls."
+    },
+    "http_request_json_serialization": {
+      "severity": "CRITICAL",
+      "problem": "HTTP Request node with contentType 'json' and dynamic expression in jsonBody causes [object Object] serialization. Expression evaluation + JSON parsing pipeline double-processes the data.",
+      "fix": "Use contentType 'raw' with rawContentType 'application/json' and explicit Content-Type header. Code node outputs JSON.stringify(payload), HTTP Request sends it as raw string.",
+      "pattern": {
+        "code_node_output": "return [{ json: { teamsBody: JSON.stringify(payload) } }]",
+        "http_request_config": {
+          "contentType": "raw",
+          "rawContentType": "application/json",
+          "body": "={{ $json.teamsBody }}",
+          "sendHeaders": true,
+          "headerParameters": [{"name": "Content-Type", "value": "application/json"}]
+        }
+      }
+    },
+    "workflow_versioning_system": {
+      "severity": "CRITICAL",
+      "problem": "n8n has a workflow versioning system. Simply updating workflow_entity.nodes does NOT update the running workflow.",
+      "architecture": {
+        "workflow_entity.nodes": "Draft version (what you see in the editor)",
+        "workflow_entity.versionId": "Current draft version UUID",
+        "workflow_entity.activeVersionId": "Published/active version UUID",
+        "workflow_published_version": "Table mapping workflowId → publishedVersionId"
+      },
+      "consequence": "Updating nodes via SQL but not versions causes 'Active version not found' errors or old code executing",
+      "fix": "Use n8n CLI (update:workflow/publish:workflow) to properly publish, then restart n8n. Do NOT manually manipulate version tables."
     }
   },
   "deployment": {
-    "description": "Workflow deployment procedures for n8n instance",
+    "description": "Workflow deployment procedures for DMI n8n instance",
     "update_existing_workflow": {
-      "description": "PREFERRED method for updating workflows already on n8n",
+      "description": "PREFERRED method for updating workflows already on n8n. Uses delete+reimport because of versioning system.",
       "steps": [
         "1. Validate JSON locally: node -e \"JSON.parse(require('fs').readFileSync('workflow.json','utf8')); console.log('OK')\"",
-        "2. SCP to VM: scp -i ~/.ssh/internal-tools.pem workflow.json <USER>@<VM_IP>:/tmp/",
+        "2. SCP to VM: scp -i ~/.ssh/internal-tools.pem workflow.json azureuser@172.161.92.118:/tmp/",
         "3. Copy into container: sudo docker cp /tmp/workflow.json n8n:/tmp/",
-        "4. Write update script (see template), copy in, and run",
-        "5. Restart: sudo docker restart n8n",
-        "6. Clean up temp files on host and in container"
+        "4. Delete old workflow from DB (webhook_entity + workflow_published_version + workflow_entity)",
+        "5. Import new: sudo docker exec n8n n8n import:workflow --input=/tmp/workflow.json",
+        "6. Activate: sudo docker exec n8n n8n update:workflow --id=NEW_ID --active=true",
+        "7. Restart: sudo docker restart n8n && sleep 8",
+        "8. Verify webhooks registered in webhook_entity table",
+        "9. Clean up temp files on host and in container"
       ],
-      "update_script_template": "const fs = require('fs');\nconst sqlite3 = require('/usr/local/lib/node_modules/n8n/node_modules/.pnpm/sqlite3@5.1.7/node_modules/sqlite3');\nconst db = new sqlite3.Database('/home/node/.n8n/database.sqlite');\nconst wf = JSON.parse(fs.readFileSync('/tmp/workflow.json', 'utf8'));\ndb.run(\n  'UPDATE workflow_entity SET nodes = ?, connections = ?, updatedAt = datetime(\"now\") WHERE id = ?',\n  [JSON.stringify(wf.nodes), JSON.stringify(wf.connections), 'WORKFLOW_ID_HERE'],\n  function(err) { console.log(err || 'Updated: ' + this.changes); db.close(); }\n);"
+      "warning": "Do NOT use raw SQL UPDATE on workflow_entity.nodes — this only updates the draft, not the published version. n8n's versioning system (activeVersionId, workflow_published_version) must be properly updated via CLI."
     },
     "first_time_import": {
       "description": "Only for NEW workflows that don't exist yet",
@@ -114,35 +174,75 @@
     }
   },
   "teams_integration": {
-    "description": "Sending Adaptive Cards to Microsoft Teams via Power Automate",
-    "critical_rules": [
-      "Power Automate PostCardToConversation expects messageBody = Adaptive Card JSON directly (type: AdaptiveCard at root)",
-      "If PA flow stores full body, it must extract card with: @string(first(variables('Body')?['Attachments'])?['content'])",
-      "Property names in PA expressions are CASE-SENSITIVE: use 'Attachments' (capital A) in n8n payload",
-      "PA HTTP trigger returns 202 even if internal flow actions fail - always check PA flow run history for errors",
-      "n8n sends wrapper format: {type: 'message', Attachments: [{contentType: '...', content: {AdaptiveCard}}]}"
-    ],
-    "n8n_payload_format": {
-      "type": "message",
-      "Attachments": [{
-        "contentType": "application/vnd.microsoft.card.adaptive",
-        "contentUrl": null,
-        "content": {
-          "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-          "type": "AdaptiveCard",
-          "version": "1.4",
-          "body": ["...TextBlock, FactSet, etc..."],
-          "actions": ["...Action.OpenUrl, etc..."]
-        }
-      }]
+    "description": "Microsoft Teams notifications via Power Automate - hard-won production lessons",
+    "status": "WORKING - Uptime Kuma → n8n → Power Automate (c6ebeea flow) → Teams",
+    "power_automate_trigger_behavior": {
+      "severity": "CRITICAL",
+      "trigger_type": "When a Teams webhook request is received",
+      "key_finding": "This trigger CONSUMES the request body. triggerBody() always returns {\"\":\"\"} (empty object) regardless of payload format.",
+      "consequences": [
+        "Any action using triggerBody() (Post card, Compose, etc.) receives EMPTY data",
+        "Post card in a chat or channel action ALWAYS fails with 'Property type must be AdaptiveCard' because it parses empty body",
+        "This happens for ALL payload formats: MessageCard, Adaptive Card, plain JSON - body is always consumed"
+      ],
+      "auto_posting_behavior": {
+        "description": "The trigger auto-posts MessageCards to the configured channel WITHOUT any action needed",
+        "works_with": "curl (direct HTTP calls from shell)",
+        "does_NOT_work_with": "Node.js fetch(), axios (n8n HTTP Request node), programmatic HTTP clients",
+        "theory": "Difference likely in HTTP headers (Transfer-Encoding, Content-Type charset, User-Agent) between curl and Node.js clients"
+      }
     },
-    "power_automate_channel": "<TEAMS_CHANNEL>",
+    "tested_and_failed_approaches": [
+      "MessageCard via fetch() in Code node - trigger does not auto-post, Post card action fails",
+      "MessageCard via n8n HTTP Request node (axios) - same result",
+      "Adaptive Card via HTTP Request node - triggerBody() still empty, Post card action fails",
+      "Removing Post card action + Terminate - flow runs but nothing posts",
+      "Compose action to inspect triggerBody() - confirmed body is empty {\"\":\"\"}"
+    ],
+    "recommended_fix": {
+      "option_a": {
+        "name": "Replace Post card with Compose action",
+        "description": "Remove 'Post card' action, add 'Compose' with value 'done'. Trigger auto-posts MessageCard. Requires testing if auto-posting works for n8n."
+      },
+      "option_b": {
+        "name": "Change trigger to 'When an HTTP request is received'",
+        "description": "Use generic HTTP trigger (Request connector) which preserves triggerBody(). Then 'Post card' action can parse Adaptive Card from body. Requires premium connector.",
+        "card_parameter": "string(triggerBody())"
+      },
+      "option_c": {
+        "name": "Use Microsoft Graph API directly from n8n",
+        "description": "Skip Power Automate entirely. Use n8n Microsoft Teams node with OAuth2 credentials to post directly to channel."
+      }
+    },
+    "messagecard_format": {
+      "description": "Legacy Office 365 Connector Card format - used by 'When a Teams webhook request is received' trigger",
+      "example": {
+        "@type": "MessageCard",
+        "@context": "http://schema.org/extensions",
+        "summary": "Alert title",
+        "themeColor": "FF0000",
+        "title": "[DOWN] Monitor Name",
+        "sections": [{"facts": [{"name": "Monitor", "value": "Name"}], "markdown": true}],
+        "potentialAction": [{"@type": "OpenUri", "name": "Open", "targets": [{"os": "default", "uri": "https://..."}]}]
+      }
+    },
+    "adaptivecard_format": {
+      "description": "Modern card format - required by 'Post card in a chat or channel' action",
+      "example": {
+        "type": "AdaptiveCard",
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "version": "1.4",
+        "body": [{"type": "TextBlock", "text": "Title", "weight": "Bolder", "size": "Large"}],
+        "actions": [{"type": "Action.OpenUrl", "title": "Open", "url": "https://..."}]
+      }
+    },
+    "power_automate_channel": "Maintenance | CloudOperations",
     "note": "Webhook URL stored in workflow JSON, not here (security)"
   },
   "xml_rpc_integration": {
     "description": "DokuWiki XML-RPC integration patterns for n8n",
-    "endpoint": "http://<DOKUWIKI_HOST>/lib/exe/xmlrpc.php (Docker internal DNS)",
-    "auth": "httpBasicAuth credential (<CREDENTIAL_NAME>)",
+    "endpoint": "http://dokuwiki/lib/exe/xmlrpc.php (Docker internal DNS)",
+    "auth": "httpBasicAuth credential (dokuwiki-basic-auth)",
     "common_methods": {
       "getRecentChanges": "wiki.getRecentChanges - param: Unix timestamp as <int>",
       "getPage": "wiki.getPage - param: page ID as <string>",
@@ -153,11 +253,33 @@
   },
   "active_workflows": {
     "dokuwiki_newsticker": {
-      "id": "<WORKFLOW_ID>",
+      "id": "VXKkirSVj3Q6ymPn",
       "name": "DokuWiki Weekly Newsticker Update",
       "triggers": ["Cron (Monday 08:00)", "Manual (n8n UI)"],
-      "target": "<WIKI_HOST> start page <newsticker> section",
+      "target": "kb.cloud.jivs.com start page <newsticker> section",
       "repo_path": "automation/dokuwiki-newsticker/dokuwiki-newsticker-workflow.json"
+    },
+    "uptime_kuma_teams_relay": {
+      "id": "UUctMskckkJ7eCCT",
+      "name": "Uptime Kuma → Teams Relay",
+      "status": "WORKING (deployed 2026-02-24)",
+      "triggers": ["Webhook POST /webhook/uptime-kuma-alert"],
+      "architecture": "Webhook → Build Card (Code, outputs JSON string) → Send to Teams (HTTP Request, raw body) → Respond OK",
+      "power_automate_flow": "c6ebeeaed9214511ae1ca7dffd72b584 (same as DokuWiki Newsticker)",
+      "card_format": "Adaptive Card in Attachments wrapper: {type:'message',Attachments:[{contentType:'application/vnd.microsoft.card.adaptive',content:{AdaptiveCard}}]}",
+      "key_pattern": "Code node builds payload as JSON.stringify(), HTTP Request sends as contentType 'raw' with rawContentType 'application/json'",
+      "uptime_kuma_notification": {
+        "id": 2,
+        "type": "webhook",
+        "url": "http://172.17.0.1:5678/webhook/uptime-kuma-alert",
+        "note": "Uses Docker bridge gateway IP because Uptime Kuma and n8n are on different Docker networks"
+      },
+      "repo_path": "automation/uptime-kuma-teams-relay/uptime-kuma-teams-relay-workflow.json"
+    },
+    "tc_credentials_webhook": {
+      "id": "lzOlqaAhoJXZ5KAE",
+      "name": "TC Credentials Webhook",
+      "status": "active"
     }
   },
   "syntax_rules": {
