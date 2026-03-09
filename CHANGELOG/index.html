@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Persistent context and learned instincts for Claude Code — static rules meet confidence-scored intelligence">
+        <meta name="description" content="Persistent tool context for Claude Desktop – eliminate context loss between chat sessions">
       
       
       
@@ -84,6 +84,10 @@
     <div data-md-component="announce">
       
     </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
     
     
       
@@ -236,74 +240,18 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../getting-started/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="../guides/INSTALLATION/" class="md-tabs__link">
+          
+  
   
   Getting Started
 
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../architecture/" class="md-tabs__link">
-        
-  
-  
+        </a>
+      </li>
     
-  
-  Architecture
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../mcp-tools/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  MCP Tools
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../cli/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  CLI Reference
-
-      </a>
-    </li>
   
 
       
@@ -333,17 +281,18 @@
     
   
   
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
   
-  Changelog
+  
+  Reference
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -430,9 +379,27 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+    
+    
+    
+    
+      
+      
         
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -446,26 +413,35 @@
   
   
 
-      </a>
-    </li>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
   
 
-    
-      
-      
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
+      <a href="../guides/INSTALLATION/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture
+    Installation
   
 
     
@@ -477,57 +453,11 @@
     </li>
   
 
-    
+              
+            
+          </ul>
+        </nav>
       
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mcp-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    CLI Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -561,6 +491,63 @@
     
       
       
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
     
@@ -626,58 +613,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#201-2026-03-09" class="md-nav__link">
+  <a href="#200-alpha1-2026-03-08" class="md-nav__link">
     <span class="md-ellipsis">
       
-        [2.0.1] - 2026-03-09
+        [2.0.0-alpha.1] - 2026-03-08
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[2.0.1] - 2026-03-09">
+    <nav class="md-nav" aria-label="[2.0.0-alpha.1] - 2026-03-08">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fixed
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#changed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changed
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#200-2026-03-08" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        [2.0.0] - 2026-03-08
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="[2.0.0] - 2026-03-08">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#changed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -727,7 +675,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_1" class="md-nav__link">
+  <a href="#fixed" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -755,7 +703,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_2" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -827,7 +775,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_3" class="md-nav__link">
+  <a href="#fixed_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -866,7 +814,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_2" class="md-nav__link">
+  <a href="#changed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -877,7 +825,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_4" class="md-nav__link">
+  <a href="#fixed_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -916,7 +864,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_3" class="md-nav__link">
+  <a href="#changed_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -927,7 +875,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_5" class="md-nav__link">
+  <a href="#fixed_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -955,7 +903,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#changed_4" class="md-nav__link">
+  <a href="#changed_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -966,7 +914,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_6" class="md-nav__link">
+  <a href="#fixed_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1160,7 +1108,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_5" class="md-nav__link">
+  <a href="#changed_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1232,7 +1180,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_6" class="md-nav__link">
+  <a href="#changed_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1243,7 +1191,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_7" class="md-nav__link">
+  <a href="#fixed_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1282,7 +1230,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_8" class="md-nav__link">
+  <a href="#fixed_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1293,7 +1241,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_7" class="md-nav__link">
+  <a href="#changed_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1332,7 +1280,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_9" class="md-nav__link">
+  <a href="#fixed_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1354,7 +1302,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_8" class="md-nav__link">
+  <a href="#changed_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1404,7 +1352,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_9" class="md-nav__link">
+  <a href="#changed_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1570,6 +1518,14 @@
     </li>
   
 
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
     
   </ul>
 </nav>
@@ -1598,58 +1554,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#201-2026-03-09" class="md-nav__link">
+  <a href="#200-alpha1-2026-03-08" class="md-nav__link">
     <span class="md-ellipsis">
       
-        [2.0.1] - 2026-03-09
+        [2.0.0-alpha.1] - 2026-03-08
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[2.0.1] - 2026-03-09">
+    <nav class="md-nav" aria-label="[2.0.0-alpha.1] - 2026-03-08">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fixed
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#changed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changed
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#200-2026-03-08" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        [2.0.0] - 2026-03-08
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="[2.0.0] - 2026-03-08">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#changed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1699,7 +1616,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_1" class="md-nav__link">
+  <a href="#fixed" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1727,7 +1644,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_2" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1799,7 +1716,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_3" class="md-nav__link">
+  <a href="#fixed_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1838,7 +1755,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_2" class="md-nav__link">
+  <a href="#changed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1849,7 +1766,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_4" class="md-nav__link">
+  <a href="#fixed_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1888,7 +1805,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_3" class="md-nav__link">
+  <a href="#changed_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1899,7 +1816,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_5" class="md-nav__link">
+  <a href="#fixed_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1927,7 +1844,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#changed_4" class="md-nav__link">
+  <a href="#changed_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -1938,7 +1855,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_6" class="md-nav__link">
+  <a href="#fixed_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -2132,7 +2049,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_5" class="md-nav__link">
+  <a href="#changed_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -2204,7 +2121,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_6" class="md-nav__link">
+  <a href="#changed_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -2215,7 +2132,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_7" class="md-nav__link">
+  <a href="#fixed_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -2254,7 +2171,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_8" class="md-nav__link">
+  <a href="#fixed_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -2265,7 +2182,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_7" class="md-nav__link">
+  <a href="#changed_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -2304,7 +2221,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_9" class="md-nav__link">
+  <a href="#fixed_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -2326,7 +2243,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_8" class="md-nav__link">
+  <a href="#changed_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -2376,7 +2293,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_9" class="md-nav__link">
+  <a href="#changed_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         Changed
@@ -2564,18 +2481,8 @@
 <p>All notable changes to the MCP Context Provider project will be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<h2 id="201-2026-03-09">[2.0.1] - 2026-03-09<a class="headerlink" href="#201-2026-03-09" title="Permanent link">&para;</a></h2>
-<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Skill discovery</strong>: Moved <code>/instill</code> skill from <code>.claude/skills/instill.md</code> to <code>.claude/skills/instill/SKILL.md</code> — Claude Code requires the <code>&lt;name&gt;/SKILL.md</code> directory convention to discover project skills</li>
-<li><strong><code>.mcp.json</code> memory path</strong>: Corrected memory server directory from stale <code>Documents/GitHub/</code> path to <code>Repositories/</code></li>
-</ul>
+<h2 id="200-alpha1-2026-03-08">[2.0.0-alpha.1] - 2026-03-08<a class="headerlink" href="#200-alpha1-2026-03-08" title="Permanent link">&para;</a></h2>
 <h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>README</strong>: Documented MCP Server section (14 tools, env config, Claude Desktop integration), fixed test count, added <code>@modelcontextprotocol/sdk</code> to tech stack, corrected <code>approved_by</code> description, added <code>server/</code> to project structure</li>
-</ul>
-<h2 id="200-2026-03-08">[2.0.0] - 2026-03-08<a class="headerlink" href="#200-2026-03-08" title="Permanent link">&para;</a></h2>
-<h3 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Complete TypeScript Rewrite</strong>: Ground-up rewrite from Python to TypeScript</li>
 <li>New dual-concept architecture: <strong>Contexts</strong> (static rules) and <strong>Instincts</strong> (learned rules)</li>
@@ -2584,9 +2491,6 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 </ul>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>MCP Server</strong>: Full stdio + HTTP transport via <code>@modelcontextprotocol/sdk</code></li>
-<li>13 MCP tools: context/instinct queries, registry management, memory bridge</li>
-<li><code>mcp-context-provider</code> binary entry point</li>
 <li><strong>Instinct Engine</strong>: Confidence-scored learned rules (0.0–1.0) with human approval workflow</li>
 <li>YAML-based instinct files with Zod validation</li>
 <li>Regex + substring trigger pattern matching</li>
@@ -2604,7 +2508,6 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Instinct sync (push/pull), orphan detection, semantic discovery</li>
 <li>Configurable base URL, API key, timeout</li>
 <li><strong><code>/instill</code> Skill</strong>: Claude Code skill for extracting instincts from sessions</li>
-<li><strong>GitHub Pages Documentation</strong>: Complete v2 docs site with architecture diagrams</li>
 <li><strong>Test Suite</strong>: 61 vitest tests across 5 suites — all passing</li>
 </ul>
 <h3 id="removed">Removed<a class="headerlink" href="#removed" title="Permanent link">&para;</a></h3>
@@ -2614,7 +2517,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Python-based CI scripts (retained for version checking compatibility)</li>
 </ul>
 <h2 id="184-2025-10-05">[1.8.4] - 2025-10-05<a class="headerlink" href="#184-2025-10-05" title="Permanent link">&para;</a></h2>
-<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Critical</strong>: Fixed KeyError: 'insights' in session initialization learning phase (context_provider_server.py:686-688)</li>
 <li>Changed to use correct key 'insights_gained' instead of 'insights'</li>
@@ -2623,7 +2526,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Enables proper learning insights capture during session startup</li>
 </ul>
 <h2 id="183-2025-09-25">[1.8.3] - 2025-09-25<a class="headerlink" href="#183-2025-09-25" title="Permanent link">&para;</a></h2>
-<h3 id="fixed_2">Fixed<a class="headerlink" href="#fixed_2" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Context File Ambiguity</strong>: Removed duplicate <code>contexts/general_preferences.json</code> file</li>
 <li>Resolved conflict between old <code>general_preferences.json</code> and new <code>general_preferences_context.json</code></li>
@@ -2664,16 +2567,16 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Memory integration with search and storage actions</li>
 <li>Tool-specific tagging for organized memory storage</li>
 </ul>
-<h3 id="fixed_3">Fixed<a class="headerlink" href="#fixed_3" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_2">Fixed<a class="headerlink" href="#fixed_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Corrected session_initialization structure to match validation requirements</li>
 </ul>
 <h2 id="181-2025-09-18">[1.8.1] - 2025-09-18<a class="headerlink" href="#181-2025-09-18" title="Permanent link">&para;</a></h2>
 <h3 id="added_2">Added<a class="headerlink" href="#added_2" title="Permanent link">&para;</a></h3>
 <p>-</p>
-<h3 id="changed_2">Changed<a class="headerlink" href="#changed_2" title="Permanent link">&para;</a></h3>
+<h3 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h3>
 <p>-</p>
-<h3 id="fixed_4">Fixed<a class="headerlink" href="#fixed_4" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_3">Fixed<a class="headerlink" href="#fixed_3" title="Permanent link">&para;</a></h3>
 <p>-</p>
 <h2 id="180-2025-09-18">[1.8.0] - 2025-09-18<a class="headerlink" href="#180-2025-09-18" title="Permanent link">&para;</a></h2>
 <h3 id="added_3">Added<a class="headerlink" href="#added_3" title="Permanent link">&para;</a></h3>
@@ -2700,7 +2603,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li><strong>Build Testing</strong>: <code>scripts/test_build.py</code> tests build process without creating packages</li>
 <li><strong>Version Consistency</strong>: <code>scripts/check_versions.py</code> ensures version synchronization across files</li>
 </ul>
-<h3 id="changed_3">Changed<a class="headerlink" href="#changed_3" title="Permanent link">&para;</a></h3>
+<h3 id="changed_2">Changed<a class="headerlink" href="#changed_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Repository Structure</strong>: Removed duplicate DXT directory from version control</li>
 <li><strong>Build Artifacts</strong>: DXT directory now generated during build, not version controlled</li>
@@ -2715,14 +2618,14 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li><strong>No Download Dependencies</strong>: Eliminates version drift from pre-built packages</li>
 <li><strong>Consistent Installation</strong>: Always installs latest server with dynamic loading</li>
 </ul>
-<h3 id="fixed_5">Fixed<a class="headerlink" href="#fixed_5" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_4">Fixed<a class="headerlink" href="#fixed_4" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Context File Discovery</strong>: Server now loads all context files instead of hardcoded 5</li>
 <li><strong>Version Synchronization</strong>: Automated version management prevents inconsistencies</li>
 <li><strong>Build Reproducibility</strong>: Eliminates manual file copying and synchronization issues</li>
 </ul>
 <h2 id="170-2025-09-18">[1.7.0] - 2025-09-18<a class="headerlink" href="#170-2025-09-18" title="Permanent link">&para;</a></h2>
-<h3 id="changed_4">Changed<a class="headerlink" href="#changed_4" title="Permanent link">&para;</a></h3>
+<h3 id="changed_3">Changed<a class="headerlink" href="#changed_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Repository Structure</strong>: Major reorganization for improved maintainability</li>
 <li>Created <code>docs/</code> directory with <code>guides/</code> and <code>phase3/</code> subdirectories for all documentation</li>
@@ -2731,7 +2634,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Moved all documentation files to appropriate subdirectories</li>
 <li>Cleaned up root directory from 37 to 22 items for better navigation</li>
 </ul>
-<h3 id="fixed_6">Fixed<a class="headerlink" href="#fixed_6" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_5">Fixed<a class="headerlink" href="#fixed_5" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Updated all documentation references to reflect new directory structure</li>
 <li>Fixed installation script paths in README.md and CLAUDE.md</li>
@@ -2923,7 +2826,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li><code>date_awareness_context.json</code>: Temporal context awareness features</li>
 <li>Session initialization configuration in existing context files</li>
 </ul>
-<h3 id="changed_5">Changed<a class="headerlink" href="#changed_5" title="Permanent link">&para;</a></h3>
+<h3 id="changed_4">Changed<a class="headerlink" href="#changed_4" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>ContextProvider Architecture</strong>: Extended with session state management</li>
 <li>Added <code>session_status</code> tracking for initialization state</li>
@@ -2957,14 +2860,14 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Added support for <code>AUTO_LOAD_CONTEXTS</code> environment variable (defaults to <code>true</code>)</li>
 <li>AppleScript context and any future contexts load automatically without code changes</li>
 </ul>
-<h3 id="changed_6">Changed<a class="headerlink" href="#changed_6" title="Permanent link">&para;</a></h3>
+<h3 id="changed_5">Changed<a class="headerlink" href="#changed_5" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Context Loading System</strong>: Replaced hardcoded context file list with dynamic file discovery</li>
 <li><code>load_all_contexts()</code> method now scans the contexts directory using glob patterns</li>
 <li>Improved error handling and logging for context file loading</li>
 <li>Better debugging output showing discovered and loaded contexts</li>
 </ul>
-<h3 id="fixed_7">Fixed<a class="headerlink" href="#fixed_7" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_6">Fixed<a class="headerlink" href="#fixed_6" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>AppleScript Context Loading</strong>: AppleScript context now loads automatically as intended</li>
 <li>Previously required manual addition to hardcoded list</li>
@@ -2978,14 +2881,14 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Future-proof: new context files require no server code changes</li>
 </ul>
 <h2 id="121-2025-09-17">[1.2.1] - 2025-09-17<a class="headerlink" href="#121-2025-09-17" title="Permanent link">&para;</a></h2>
-<h3 id="fixed_8">Fixed<a class="headerlink" href="#fixed_8" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_7">Fixed<a class="headerlink" href="#fixed_7" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>macOS Configuration Path Issue</strong>: Fixed incorrect Claude Desktop configuration path detection</li>
 <li><code>install.sh</code>: Added proper macOS detection using <code>$OSTYPE</code> to use <code>~/Library/Application Support/Claude/</code> instead of <code>~/.config/claude/</code></li>
 <li><code>verify_install.py</code>: Updated <code>find_claude_config()</code> function to use correct macOS path</li>
 <li>Updated error messages to show platform-specific paths for better troubleshooting</li>
 </ul>
-<h3 id="changed_7">Changed<a class="headerlink" href="#changed_7" title="Permanent link">&para;</a></h3>
+<h3 id="changed_6">Changed<a class="headerlink" href="#changed_6" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Documentation Updates</strong>: Corrected macOS paths throughout documentation</li>
 <li><code>README.md</code>: Separated Linux/macOS configuration file locations</li>
@@ -3000,7 +2903,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>This resolves the issue where the installer would create config files in the wrong location on macOS systems</li>
 </ul>
 <h2 id="120-2025-08-21">[1.2.0] - 2025-08-21<a class="headerlink" href="#120-2025-08-21" title="Permanent link">&para;</a></h2>
-<h3 id="fixed_9">Fixed<a class="headerlink" href="#fixed_9" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_8">Fixed<a class="headerlink" href="#fixed_8" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Issue #1</strong>: DXT Package Installation Not Working as Documented</li>
 <li>Removed references to non-existent <code>dxt install</code> command</li>
@@ -3019,7 +2922,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Added platform-specific installation instructions</li>
 <li>Improved troubleshooting documentation</li>
 </ul>
-<h3 id="changed_8">Changed<a class="headerlink" href="#changed_8" title="Permanent link">&para;</a></h3>
+<h3 id="changed_7">Changed<a class="headerlink" href="#changed_7" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Installation Process</strong>: Now uses virtual environment approach instead of bundled dependencies</li>
 <li><strong>Documentation Structure</strong>: Reorganized installation options with automated scripts as primary method</li>
@@ -3044,7 +2947,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li><strong>DXT Build System</strong>: Added complete DXT directory structure and build process</li>
 <li><strong>Distribution Ready</strong>: 18.6 MB compressed package (44.6 MB unpacked)</li>
 </ul>
-<h3 id="changed_9">Changed<a class="headerlink" href="#changed_9" title="Permanent link">&para;</a></h3>
+<h3 id="changed_8">Changed<a class="headerlink" href="#changed_8" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Installation Methods</strong>: Now supports both DXT (recommended) and manual installation</li>
 <li><strong>README Structure</strong>: Reorganized with DXT installation as primary method</li>
@@ -3161,7 +3064,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2025–2026 doobidoo — Apache License 2.0
+      Copyright &copy; 2025-2026 doobidoo – MIT License
     </div>
   
   
@@ -3201,131 +3104,11 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
-<script type="module">
-// ==========================================================================
-// Workaround: Material for MkDocs loads mermaid from unpkg.com which
-// intermittently returns 503. The failed dynamic import() causes:
-//   1. Mermaid blocks show raw code (class "mermaid" gets stripped)
-//   2. Palette toggle event listeners never attach (dark mode broken)
-// This script fixes both issues.
-// ==========================================================================
-
-// --- Palette toggle fix ---------------------------------------------------
-// Material's palette toggle relies on JS event listeners that may not attach
-// when the mermaid import fails. This re-implements the toggle logic.
-function fixPaletteToggle() {
-  const palette = document.querySelector('[data-md-component="palette"]');
-  if (!palette) return;
-
-  const radios = palette.querySelectorAll('input[name="__palette"]');
-  const labels = palette.querySelectorAll('label');
-
-  function applyPalette(radio) {
-    const scheme = radio.getAttribute('data-md-color-scheme');
-    const primary = radio.getAttribute('data-md-color-primary');
-    const accent = radio.getAttribute('data-md-color-accent');
-
-    document.body.setAttribute('data-md-color-switching', '');
-    document.body.setAttribute('data-md-color-scheme', scheme);
-    document.body.setAttribute('data-md-color-primary', primary);
-    document.body.setAttribute('data-md-color-accent', accent);
-
-    // Toggle label visibility (show the opposite toggle)
-    for (const label of labels) {
-      label.hidden = label.htmlFor === radio.id;
-    }
-
-    // Persist preference
-    try {
-      localStorage.setItem('__md_palette', JSON.stringify({
-        scheme, primary, accent
-      }));
-    } catch (e) { /* private browsing */ }
-
-    // Remove transition marker after animation
-    requestAnimationFrame(() => {
-      document.body.removeAttribute('data-md-color-switching');
-    });
-  }
-
-  // Listen for radio changes
-  for (const radio of radios) {
-    radio.addEventListener('change', () => {
-      if (radio.checked) applyPalette(radio);
-    });
-  }
-
-  // Also listen for label clicks (in case radios don't fire change)
-  for (const label of labels) {
-    label.addEventListener('click', () => {
-      const radio = document.getElementById(label.htmlFor);
-      if (radio && !radio.checked) {
-        radio.checked = true;
-        applyPalette(radio);
-      }
-    });
-  }
-}
-
-// Run palette fix immediately (no need to wait)
-fixPaletteToggle();
-
-// --- Mermaid CDN fallback -------------------------------------------------
-const MERMAID_KEYWORDS = [
-  'graph ', 'graph\n', 'flowchart ', 'sequenceDiagram', 'classDiagram',
-  'stateDiagram', 'erDiagram', 'gantt', 'pie ', 'gitgraph',
-  'mindmap', 'timeline', 'sankey', 'xychart', 'block-beta'
-];
-
-function isMermaidBlock(el) {
-  const text = el.textContent.trimStart();
-  return MERMAID_KEYWORDS.some(kw => text.startsWith(kw));
-}
-
-async function initMermaidFallback() {
-  // Wait for Material's built-in mermaid loader to try (and possibly fail)
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
-  // Find <pre> blocks that contain mermaid syntax but have no rendered SVG
-  const allPre = document.querySelectorAll('pre');
-  const unrendered = Array.from(allPre).filter(
-    el => isMermaidBlock(el) && !el.querySelector('svg')
-  );
-
-  if (unrendered.length === 0) return;
-
-  // Load mermaid from jsdelivr
-  const { default: mermaid } = await import(
-    'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
-  );
-
-  // Detect current color scheme for correct theme
-  const scheme = document.body.getAttribute('data-md-color-scheme');
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: scheme === 'slate' ? 'dark' : 'default'
-  });
-
-  // Restore the mermaid class and set textContent directly (strip <code> wrapper)
-  for (const el of unrendered) {
-    const diagramText = el.textContent;
-    el.className = 'mermaid';
-    el.textContent = diagramText;
-  }
-
-  // Render all mermaid blocks
-  await mermaid.run({ nodes: unrendered });
-}
-
-initMermaidFallback().catch(err => console.warn('Mermaid fallback failed:', err));
-</script>
-
   </body>
 </html>

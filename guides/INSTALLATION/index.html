@@ -6,35 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Persistent context and learned instincts for Claude Code — static rules meet confidence-scored intelligence">
+        <meta name="description" content="Persistent tool context for Claude Desktop – eliminate context loss between chat sessions">
       
       
       
-        <link rel="canonical" href="https://doobidoo.github.io/MCP-Context-Provider/getting-started/">
+        <link rel="canonical" href="https://doobidoo.github.io/MCP-Context-Provider/guides/INSTALLATION/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../..">
       
       
-        <link rel="next" href="../architecture/">
+        <link rel="next" href="../../contexts-reference/">
       
       
         
       
       
-      <link rel="icon" href="../assets/logo.svg">
+      <link rel="icon" href="../../assets/logo.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
-        <title>Getting Started - MCP Context Provider</title>
+        <title>Installation - MCP Context Provider</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#installation" class="md-skip">
           Skip to content
         </a>
       
@@ -87,6 +87,10 @@
       
     </div>
     
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
     
       
 
@@ -94,9 +98,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="MCP Context Provider" class="md-header__button md-logo" aria-label="MCP Context Provider" data-md-component="logo">
+    <a href="../.." title="MCP Context Provider" class="md-header__button md-logo" aria-label="MCP Context Provider" data-md-component="logo">
       
-  <img src="../assets/logo.svg" alt="logo">
+  <img src="../../assets/logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -113,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting Started
+              Installation
             
           </span>
         </div>
@@ -220,7 +224,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -240,37 +244,19 @@
     
   
   
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
   
   Getting Started
 
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../architecture/" class="md-tabs__link">
-        
-  
-  
+        </a>
+      </li>
     
   
-  Architecture
-
-      </a>
-    </li>
-  
 
       
         
@@ -279,45 +265,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../mcp-tools/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  MCP Tools
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../cli/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  CLI Reference
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../contexts-reference/" class="md-tabs__link">
+      <a href="../../contexts-reference/" class="md-tabs__link">
         
   
   
@@ -335,17 +283,18 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../CHANGELOG/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="../../CHANGELOG/" class="md-tabs__link">
+          
   
-  Changelog
+  
+  Reference
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -377,9 +326,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="MCP Context Provider" class="md-nav__button md-logo" aria-label="MCP Context Provider" data-md-component="logo">
+    <a href="../.." title="MCP Context Provider" class="md-nav__button md-logo" aria-label="MCP Context Provider" data-md-component="logo">
       
-  <img src="../assets/logo.svg" alt="logo">
+  <img src="../../assets/logo.svg" alt="logo">
 
     </a>
     MCP Context Provider
@@ -406,7 +355,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -434,6 +383,63 @@
   
   
   
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
@@ -449,7 +455,7 @@
   <span class="md-ellipsis">
     
   
-    Getting Started
+    Installation
   
 
     
@@ -467,7 +473,7 @@
   <span class="md-ellipsis">
     
   
-    Getting Started
+    Installation
   
 
     
@@ -493,10 +499,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Requirements
       
     </span>
   </a>
@@ -504,10 +510,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#install-from-source" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Install from Source
       
     </span>
   </a>
@@ -515,10 +521,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verify" class="md-nav__link">
+  <a href="#global-cli-installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify
+        Global CLI Installation
       
     </span>
   </a>
@@ -526,10 +532,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configure-claude-code" class="md-nav__link">
+  <a href="#claude-desktop-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configure Claude Code
+        Claude Desktop Configuration
       
     </span>
   </a>
@@ -537,32 +543,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#restart-claude-code" class="md-nav__link">
+  <a href="#claude-code-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Restart Claude Code
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verify it works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-memory-bridge" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optional: Memory Bridge
+        Claude Code Configuration
       
     </span>
   </a>
@@ -581,10 +565,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#optional-memory-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional: Memory Bridge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#environment-variables" class="md-nav__link">
     <span class="md-ellipsis">
       
         Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-instill-skill-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional: /instill Skill (Claude Code)
       
     </span>
   </a>
@@ -609,30 +615,11 @@
     </li>
   
 
-    
+              
+            
+          </ul>
+        </nav>
       
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -644,61 +631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mcp-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    CLI Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../contexts-reference/" class="md-nav__link">
+      <a href="../../contexts-reference/" class="md-nav__link">
         
   
   
@@ -724,8 +657,62 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../CHANGELOG/" class="md-nav__link">
+      <a href="../../CHANGELOG/" class="md-nav__link">
         
   
   
@@ -741,6 +728,14 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -772,10 +767,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Requirements
       
     </span>
   </a>
@@ -783,10 +778,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#install-from-source" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Install from Source
       
     </span>
   </a>
@@ -794,10 +789,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verify" class="md-nav__link">
+  <a href="#global-cli-installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify
+        Global CLI Installation
       
     </span>
   </a>
@@ -805,10 +800,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configure-claude-code" class="md-nav__link">
+  <a href="#claude-desktop-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configure Claude Code
+        Claude Desktop Configuration
       
     </span>
   </a>
@@ -816,32 +811,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#restart-claude-code" class="md-nav__link">
+  <a href="#claude-code-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Restart Claude Code
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verify it works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-memory-bridge" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optional: Memory Bridge
+        Claude Code Configuration
       
     </span>
   </a>
@@ -860,10 +833,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#optional-memory-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional: Memory Bridge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#environment-variables" class="md-nav__link">
     <span class="md-ellipsis">
       
         Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-instill-skill-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional: /instill Skill (Claude Code)
       
     </span>
   </a>
@@ -898,7 +893,7 @@
 
 
   
-    <a href="https://github.com/doobidoo/MCP-Context-Provider/edit/main/docs/getting-started.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/doobidoo/MCP-Context-Provider/edit/main/docs/guides/INSTALLATION.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -906,71 +901,107 @@
   
 
 
-<h1 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h1>
-<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Node.js</strong> &gt;= 20</li>
-<li><strong>npm</strong></li>
+<li>Node.js &gt;= 20</li>
+<li>npm</li>
 </ul>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<h2 id="install-from-source">Install from Source<a class="headerlink" href="#install-from-source" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/doobidoo/MCP-Context-Provider.git
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>MCP-Context-Provider
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>npm<span class="w"> </span>install
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>npm<span class="w"> </span>run<span class="w"> </span>build
 </code></pre></div>
-<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npm<span class="w"> </span>run<span class="w"> </span>lint<span class="w">    </span><span class="c1"># Type-check (should produce no errors)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>npm<span class="w"> </span><span class="nb">test</span><span class="w">        </span><span class="c1"># Run all tests (82 tests across 6 suites)</span>
+<p>Verify:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npm<span class="w"> </span><span class="nb">test</span><span class="w">          </span><span class="c1"># 61 tests should pass</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>npm<span class="w"> </span>start<span class="w">         </span><span class="c1"># Should print &quot;Engine loaded: N contexts, N instincts&quot;</span>
 </code></pre></div>
-<h2 id="configure-claude-code">Configure Claude Code<a class="headerlink" href="#configure-claude-code" title="Permanent link">&para;</a></h2>
-<p>Add the context provider to your <code>.mcp.json</code> (in your home directory or project root):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;context-provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dist/server/index.js&quot;</span><span class="p">],</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/MCP-Context-Provider&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="nt">&quot;CONTEXTS_PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./contexts&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="nt">&quot;INSTINCTS_PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./instincts&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">}</span>
+<h2 id="global-cli-installation">Global CLI Installation<a class="headerlink" href="#global-cli-installation" title="Permanent link">&para;</a></h2>
+<p>To make <code>mcp-cp</code> and <code>mcp-context-provider</code> available system-wide:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>npm<span class="w"> </span>link
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Paths</p>
-<p><code>CONTEXTS_PATH</code> and <code>INSTINCTS_PATH</code> are resolved relative to <code>cwd</code>. You can also use absolute paths.</p>
-</div>
-<h2 id="restart-claude-code">Restart Claude Code<a class="headerlink" href="#restart-claude-code" title="Permanent link">&para;</a></h2>
-<p>After updating <code>.mcp.json</code>, restart Claude Code. The MCP server will load all contexts and instincts automatically.</p>
-<h2 id="verify-it-works">Verify it works<a class="headerlink" href="#verify-it-works" title="Permanent link">&para;</a></h2>
-<p>In a new Claude Code session, the context provider tools should be available. Try:</p>
+<p>This installs two commands:</p>
 <ul>
-<li><code>server_info</code> — shows loaded contexts, instincts, and connection status</li>
-<li><code>list_contexts</code> — lists all available context categories</li>
-<li><code>list_instincts</code> — lists all loaded instincts</li>
+<li><code>mcp-context-provider</code> — run the MCP server directly</li>
+<li><code>mcp-cp</code> — manage instincts (list, approve, reject, tune)</li>
 </ul>
-<h2 id="optional-memory-bridge">Optional: Memory Bridge<a class="headerlink" href="#optional-memory-bridge" title="Permanent link">&para;</a></h2>
-<p>To sync instincts with <a href="https://github.com/doobidoo/mcp-memory-service">mcp-memory-service</a>, add environment variables:</p>
+<h2 id="claude-desktop-configuration">Claude Desktop Configuration<a class="headerlink" href="#claude-desktop-configuration" title="Permanent link">&para;</a></h2>
+<p>Update your <code>claude_desktop_config.json</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Config Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS</td>
+<td><code>~/Library/Application Support/Claude/claude_desktop_config.json</code></td>
+</tr>
+<tr>
+<td>Linux</td>
+<td><code>~/.config/claude/claude_desktop_config.json</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>%APPDATA%\Claude\claude_desktop_config.json</code></td>
+</tr>
+</tbody>
+</table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;CONTEXTS_PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./contexts&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">&quot;INSTINCTS_PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./instincts&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">&quot;MEMORY_BRIDGE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/api&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">&quot;MEMORY_BRIDGE_API_KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-api-key&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;context-provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/path/to/MCP-Context-Provider/dist/server/index.js&quot;</span><span class="p">],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="nt">&quot;CONTEXTS_PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/MCP-Context-Provider/contexts&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="nt">&quot;INSTINCTS_PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/MCP-Context-Provider/instincts&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">}</span>
+</code></pre></div>
+<p>Replace <code>/path/to/MCP-Context-Provider</code> with your actual installation path.</p>
+<h2 id="claude-code-configuration">Claude Code Configuration<a class="headerlink" href="#claude-code-configuration" title="Permanent link">&para;</a></h2>
+<p>Add to your project <code>.mcp.json</code> or global <code>~/.claude.json</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;context-provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dist/server/index.js&quot;</span><span class="p">],</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="nt">&quot;CONTEXTS_PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./contexts&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="nt">&quot;INSTINCTS_PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./instincts&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="optional-http-transport">Optional: HTTP Transport<a class="headerlink" href="#optional-http-transport" title="Permanent link">&para;</a></h2>
 <p>For remote deployment or multi-client scenarios, use the <code>--http</code> flag:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dist/server/index.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--http&quot;</span><span class="p">],</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">&quot;MCP_SERVER_PORT&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3100&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dist/server/index.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--http&quot;</span><span class="p">],</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&quot;MCP_SERVER_PORT&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3100&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>The HTTP server exposes:</p>
+<ul>
+<li><code>POST /mcp</code> — MCP protocol endpoint (Streamable HTTP)</li>
+<li><code>GET /health</code> — Health check with engine status</li>
+</ul>
+<h2 id="optional-memory-bridge">Optional: Memory Bridge<a class="headerlink" href="#optional-memory-bridge" title="Permanent link">&para;</a></h2>
+<p>Connect to <a href="https://github.com/doobidoo/mcp-memory-service">mcp-memory-service</a> for instinct persistence:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">&quot;MEMORY_BRIDGE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/api&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">&quot;MEMORY_BRIDGE_API_KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-api-key&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <table>
@@ -994,29 +1025,75 @@
 </tr>
 <tr>
 <td><code>MEMORY_BRIDGE_URL</code></td>
-<td><em>(none)</em></td>
+<td>(none)</td>
 <td>Memory service base URL (enables bridge)</td>
 </tr>
 <tr>
 <td><code>MEMORY_BRIDGE_API_KEY</code></td>
-<td><em>(none)</em></td>
+<td>(none)</td>
 <td>API key for memory service</td>
 </tr>
 <tr>
 <td><code>MCP_SERVER_PORT</code></td>
 <td><code>3100</code></td>
-<td>HTTP port (only with <code>--http</code>)</td>
+<td>HTTP server port (only with <code>--http</code>)</td>
 </tr>
 </tbody>
 </table>
+<h2 id="optional-instill-skill-claude-code">Optional: /instill Skill (Claude Code)<a class="headerlink" href="#optional-instill-skill-claude-code" title="Permanent link">&para;</a></h2>
+<p>Install the instinct distillation skill globally:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.claude/skills/instill
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cp<span class="w"> </span>.claude/skills/instill.md<span class="w"> </span>~/.claude/skills/instill/SKILL.md
+</code></pre></div>
+<p>Then use <code>/instill</code> in any Claude Code session to extract learned rules.</p>
 <h2 id="migration-from-v1x">Migration from v1.x<a class="headerlink" href="#migration-from-v1x" title="Permanent link">&para;</a></h2>
-<p>If you're upgrading from the Python v1.x version:</p>
-<ol>
-<li>Your existing <code>*_context.json</code> files in <code>contexts/</code> are <strong>fully compatible</strong> — no changes needed</li>
-<li>Replace the Python command in your config with the Node command above</li>
-<li>Remove Python-specific env vars (<code>CONTEXT_CONFIG_DIR</code>, <code>AUTO_LOAD_CONTEXTS</code>)</li>
-<li>v1 tools like <code>get_tool_context</code> are replaced by <code>build_injection</code>, <code>get_context</code>, etc.</li>
-</ol>
+<p>v2.0 is a complete rewrite from Python to TypeScript. Key changes:</p>
+<table>
+<thead>
+<tr>
+<th>v1.x (Python)</th>
+<th>v2.x (TypeScript)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python context_provider_server.py</code></td>
+<td><code>node dist/server/index.js</code></td>
+</tr>
+<tr>
+<td><code>CONTEXT_CONFIG_DIR</code></td>
+<td><code>CONTEXTS_PATH</code></td>
+</tr>
+<tr>
+<td><code>AUTO_LOAD_CONTEXTS</code></td>
+<td>Always auto-loads</td>
+</tr>
+<tr>
+<td>DXT packaging</td>
+<td>npm install</td>
+</tr>
+<tr>
+<td>4 MCP tools</td>
+<td>6 MCP tools</td>
+</tr>
+<tr>
+<td>No instincts</td>
+<td>Instinct engine with confidence scoring</td>
+</tr>
+<tr>
+<td>stdio only</td>
+<td>stdio + HTTP transport</td>
+</tr>
+</tbody>
+</table>
+<p>Context JSON files (<code>contexts/*_context.json</code>) are compatible. The v2 Zod schema is stricter:</p>
+<ul>
+<li><code>auto_corrections</code> values must be <code>{pattern, replacement}</code> objects (not plain strings)</li>
+<li><code>session_initialization</code> requires <code>enabled</code> (boolean) and <code>actions</code> fields</li>
+<li><code>metadata.priority</code> only accepts <code>high</code>, <code>medium</code>, <code>low</code> (not <code>critical</code>)</li>
+<li><code>metadata.applies_to_tools</code> must have at least 1 element</li>
+</ul>
+<p>Restart Claude Desktop after updating the configuration.</p>
 
 
 
@@ -1052,7 +1129,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2025–2026 doobidoo — Apache License 2.0
+      Copyright &copy; 2025-2026 doobidoo – MIT License
     </div>
   
   
@@ -1092,131 +1169,11 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
-<script type="module">
-// ==========================================================================
-// Workaround: Material for MkDocs loads mermaid from unpkg.com which
-// intermittently returns 503. The failed dynamic import() causes:
-//   1. Mermaid blocks show raw code (class "mermaid" gets stripped)
-//   2. Palette toggle event listeners never attach (dark mode broken)
-// This script fixes both issues.
-// ==========================================================================
-
-// --- Palette toggle fix ---------------------------------------------------
-// Material's palette toggle relies on JS event listeners that may not attach
-// when the mermaid import fails. This re-implements the toggle logic.
-function fixPaletteToggle() {
-  const palette = document.querySelector('[data-md-component="palette"]');
-  if (!palette) return;
-
-  const radios = palette.querySelectorAll('input[name="__palette"]');
-  const labels = palette.querySelectorAll('label');
-
-  function applyPalette(radio) {
-    const scheme = radio.getAttribute('data-md-color-scheme');
-    const primary = radio.getAttribute('data-md-color-primary');
-    const accent = radio.getAttribute('data-md-color-accent');
-
-    document.body.setAttribute('data-md-color-switching', '');
-    document.body.setAttribute('data-md-color-scheme', scheme);
-    document.body.setAttribute('data-md-color-primary', primary);
-    document.body.setAttribute('data-md-color-accent', accent);
-
-    // Toggle label visibility (show the opposite toggle)
-    for (const label of labels) {
-      label.hidden = label.htmlFor === radio.id;
-    }
-
-    // Persist preference
-    try {
-      localStorage.setItem('__md_palette', JSON.stringify({
-        scheme, primary, accent
-      }));
-    } catch (e) { /* private browsing */ }
-
-    // Remove transition marker after animation
-    requestAnimationFrame(() => {
-      document.body.removeAttribute('data-md-color-switching');
-    });
-  }
-
-  // Listen for radio changes
-  for (const radio of radios) {
-    radio.addEventListener('change', () => {
-      if (radio.checked) applyPalette(radio);
-    });
-  }
-
-  // Also listen for label clicks (in case radios don't fire change)
-  for (const label of labels) {
-    label.addEventListener('click', () => {
-      const radio = document.getElementById(label.htmlFor);
-      if (radio && !radio.checked) {
-        radio.checked = true;
-        applyPalette(radio);
-      }
-    });
-  }
-}
-
-// Run palette fix immediately (no need to wait)
-fixPaletteToggle();
-
-// --- Mermaid CDN fallback -------------------------------------------------
-const MERMAID_KEYWORDS = [
-  'graph ', 'graph\n', 'flowchart ', 'sequenceDiagram', 'classDiagram',
-  'stateDiagram', 'erDiagram', 'gantt', 'pie ', 'gitgraph',
-  'mindmap', 'timeline', 'sankey', 'xychart', 'block-beta'
-];
-
-function isMermaidBlock(el) {
-  const text = el.textContent.trimStart();
-  return MERMAID_KEYWORDS.some(kw => text.startsWith(kw));
-}
-
-async function initMermaidFallback() {
-  // Wait for Material's built-in mermaid loader to try (and possibly fail)
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
-  // Find <pre> blocks that contain mermaid syntax but have no rendered SVG
-  const allPre = document.querySelectorAll('pre');
-  const unrendered = Array.from(allPre).filter(
-    el => isMermaidBlock(el) && !el.querySelector('svg')
-  );
-
-  if (unrendered.length === 0) return;
-
-  // Load mermaid from jsdelivr
-  const { default: mermaid } = await import(
-    'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
-  );
-
-  // Detect current color scheme for correct theme
-  const scheme = document.body.getAttribute('data-md-color-scheme');
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: scheme === 'slate' ? 'dark' : 'default'
-  });
-
-  // Restore the mermaid class and set textContent directly (strip <code> wrapper)
-  for (const el of unrendered) {
-    const diagramText = el.textContent;
-    el.className = 'mermaid';
-    el.textContent = diagramText;
-  }
-
-  // Render all mermaid blocks
-  await mermaid.run({ nodes: unrendered });
-}
-
-initMermaidFallback().catch(err => console.warn('Mermaid fallback failed:', err));
-</script>
-
   </body>
 </html>
