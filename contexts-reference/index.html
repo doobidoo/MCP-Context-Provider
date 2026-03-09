@@ -6,14 +6,14 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Persistent context and learned instincts for Claude Code — static rules meet confidence-scored intelligence">
+        <meta name="description" content="Persistent tool context for Claude Desktop – eliminate context loss between chat sessions">
       
       
       
         <link rel="canonical" href="https://doobidoo.github.io/MCP-Context-Provider/contexts-reference/">
       
       
-        <link rel="prev" href="../cli/">
+        <link rel="prev" href="../guides/INSTALLATION/">
       
       
         <link rel="next" href="../CHANGELOG/">
@@ -86,6 +86,10 @@
     <div data-md-component="announce">
       
     </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
     
     
       
@@ -238,74 +242,18 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../getting-started/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="../guides/INSTALLATION/" class="md-tabs__link">
+          
+  
   
   Getting Started
 
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../architecture/" class="md-tabs__link">
-        
-  
-  
+        </a>
+      </li>
     
-  
-  Architecture
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../mcp-tools/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  MCP Tools
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../cli/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  CLI Reference
-
-      </a>
-    </li>
   
 
       
@@ -335,17 +283,18 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../CHANGELOG/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="../CHANGELOG/" class="md-tabs__link">
+          
   
-  Changelog
+  
+  Reference
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -432,9 +381,27 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+    
+    
+    
+    
+      
+      
         
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -448,26 +415,35 @@
   
   
 
-      </a>
-    </li>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
   
 
-    
-      
-      
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
+      <a href="../guides/INSTALLATION/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture
+    Installation
   
 
     
@@ -479,57 +455,11 @@
     </li>
   
 
-    
+              
+            
+          </ul>
+        </nav>
       
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mcp-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    CLI Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -601,10 +531,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#built-in-contexts" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in Contexts
+        Overview
       
     </span>
   </a>
@@ -612,33 +542,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tool-pattern-matching" class="md-nav__link">
+  <a href="#memory-contexts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tool Pattern Matching
+        Memory Contexts
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-custom-contexts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding Custom Contexts
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Adding Custom Contexts">
+    <nav class="md-nav" aria-label="Memory Contexts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#optional-sections" class="md-nav__link">
+  <a href="#memory_contextjson-mcp-memory-auto-trigger" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional Sections
+        memory_context.json – MCP Memory Auto-Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python_mcp_memory_contextjson-mcp-memory-service-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        python_mcp_memory_context.json – MCP Memory Service Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shodh_memory_contextjson-shodh-episodic-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        shodh_memory_context.json – SHODH Episodic Memory
       
     </span>
   </a>
@@ -651,10 +592,93 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#private-contexts" class="md-nav__link">
+  <a href="#other-built-in-contexts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Private Contexts
+        Other Built-in Contexts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other Built-in Contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dokuwiki_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dokuwiki_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#azure_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        azure_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terraform_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general_preferences_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        general_preferences_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_shortcodes_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        response_shortcodes_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-custom-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Custom Contexts
       
     </span>
   </a>
@@ -671,6 +695,60 @@
     
       
       
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
   
@@ -692,6 +770,14 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -723,10 +809,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#built-in-contexts" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in Contexts
+        Overview
       
     </span>
   </a>
@@ -734,33 +820,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tool-pattern-matching" class="md-nav__link">
+  <a href="#memory-contexts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tool Pattern Matching
+        Memory Contexts
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-custom-contexts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding Custom Contexts
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Adding Custom Contexts">
+    <nav class="md-nav" aria-label="Memory Contexts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#optional-sections" class="md-nav__link">
+  <a href="#memory_contextjson-mcp-memory-auto-trigger" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional Sections
+        memory_context.json – MCP Memory Auto-Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python_mcp_memory_contextjson-mcp-memory-service-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        python_mcp_memory_context.json – MCP Memory Service Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shodh_memory_contextjson-shodh-episodic-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        shodh_memory_context.json – SHODH Episodic Memory
       
     </span>
   </a>
@@ -773,10 +870,93 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#private-contexts" class="md-nav__link">
+  <a href="#other-built-in-contexts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Private Contexts
+        Other Built-in Contexts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other Built-in Contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dokuwiki_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dokuwiki_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#azure_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        azure_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terraform_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#general_preferences_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        general_preferences_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response_shortcodes_contextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        response_shortcodes_context.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-custom-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Custom Contexts
       
     </span>
   </a>
@@ -809,8 +989,8 @@
 
 
 <h1 id="contexts-reference">Contexts Reference<a class="headerlink" href="#contexts-reference" title="Permanent link">&para;</a></h1>
-<p>All built-in contexts are stored as JSON files in <code>contexts/</code>. The engine discovers and loads all <code>*_context.json</code> files automatically at startup.</p>
-<h2 id="built-in-contexts">Built-in Contexts<a class="headerlink" href="#built-in-contexts" title="Permanent link">&para;</a></h2>
+<p>All built-in contexts are stored as JSON files in the <code>contexts/</code> directory. Each context is automatically loaded at Claude Desktop startup when <code>AUTO_LOAD_CONTEXTS=true</code> is set.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -821,163 +1001,281 @@
 </thead>
 <tbody>
 <tr>
-<td><code>git_context.json</code></td>
-<td><code>git</code></td>
-<td>Conventional commits, branch naming</td>
-</tr>
-<tr>
-<td><code>terraform_context.json</code></td>
-<td><code>terraform</code></td>
-<td>Terraform snake_case, module patterns, state management</td>
-</tr>
-<tr>
-<td><code>azure_context.json</code></td>
-<td><code>azure</code></td>
-<td>Azure resource naming conventions and compliance</td>
-</tr>
-<tr>
-<td><code>azure_cli_operations_context.json</code></td>
-<td><code>azure_cli_operations</code></td>
-<td>Azure CLI safety: auto-approve reads, require approval for destructive ops</td>
-</tr>
-<tr>
 <td><code>dokuwiki_context.json</code></td>
 <td><code>dokuwiki</code></td>
 <td>Markdown → DokuWiki auto-conversion</td>
 </tr>
 <tr>
-<td><code>mkdocs_context.json</code></td>
-<td><code>mkdocs</code></td>
-<td>MkDocs Material configuration and GitHub Pages deployment</td>
+<td><code>azure_context.json</code></td>
+<td><code>azure</code></td>
+<td>Azure resource naming conventions</td>
 </tr>
 <tr>
-<td><code>applescript_context.json</code></td>
-<td><code>applescript</code></td>
-<td>AppleScript patterns and best practices</td>
+<td><code>terraform_context.json</code></td>
+<td><code>terraform</code></td>
+<td>Terraform patterns and best practices</td>
 </tr>
 <tr>
-<td><code>ios_shortcuts_context.json</code></td>
-<td><code>ios-shortcuts</code></td>
-<td>iOS Shortcuts action identifiers and API references</td>
+<td><code>git_context.json</code></td>
+<td><code>git</code></td>
+<td>Conventional commits and branch naming</td>
+</tr>
+<tr>
+<td><code>general_preferences_context.json</code></td>
+<td><code>general_preferences</code></td>
+<td>Cross-tool preferences and standards</td>
 </tr>
 <tr>
 <td><code>memory_context.json</code></td>
 <td><code>memory</code></td>
-<td>MCP Memory Service auto-store/retrieve triggers</td>
+<td>MCP Memory Service auto-store/retrieve</td>
 </tr>
 <tr>
 <td><code>python_mcp_memory_context.json</code></td>
-<td><code>python</code></td>
-<td>Python + MCP Memory Service development patterns</td>
+<td><code>python-mcp-memory</code></td>
+<td>MCP Memory Service development patterns</td>
 </tr>
 <tr>
-<td><code>date_awareness_context.json</code></td>
-<td><code>date_awareness</code></td>
-<td>Temporal context and scheduling awareness</td>
+<td><code>shodh_memory_context.json</code></td>
+<td><code>memory</code></td>
+<td>SHODH episodic memory management</td>
 </tr>
 <tr>
-<td><code>anti_ai_voice_context.json</code></td>
-<td><code>writing</code></td>
-<td>Rewrites AI-sounding text to clear, specific human voice</td>
+<td><code>applescript_context.json</code></td>
+<td><code>applescript</code></td>
+<td>AppleScript patterns</td>
+</tr>
+<tr>
+<td><code>n8n_context.json</code></td>
+<td><code>n8n</code></td>
+<td>n8n workflow automation</td>
+</tr>
+<tr>
+<td><code>ios_shortcuts_context.json</code></td>
+<td><code>ios_shortcuts</code></td>
+<td>iOS Shortcuts integration</td>
+</tr>
+<tr>
+<td><code>response_shortcodes_context.json</code></td>
+<td><code>response_shortcodes</code></td>
+<td>G/I Cycle shortcodes (<code>/GRADE</code>, <code>/I</code>)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="tool-pattern-matching">Tool Pattern Matching<a class="headerlink" href="#tool-pattern-matching" title="Permanent link">&para;</a></h2>
-<p>Each context declares which tools it applies to via <code>metadata.applies_to_tools</code>:</p>
+<hr />
+<h2 id="memory-contexts">Memory Contexts<a class="headerlink" href="#memory-contexts" title="Permanent link">&para;</a></h2>
+<p>The Context Provider ships with three memory-related contexts covering different layers of the memory ecosystem.</p>
+<hr />
+<h3 id="memory_contextjson-mcp-memory-auto-trigger"><code>memory_context.json</code> – MCP Memory Auto-Trigger<a class="headerlink" href="#memory_contextjson-mcp-memory-auto-trigger" title="Permanent link">&para;</a></h3>
+<p><strong>Category</strong>: <code>memory</code><br />
+<strong>Purpose</strong>: Proactive storage and retrieval rules for the <a href="https://github.com/doobidoo/mcp-memory-service">MCP Memory Service</a>. Defines when Claude should automatically store memories and when to proactively retrieve them based on conversation patterns.</p>
+<p><strong>Session Initialization</strong>: On startup, loads recent activity (last 24h) and retrieves any open tasks tagged <code>in-progress</code>, <code>active</code>, or <code>follow-up</code>.</p>
+<p><strong>Auto-Store Triggers</strong> — Claude stores a memory when it detects:</p>
 <table>
 <thead>
 <tr>
-<th>Pattern</th>
-<th>Matches</th>
+<th>Trigger</th>
+<th>Example Patterns</th>
+<th>Tags Applied</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>*</code></td>
-<td>All tools</td>
+<td>Decisions</td>
+<td>"I decided to", "We agreed that", "Let's go with"</td>
+<td><code>decision</code>, <code>{project}</code></td>
 </tr>
 <tr>
-<td><code>git:*</code></td>
-<td>All git tools (<code>git:commit</code>, <code>git:push</code>, ...)</td>
+<td>Technical solutions</td>
+<td>"The fix was", "The solution is", "To resolve this"</td>
+<td><code>solution</code>, <code>technical</code></td>
 </tr>
 <tr>
-<td><code>bash:git</code></td>
-<td>Only <code>bash:git</code> (exact match)</td>
+<td>Completed activities</td>
+<td>"I completed", "I implemented", "I resolved"</td>
+<td><code>activity</code>, <code>completed</code></td>
 </tr>
 <tr>
-<td><code>git</code></td>
-<td>Category-level: matches <code>git:commit</code>, <code>git:push</code>, etc.</td>
+<td>Future tasks</td>
+<td>"I need to", "TODO:", "Remember to"</td>
+<td><code>todo</code>, <code>in-progress</code></td>
+</tr>
+<tr>
+<td>Preferences</td>
+<td>"I prefer", "I always", "My preference is"</td>
+<td><code>preference</code>, <code>personal</code></td>
+</tr>
+<tr>
+<td>Learning moments</td>
+<td>"I learned that", "It turns out", "The issue was"</td>
+<td><code>learning</code>, <code>insight</code></td>
 </tr>
 </tbody>
 </table>
-<p>Contexts are sorted by priority (<code>high</code> &gt; <code>medium</code> &gt; <code>low</code>) when multiple match.</p>
-<h2 id="adding-custom-contexts">Adding Custom Contexts<a class="headerlink" href="#adding-custom-contexts" title="Permanent link">&para;</a></h2>
-<p>Create a new file <code>contexts/{toolname}_context.json</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;tool_category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;toolname&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What this context does&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;auto_convert&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">&quot;applies_to_tools&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;toolname:*&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">&quot;priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="nt">&quot;syntax_rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nt">&quot;preferences&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="nt">&quot;auto_corrections&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">}</span>
-</code></pre></div>
-<p>The engine picks up new files automatically on restart — no code changes needed.</p>
-<h3 id="optional-sections">Optional Sections<a class="headerlink" href="#optional-sections" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Section</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>syntax_rules</code></td>
-<td>Tool-specific syntax rules (freeform JSON)</td>
-</tr>
-<tr>
-<td><code>preferences</code></td>
-<td>User/tool preferences (freeform JSON)</td>
-</tr>
-<tr>
-<td><code>auto_corrections</code></td>
-<td>Regex-based text replacements (<code>pattern</code> → <code>replacement</code>)</td>
-</tr>
-<tr>
-<td><code>auto_store_triggers</code></td>
-<td>Memory service auto-store patterns</td>
-</tr>
-<tr>
-<td><code>auto_retrieve_triggers</code></td>
-<td>Memory service auto-retrieve patterns</td>
-</tr>
-<tr>
-<td><code>session_initialization</code></td>
-<td>Startup actions (memory loads, greetings)</td>
-</tr>
-<tr>
-<td><code>workflow_patterns</code></td>
-<td>Workflow sequences and best practices</td>
-</tr>
-<tr>
-<td><code>best_practices</code></td>
-<td>Domain-specific best practices</td>
-</tr>
-</tbody>
-</table>
-<p>All sections except <code>tool_category</code>, <code>description</code>, and <code>metadata</code> are optional and domain-specific.</p>
-<h2 id="private-contexts">Private Contexts<a class="headerlink" href="#private-contexts" title="Permanent link">&para;</a></h2>
-<p>Place user-specific contexts in <code>contexts/private/</code> — this directory is gitignored and won't be committed to the repository. The engine loads contexts from the configured <code>CONTEXTS_PATH</code> only, so to include private contexts, either:</p>
+<p><strong>Auto-Retrieve Triggers</strong> — Claude retrieves memories when it detects:</p>
 <ul>
-<li>Place them directly in <code>contexts/</code> (tracked) or <code>contexts/private/</code> (ignored)</li>
-<li>Use a separate <code>CONTEXTS_PATH</code> pointing to your private directory</li>
+<li>Temporal queries: "What did I do last week", "Yesterday", "Earlier today"</li>
+<li>Continuation: "Continue with", "Where were we", "Pick up where"</li>
+<li>Problem solving: "How did I fix", "What was the solution for"</li>
 </ul>
+<p><strong>Smart Tagging</strong>: Automatically detects project names, tool names (Terraform, Docker, Azure, Git, Python, etc.), and adds temporal tags (day, month, year).</p>
+<hr />
+<h3 id="python_mcp_memory_contextjson-mcp-memory-service-development"><code>python_mcp_memory_context.json</code> – MCP Memory Service Development<a class="headerlink" href="#python_mcp_memory_contextjson-mcp-memory-service-development" title="Permanent link">&para;</a></h3>
+<p><strong>Category</strong>: <code>python-mcp-memory</code><br />
+<strong>Purpose</strong>: Specialized context for <strong>developing and extending the MCP Memory Service itself</strong>. Provides FastAPI patterns, MCP protocol conventions, storage backend configurations, and Cloudflare integration rules. Activate this when working on the <a href="https://github.com/doobidoo/mcp-memory-service">mcp-memory-service</a> codebase.</p>
+<p><strong>Session Initialization</strong>: Loads last 7 days of MCP Memory Service development activity, retrieves architecture and backend config context, and surfaces any open <code>mcp-memory-service</code> tasks.</p>
+<p><strong>Auto-Store Triggers</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Example Patterns</th>
+<th>Tags Applied</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP protocol changes</td>
+<td>"tool handler", "JSON-RPC", "stdio transport"</td>
+<td><code>mcp-protocol</code>, <code>mcp-memory-service</code></td>
+</tr>
+<tr>
+<td>Storage backend config</td>
+<td>"Cloudflare backend", "SQLite-vec", "Vectorize index"</td>
+<td><code>storage-backend</code>, <code>configuration</code></td>
+</tr>
+<tr>
+<td>Cloudflare setup</td>
+<td>"CLOUDFLARE_API_TOKEN", "Workers AI", "D1 setup"</td>
+<td><code>cloudflare</code>, <code>setup</code></td>
+</tr>
+<tr>
+<td>Hybrid backend</td>
+<td>"dual storage", "background sync", "graceful fallback"</td>
+<td><code>hybrid-backend</code>, <code>sync</code></td>
+</tr>
+<tr>
+<td>FastAPI implementation</td>
+<td>"API endpoint", "async route", "SSE events"</td>
+<td><code>fastapi</code>, <code>api</code></td>
+</tr>
+<tr>
+<td>Troubleshooting solutions</td>
+<td>"fixed by", "root cause", "resolved by"</td>
+<td><code>troubleshooting</code>, <code>solution</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Auto-Retrieve Triggers</strong>:</p>
+<ul>
+<li>Backend errors → searches <code>cloudflare</code>, <code>storage-backend</code>, <code>troubleshooting</code></li>
+<li>MCP connection issues → searches <code>mcp-protocol</code>, <code>connection</code></li>
+<li>Async errors → searches <code>async</code>, <code>troubleshooting</code>, <code>python</code></li>
+<li>Performance issues → searches <code>performance</code>, <code>optimization</code></li>
+</ul>
+<p><strong>Code Style Rules</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Type hints required, async preferred, Python 3.10+</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_store_memory</span><span class="p">(</span><span class="n">arguments</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TextContent</span><span class="p">]:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">...</span>
+</code></pre></div>
+<p><strong>Preferences</strong>: <code>uv</code> as package manager, <code>pytest</code> for tests, <code>black</code> formatter, <code>ruff</code> linter, Google docstrings, 80% minimum test coverage.</p>
+<hr />
+<h3 id="shodh_memory_contextjson-shodh-episodic-memory"><code>shodh_memory_context.json</code> – SHODH Episodic Memory<a class="headerlink" href="#shodh_memory_contextjson-shodh-episodic-memory" title="Permanent link">&para;</a></h3>
+<p><strong>Category</strong>: <code>memory</code><br />
+<strong>Purpose</strong>: Context rules for the <a href="https://github.com/doobidoo/shodh-memory">SHODH Cloudflare Memory</a> backend — a separate memory system focused on episodic memory with emotional metadata, credibility scoring, and associative retrieval. Used as the backend for the SecondBrain app.</p>
+<p><strong>Key Differentiators vs. <code>memory_context.json</code></strong>:</p>
+<ul>
+<li><strong>Episodic grouping</strong>: Related memories are grouped into episodes (30min timeout)</li>
+<li><strong>Emotional metadata</strong>: Auto-detects valence/arousal from conversation patterns (joy, frustration, satisfaction, concern)</li>
+<li><strong>Credibility scoring</strong>: Each memory gets a credibility score (user-stated=1.0, ai-generated=0.7, inferred=0.5)</li>
+<li><strong>Typed memories</strong>: Observation, Decision, Learning, Error, Discovery, Pattern, Context, Task</li>
+</ul>
+<p><strong>Memory Types</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>When Used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Decision</code></td>
+<td>"decided to", "we agreed", "going with"</td>
+</tr>
+<tr>
+<td><code>Learning</code></td>
+<td>"I learned", "lesson learned", "key insight"</td>
+</tr>
+<tr>
+<td><code>Error</code></td>
+<td>"fixed the", "resolved by", "workaround is"</td>
+</tr>
+<tr>
+<td><code>Discovery</code></td>
+<td>"I discovered", "it turns out", "TIL"</td>
+</tr>
+<tr>
+<td><code>Pattern</code></td>
+<td>"best practice", "always do", "rule of thumb"</td>
+</tr>
+<tr>
+<td><code>Task</code></td>
+<td>"TODO:", "don't forget", "action item"</td>
+</tr>
+<tr>
+<td><code>Context</code></td>
+<td>"working on", "focusing on", "today's goal"</td>
+</tr>
+<tr>
+<td><code>Observation</code></td>
+<td>"I noticed", "worth noting"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Proactive Context</strong>: Calls <code>proactive_context</code> on every message with a surface threshold of 0.65 — memories are surfaced automatically without explicit retrieval requests.</p>
+<hr />
+<h2 id="other-built-in-contexts">Other Built-in Contexts<a class="headerlink" href="#other-built-in-contexts" title="Permanent link">&para;</a></h2>
+<h3 id="dokuwiki_contextjson"><code>dokuwiki_context.json</code><a class="headerlink" href="#dokuwiki_contextjson" title="Permanent link">&para;</a></h3>
+<p>Handles automatic Markdown → DokuWiki syntax conversion. Converts headers (<code># Title</code> → <code>====== Title ======</code>), code blocks (<code>```</code> → <code>&lt;code&gt;</code>), links, tables, and note blocks. See <a href="../EXAMPLES/">Examples</a> for detailed conversion examples.</p>
+<h3 id="azure_contextjson"><code>azure_context.json</code><a class="headerlink" href="#azure_contextjson" title="Permanent link">&para;</a></h3>
+<p>Enforces Azure resource naming conventions, required tags (Environment, Owner, CostCenter), security defaults (TLS 1.2, HTTPS-only), and location normalization (<code>West Europe</code> → <code>westeurope</code>).</p>
+<h3 id="terraform_contextjson"><code>terraform_context.json</code><a class="headerlink" href="#terraform_contextjson" title="Permanent link">&para;</a></h3>
+<p>Enforces snake_case variable names, required descriptions, validation blocks, module structure, and proper tagging patterns for Azure Terraform deployments.</p>
+<h3 id="git_contextjson"><code>git_context.json</code><a class="headerlink" href="#git_contextjson" title="Permanent link">&para;</a></h3>
+<p>Enforces Conventional Commits format (<code>feat:</code>, <code>fix:</code>, <code>chore:</code>), branch naming conventions (<code>feature/</code>, <code>bugfix/</code>, <code>hotfix/</code>), and pull request template standards.</p>
+<h3 id="general_preferences_contextjson"><code>general_preferences_context.json</code><a class="headerlink" href="#general_preferences_contextjson" title="Permanent link">&para;</a></h3>
+<p>Cross-tool preferences including the G/I Cycle trigger (<code>/GRADE</code> → <code>/I</code> for iterative output improvement) and general response style preferences.</p>
+<h3 id="response_shortcodes_contextjson"><code>response_shortcodes_context.json</code><a class="headerlink" href="#response_shortcodes_contextjson" title="Permanent link">&para;</a></h3>
+<p>Defines shortcodes for structured output review:</p>
+<ul>
+<li><code>/GRADE</code> — grades output with point deductions</li>
+<li><code>/I</code> — improves output, addressing deductions</li>
+<li><code>/GRADE ANALYSIS</code> — meta-level analysis of reasoning quality</li>
+</ul>
+<hr />
+<h2 id="adding-custom-contexts">Adding Custom Contexts<a class="headerlink" href="#adding-custom-contexts" title="Permanent link">&para;</a></h2>
+<p>Create a new file <code>contexts/{toolname}_context.json</code> following the structure below, then restart Claude Desktop:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;tool_category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;toolname&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What this context does&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;auto_convert&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&quot;syntax_rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">&quot;preferences&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">&quot;auto_corrections&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">&quot;auto_store_triggers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">&quot;auto_retrieve_triggers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">&quot;session_initialization&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="nt">&quot;applies_to_tools&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;toolname&quot;</span><span class="p">],</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="nt">&quot;priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">}</span>
+</code></pre></div>
+<p>See the <a href="../guides/DEVELOPER_GUIDE/">Developer Guide</a> for full field documentation.</p>
 
 
 
@@ -1013,7 +1311,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2025–2026 doobidoo — Apache License 2.0
+      Copyright &copy; 2025-2026 doobidoo – MIT License
     </div>
   
   
@@ -1053,131 +1351,11 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
-<script type="module">
-// ==========================================================================
-// Workaround: Material for MkDocs loads mermaid from unpkg.com which
-// intermittently returns 503. The failed dynamic import() causes:
-//   1. Mermaid blocks show raw code (class "mermaid" gets stripped)
-//   2. Palette toggle event listeners never attach (dark mode broken)
-// This script fixes both issues.
-// ==========================================================================
-
-// --- Palette toggle fix ---------------------------------------------------
-// Material's palette toggle relies on JS event listeners that may not attach
-// when the mermaid import fails. This re-implements the toggle logic.
-function fixPaletteToggle() {
-  const palette = document.querySelector('[data-md-component="palette"]');
-  if (!palette) return;
-
-  const radios = palette.querySelectorAll('input[name="__palette"]');
-  const labels = palette.querySelectorAll('label');
-
-  function applyPalette(radio) {
-    const scheme = radio.getAttribute('data-md-color-scheme');
-    const primary = radio.getAttribute('data-md-color-primary');
-    const accent = radio.getAttribute('data-md-color-accent');
-
-    document.body.setAttribute('data-md-color-switching', '');
-    document.body.setAttribute('data-md-color-scheme', scheme);
-    document.body.setAttribute('data-md-color-primary', primary);
-    document.body.setAttribute('data-md-color-accent', accent);
-
-    // Toggle label visibility (show the opposite toggle)
-    for (const label of labels) {
-      label.hidden = label.htmlFor === radio.id;
-    }
-
-    // Persist preference
-    try {
-      localStorage.setItem('__md_palette', JSON.stringify({
-        scheme, primary, accent
-      }));
-    } catch (e) { /* private browsing */ }
-
-    // Remove transition marker after animation
-    requestAnimationFrame(() => {
-      document.body.removeAttribute('data-md-color-switching');
-    });
-  }
-
-  // Listen for radio changes
-  for (const radio of radios) {
-    radio.addEventListener('change', () => {
-      if (radio.checked) applyPalette(radio);
-    });
-  }
-
-  // Also listen for label clicks (in case radios don't fire change)
-  for (const label of labels) {
-    label.addEventListener('click', () => {
-      const radio = document.getElementById(label.htmlFor);
-      if (radio && !radio.checked) {
-        radio.checked = true;
-        applyPalette(radio);
-      }
-    });
-  }
-}
-
-// Run palette fix immediately (no need to wait)
-fixPaletteToggle();
-
-// --- Mermaid CDN fallback -------------------------------------------------
-const MERMAID_KEYWORDS = [
-  'graph ', 'graph\n', 'flowchart ', 'sequenceDiagram', 'classDiagram',
-  'stateDiagram', 'erDiagram', 'gantt', 'pie ', 'gitgraph',
-  'mindmap', 'timeline', 'sankey', 'xychart', 'block-beta'
-];
-
-function isMermaidBlock(el) {
-  const text = el.textContent.trimStart();
-  return MERMAID_KEYWORDS.some(kw => text.startsWith(kw));
-}
-
-async function initMermaidFallback() {
-  // Wait for Material's built-in mermaid loader to try (and possibly fail)
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
-  // Find <pre> blocks that contain mermaid syntax but have no rendered SVG
-  const allPre = document.querySelectorAll('pre');
-  const unrendered = Array.from(allPre).filter(
-    el => isMermaidBlock(el) && !el.querySelector('svg')
-  );
-
-  if (unrendered.length === 0) return;
-
-  // Load mermaid from jsdelivr
-  const { default: mermaid } = await import(
-    'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
-  );
-
-  // Detect current color scheme for correct theme
-  const scheme = document.body.getAttribute('data-md-color-scheme');
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: scheme === 'slate' ? 'dark' : 'default'
-  });
-
-  // Restore the mermaid class and set textContent directly (strip <code> wrapper)
-  for (const el of unrendered) {
-    const diagramText = el.textContent;
-    el.className = 'mermaid';
-    el.textContent = diagramText;
-  }
-
-  // Render all mermaid blocks
-  await mermaid.run({ nodes: unrendered });
-}
-
-initMermaidFallback().catch(err => console.warn('Mermaid fallback failed:', err));
-</script>
-
   </body>
 </html>
