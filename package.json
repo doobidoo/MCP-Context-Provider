@@ -6,10 +6,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "mcp-cp": "dist/cli/index.js"
+    "mcp-cp": "dist/cli/index.js",
+    "mcp-context-provider": "dist/server/index.js"
   },
   "scripts": {
     "build": "tsc",
+    "start": "node dist/server/index.js",
+    "start:http": "node dist/server/index.js --http",
     "dev": "tsc --watch",
     "lint": "tsc --noEmit",
     "test": "vitest run",
@@ -33,6 +36,7 @@
     "node": ">=20"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
     "yaml": "^2.7.0",
     "zod": "^3.24.0"
   },

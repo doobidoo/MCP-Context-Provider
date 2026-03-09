@@ -15,12 +15,11 @@
       }
     },
     "context-provider": {
-      "command": "python",
-      "args": ["context_provider_server.py"],
-      "cwd": "/Users/hkr/Documents/GitHub/MCP-Context-Provider",
+      "command": "node",
+      "args": ["dist/server/index.js"],
       "env": {
-        "CONTEXT_CONFIG_DIR": "./contexts",
-        "AUTO_LOAD_CONTEXTS": "true"
+        "CONTEXTS_PATH": "./contexts",
+        "INSTINCTS_PATH": "./instincts"
       }
     }
   }

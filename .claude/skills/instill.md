@@ -62,26 +62,55 @@ source_excerpt: "Brief quote from session that led to this"
 
 ### Step 4: Present to User
 
-Present candidates in this format:
+Present candidates as a numbered review list. Use the AskUserQuestion tool to collect the user's decision. Format as follows:
 
 ```
-## Instinct Candidates
+## Instinct Candidates (N found)
 
-### 1. `suggested-id` (domain: X, confidence: 0.7)
+---
+
+### 1. `suggested-id`
+> domain: X | confidence: 0.7
+
 **Rule:** "The compact rule text"
-**Triggers:** pattern1, pattern2
+**Triggers:** `pattern1`, `pattern2`
 **Rationale:** Why this matters
-**Source:** "Brief session excerpt"
+**Source:** _"Brief session excerpt"_
 
-[Accept] [Edit] [Reject]
+---
+
+### 2. `another-id`
+> domain: Y | confidence: 0.6
+
+**Rule:** "Another rule"
+**Triggers:** `pattern`
+**Rationale:** Evidence from session
+
+---
+
+**Reply with one of:**
+- **a** — accept all
+- **1,3** — accept specific candidates (by number)
+- **e2** — edit candidate 2 before saving
+- **r** — reject all, discard everything
+- **r2** — reject only candidate 2
 ```
+
+IMPORTANT interaction rules:
+- Always use AskUserQuestion to collect the response. Never assume the answer.
+- Parse the response flexibly: "a", "accept", "all", "ja", "yes" all mean accept all.
+- "1,3" or "accept 1 and 3" means accept candidates 1 and 3.
+- "e2" or "edit 2" means edit candidate 2.
+- "r" or "reject" or "nein" means reject all.
+- If the response is ambiguous, ask for clarification.
+- After each action, show a brief confirmation of what was saved or skipped.
 
 ### Step 5: On Accept
 
 When the user accepts a candidate:
 
 1. Read the existing instincts file (or create new):
-   - Check `instincts/learned.instincts.yaml`
+   - Check `C:/REPOSITORIES/personal/MCP-Context-Provider/instincts/learned.instincts.yaml`
 2. Transform the candidate into a full Instinct:
    ```yaml
    id: suggested-id
@@ -97,17 +126,39 @@ When the user accepts a candidate:
    created_at: <now ISO-8601>
    outcome_log: []
    ```
-3. Append to `instincts/learned.instincts.yaml`
+3. Append to `C:/REPOSITORIES/personal/MCP-Context-Provider/instincts/learned.instincts.yaml`
 4. Validate with Zod schema before writing
-5. Confirm to user
+5. Show confirmation:
+   ```
+   Saved `suggested-id` (confidence: 0.7, domain: X)
+   ```
 
 ### Step 6: On Edit
 
-Let the user modify any field, then re-validate and save.
+When the user wants to edit (e.g. "e2"):
+1. Show the candidate fields as an editable block
+2. Ask which field to change and the new value
+3. Re-validate and save
 
 ### Step 7: On Reject
 
-Acknowledge and skip. Do not persist rejected candidates.
+Acknowledge briefly:
+```
+Skipped `candidate-id`
+```
+
+### Step 8: Summary
+
+After all decisions, show a summary:
+
+```
+## Summary
+
+Saved: `id-1`, `id-3` (2 instincts)
+Skipped: `id-2` (1 rejected)
+
+Run `mcp-cp list` to see all active instincts.
+```
 
 ## Important Rules
 
@@ -120,7 +171,8 @@ Acknowledge and skip. Do not persist rejected candidates.
 
 ## File Locations
 
-- Instinct YAML files: `instincts/*.instincts.yaml`
-- Learned instincts: `instincts/learned.instincts.yaml`
-- Schema types: `src/types/instinct.ts`
-- Zod validation: `src/schema/instinct.schema.ts`
+- Instinct YAML files: `C:/REPOSITORIES/personal/MCP-Context-Provider/instincts/*.instincts.yaml`
+- Learned instincts: `C:/REPOSITORIES/personal/MCP-Context-Provider/instincts/learned.instincts.yaml`
+- Schema types: `C:/REPOSITORIES/personal/MCP-Context-Provider/src/types/instinct.ts`
+- Zod validation: `C:/REPOSITORIES/personal/MCP-Context-Provider/src/schema/instinct.schema.ts`
+- CLI for management: `mcp-cp list|show|approve|reject|tune`
