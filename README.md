@@ -2,487 +2,178 @@
 
 <div align="center">
   <img src="assets/MCP-CONTEXT-PROVIDER.png" alt="MCP Context Provider Architecture" width="600"/>
-  
-  *The stable, glowing orb at the center represents the persistent context that survives across chat sessions. The flowing data streams show how ongoing conversations connect to and draw from this stable core of information, preventing context loss.*
+
+  *Persistent context and learned instincts for Claude Desktop and Claude Code — surviving across sessions.*
 </div>
 
-A static MCP (Model Context Protocol) server that provides AI models with persistent tool context, preventing context loss between chat sessions. This server automatically loads and injects tool-specific rules, syntax preferences, and best practices at Claude Desktop startup.
+A TypeScript MCP server that gives Claude persistent **Contexts** (static tool rules) and **Instincts** (learned, confidence-scored rules distilled from sessions). No more re-establishing context in every new chat.
 
-## Overview
+## Architecture
 
-The Context Provider acts as a **persistent neural core** for your AI interactions, eliminating the need to re-establish context in each new chat session by:
+Two core concepts:
 
-- 🔄 **Persistent Context**: Like the stable orb in the visualization, rules and preferences survive across Claude Desktop restarts
-- ⚡ **Automatic Injection**: Context flows seamlessly into every conversation, just as the data streams connect to the central core
-- 🎯 **Tool-Specific**: Each tool gets its own context rules and syntax preferences, creating specialized knowledge pathways
-- 🔧 **Auto-Corrections**: Automatic syntax transformations (e.g., Markdown → DokuWiki) ensure consistency across all interactions
-- 📈 **Scalable**: Easy to add new tools and context rules, expanding the knowledge network
-- 🏢 **Enterprise-Ready**: Version-controlled context management provides organizational stability
+| Concept | Description | Size | Lifetime |
+|---------|-------------|------|----------|
+| **Context** | Static tool rules, syntax preferences, auto-corrections | 200–1000 tokens | Permanent, manually authored |
+| **Instinct** | Learned rule extracted from sessions, confidence-scored | 20–80 tokens | Human-approved, evolves over time |
 
-## The Neural Network Metaphor
+Four subsystems:
 
-Just like the image depicts, your MCP Context Provider functions as:
-- **Central Orb**: The stable, persistent context core that maintains consistency
-- **Neural Pathways**: Tool-specific context rules that create specialized knowledge channels  
-- **Data Streams**: Individual chat sessions that flow through and benefit from the persistent context
-- **Network Stability**: Prevents the ephemeral nature of conversations from losing important contextual information
+- **Engine** — loads, matches, and merges contexts + instincts into injection payloads
+- **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport, 6 MCP tools
+- **CLI** (`mcp-cp`) — approval registry for instinct lifecycle management
+- **Memory Bridge** — optional sync of instincts to mcp-memory-service
 
 ## Quick Start
 
-### Option 1: Automated Installation (Recommended)
-
-The easiest way to install MCP Context Provider is using the provided installation scripts:
-
-**Unix/Linux/macOS:**
 ```bash
-# Clone the repository (contains latest source files)
 git clone https://github.com/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
-
-# Run the automated installer (builds fresh package)
-./scripts/install.sh
+npm install
+npm run build
 ```
 
-**Windows:**
-```powershell
-# Clone the repository first
-git clone https://github.com/doobidoo/MCP-Context-Provider.git
-cd MCP-Context-Provider
+### Claude Desktop
 
-# Run the Windows installer
-.\scripts\install.bat
-```
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS):
 
-The installation script automatically:
-- Builds the latest DXT package from source
-- Creates a Python virtual environment
-- Installs all required dependencies
-- Configures Claude Desktop settings
-
-### Option 2: Manual Installation from DXT
-
-```bash
-# Install DXT CLI (if not already installed)
-npm install -g @anthropic-ai/dxt
-
-# Download the DXT package
-wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.2.1.dxt
-
-# Unpack the extension to your desired location
-dxt unpack mcp-context-provider-1.2.1.dxt ~/mcp-context-provider
-
-# Navigate to the installation directory
-cd ~/mcp-context-provider
-
-# Create and activate a Python virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install mcp>=1.9.4
-```
-
-### Option 3: Installation from Source
-
-```bash
-# Clone the repository
-git clone https://github.com/doobidoo/MCP-Context-Provider.git
-cd MCP-Context-Provider
-
-# Create and activate a Python virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 2. Configuration
-
-Update your Claude Desktop configuration file:
-
-**Configuration File Location**:
-- **Linux**: `~/.config/claude/claude_desktop_config.json`
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-**For Virtual Environment Installation (Recommended):**
 ```json
 {
   "mcpServers": {
     "context-provider": {
-      "command": "/path/to/mcp-context-provider/venv/bin/python",
-      "args": ["/path/to/mcp-context-provider/context_provider_server.py"],
+      "command": "node",
+      "args": ["/path/to/mcp-context-provider/dist/server/index.js"],
       "env": {
-        "CONTEXT_CONFIG_DIR": "/path/to/mcp-context-provider/contexts",
-        "AUTO_LOAD_CONTEXTS": "true"
+        "CONTEXTS_PATH": "/path/to/mcp-context-provider/contexts",
+        "INSTINCTS_PATH": "/path/to/mcp-context-provider/instincts"
       }
     }
   }
 }
 ```
 
-**For System Python Installation:**
+### Claude Code (global)
+
+Add to `~/.mcp.json`:
+
 ```json
 {
   "mcpServers": {
     "context-provider": {
-      "command": "python",
-      "args": ["context_provider_server.py"],
-      "cwd": "/path/to/MCP-Context-Provider",
+      "command": "node",
+      "args": ["/path/to/mcp-context-provider/dist/server/index.js"],
       "env": {
-        "CONTEXT_CONFIG_DIR": "./contexts",
-        "AUTO_LOAD_CONTEXTS": "true"
+        "CONTEXTS_PATH": "/path/to/mcp-context-provider/contexts",
+        "INSTINCTS_PATH": "/path/to/mcp-context-provider/instincts"
       }
     }
   }
 }
 ```
 
-**Important**: Replace `/path/to/mcp-context-provider` with the actual installation path.
+### `/instill` Skill (Claude Code)
 
-### 3. Verify Installation
-
-Run the verification script to ensure everything is configured correctly:
+Install the skill globally as a symlink (stays current with `git pull`):
 
 ```bash
-python scripts/verify_install.py
+ln -s /path/to/mcp-context-provider/.claude/skills/instill.md ~/.claude/skills/instill.md
 ```
 
-### 4. Restart Claude Desktop
+Then use `/instill` at the end of productive sessions to distill learned patterns into instinct candidates.
 
-After updating the configuration, restart Claude Desktop to load the MCP server.
+## MCP Tools
 
-## How It Works
+| Tool | Description |
+|------|-------------|
+| `get_tool_context` | Get complete context for a tool category |
+| `get_syntax_rules` | Get syntax-specific rules for a tool |
+| `list_available_contexts` | List all loaded contexts |
+| `apply_auto_corrections` | Apply correction patterns to text |
+| `build_injection` | Combined context + instinct injection payload |
+| `list_instincts` | List all instincts with confidence scores |
 
-### Architecture
+## Environment Variables
 
-1. **Context Provider Server**: Python MCP server that loads JSON context files
-2. **Context Files**: Tool-specific rules stored in `/contexts` directory  
-3. **Claude Desktop Integration**: MCP server registered in configuration
-4. **Automatic Loading**: Context is injected at startup and persists across chats
-
-### Context Flow
-
-```
-Startup → Load Context Files → Register MCP Tools → Context Available in All Chats
-```
-
-### Available Tools
-
-Once loaded, the following tools are available in all chat sessions:
-
-**Core Context Tools:**
-- `get_tool_context`: Get context rules for specific tool
-- `get_syntax_rules`: Get syntax conversion rules
-- `list_available_contexts`: List all loaded context categories
-- `apply_auto_corrections`: Apply automatic syntax corrections
-
-**Phase 1 - Session Management:**
-- `execute_session_initialization`: Initialize session with memory service integration
-- `get_session_status`: Retrieve detailed session initialization status
-
-**Phase 2 - Dynamic Context Management:**
-- `create_context_file`: Create new context files dynamically with validation
-- `update_context_rules`: Update existing context rules with backup and validation
-- `add_context_pattern`: Add patterns to auto-trigger sections for memory integration
-
-**Phase 3 - Intelligent Learning (v1.6.0+):**
-- `analyze_context_effectiveness`: Analyze context effectiveness with memory-driven insights
-- `suggest_context_optimizations`: Generate global optimization suggestions based on usage patterns
-- `get_proactive_suggestions`: Provide proactive context suggestions for workflow improvement
-- `auto_optimize_context`: Automatically optimize contexts based on learning engine recommendations
-
-<div align="center">
-  <img src="assets/Get-tool-specific-context-rules.png" alt="MCP Context Provider Tools in Action" width="800"/>
-  
-  *Screenshot showing the MCP Context Provider in action within Claude Desktop. The tool automatically detects and lists all available context categories (dokuwiki, terraform, azure, git, general_preferences) and provides interactive access to tool-specific rules and guidelines.*
-</div>
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CONTEXTS_PATH` | `./contexts` | Path to `*_context.json` files |
+| `INSTINCTS_PATH` | `./instincts` | Path to `*.instincts.yaml` files |
+| `MEMORY_BRIDGE_URL` | — | Memory service base URL (enables bridge) |
+| `MEMORY_BRIDGE_API_KEY` | — | API key for memory service |
+| `MCP_SERVER_PORT` | `3100` | HTTP server port (only with `--http`) |
 
 ## Context Files
 
-The server loads context files from the `/contexts` directory:
-
-- **`dokuwiki_context.json`**: DokuWiki syntax rules and preferences
-- **`terraform_context.json`**: Terraform naming conventions and best practices
-- **`azure_context.json`**: Azure resource naming and compliance rules
-- **`git_context.json`**: Git commit conventions and workflow patterns
-- **`general_preferences.json`**: Cross-tool preferences and standards
-
-### Context File Structure
-
-Each context file follows this pattern:
+Contexts are JSON files in `contexts/*_context.json`. Each file matches one or more tools via glob patterns and injects static rules.
 
 ```json
 {
-  "tool_category": "toolname",
-  "description": "Tool-specific context rules",
-  "auto_convert": true,
-  "syntax_rules": {
-    "format_rules": "conversion patterns"
-  },
-  "preferences": {
-    "user_preferences": "settings"
-  },
-  "auto_corrections": {
-    "regex_patterns": "automatic fixes"
-  },
+  "tool_category": "git",
+  "description": "Git workflow rules",
+  "auto_convert": false,
   "metadata": {
     "version": "1.0.0",
-    "applies_to_tools": ["tool:*"]
+    "applies_to_tools": ["git:*", "Bash"],
+    "priority": "high"
+  },
+  "syntax_rules": { ... },
+  "auto_corrections": {
+    "fix-1": { "pattern": "...", "replacement": "..." }
   }
 }
 ```
 
-## Examples
+Add a new context by dropping a `*_context.json` file in `contexts/` and restarting the server.
 
-### DokuWiki Syntax Conversion
+## Instincts
 
-Input (Markdown):
-```markdown
-# My Header
-This is `inline code` and here's a [link](http://example.com).
+Instincts are YAML files in `instincts/*.instincts.yaml`. They are distilled from sessions via `/instill` and require human approval.
+
+```yaml
+version: "1.0"
+
+instincts:
+  my-rule:
+    id: my-rule
+    rule: "Compact, actionable rule (20–80 tokens)."
+    domain: git
+    tags: [git, workflow]
+    trigger_patterns:
+      - "git commit"
+    confidence: 0.75
+    min_confidence: 0.5
+    approved_by: human
+    active: true
+    created_at: "2026-03-10T00:00:00Z"
+    outcome_log: []
 ```
 
-Auto-converted to DokuWiki:
-```
-====== My Header ======
-This is ''inline code'' and here's a [[http://example.com|link]].
-```
-
-### Azure Resource Naming
-
-Input: `storage_account_logs_prod`
-Auto-corrected to: `stlogsprod` (following Azure naming conventions)
-
-### Git Commit Messages
-
-Input: `Fixed the login bug`
-Auto-corrected to: `fix: resolve login authentication issue`
-
-## Adding New Context
-
-To add support for a new tool:
-
-1. Create a new JSON file: `contexts/{toolname}_context.json`
-2. Follow the standard context structure
-3. Restart Claude Desktop to load the new context
-
-The server automatically detects and loads any `*_context.json` files in the contexts directory.
-
-## Benefits
-
-### For Developers
-- No need to re-establish context in new chats
-- Automatic syntax corrections save time
-- Consistent formatting across all work
-- Best practices automatically applied
-
-### For Teams
-- Shared context rules across team members
-- Version-controlled standards
-- Consistent code and documentation formatting
-- Enterprise compliance automatically enforced
-
-### For Organizations
-- Centralized context management
-- Scalable across multiple tools
-- Audit trail of context changes
-- Easy deployment and updates
-
-## 🧠 Phase 3: Intelligent Learning System (v1.6.0+)
-
-### Revolutionary Learning Capabilities
-
-Version 1.6.0 introduces the **Synergistic Integration with Intelligent Learning** system, transforming the MCP Context Provider from a static configuration tool into an intelligent, self-improving context evolution platform.
-
-### 🎯 Key Learning Features
-
-#### **Intelligent Context Evolution**
-- **Automatic Effectiveness Analysis**: Contexts self-analyze based on usage patterns and memory data
-- **Smart Optimization Suggestions**: AI-driven recommendations for context improvements
-- **Auto-Optimization**: Contexts automatically improve through pattern learning and preference tuning
-- **Proactive Intelligence**: Suggests missing tool contexts and workflow enhancements
-
-#### **Real Memory Service Integration**
-- **Persistent Learning**: Full integration with `mcp-memory-service` for persistent learning data
-- **Usage Pattern Tracking**: Comprehensive tracking of context modifications and effectiveness
-- **Memory-Driven Insights**: Historical data analysis for continuous improvement
-- **Team Knowledge Propagation**: Shared learning insights across team members
-
-#### **Advanced MCP Tools**
-4 new intelligent tools for context management:
-- `analyze_context_effectiveness`: Memory-driven effectiveness analysis
-- `suggest_context_optimizations`: Global optimization recommendations
-- `get_proactive_suggestions`: Workflow improvement suggestions
-- `auto_optimize_context`: Automatic context optimization based on learning
-
-### 🔄 Learning Workflow
-
-```
-Context Usage → Memory Storage → Pattern Analysis → Optimization Suggestions → Auto-Improvement
-     ↓              ↓                 ↓                    ↓                     ↓
-Session Data → Learning Engine → Effectiveness Score → Proactive Recommendations → Enhanced Contexts
-```
-
-### 📊 Learning Metrics
-
-The system tracks and analyzes:
-- **Context Effectiveness Scores** (0.0-1.0 scale)
-- **Usage Pattern Recognition** (frequency, modifications, interactions)
-- **Session Performance Optimization** (sub-second initialization targets)
-- **Memory-Driven Trend Analysis** (historical usage and improvement data)
-
-### 🚀 Phase 3 Setup
-
-**Prerequisites**: Requires `mcp-memory-service` integration
-
-1. **Configure Memory Service** (`.mcp.json`):
-```json
-{
-  "mcpServers": {
-    "memory": {
-      "command": "/path/to/uv",
-      "args": ["--directory", "/path/to/mcp-memory-service", "run", "memory"],
-      "env": {
-        "MCP_MEMORY_STORAGE_BACKEND": "sqlite_vec",
-        "MCP_MEMORY_SQLITE_PATH": "/path/to/memory.db"
-      }
-    },
-    "context-provider": {
-      "command": "python",
-      "args": ["context_provider_server.py"],
-      "env": {
-        "CONTEXT_CONFIG_DIR": "./contexts",
-        "AUTO_LOAD_CONTEXTS": "true"
-      }
-    }
-  }
-}
-```
-
-2. **Test Learning Features**:
-```bash
-# Run comprehensive Phase 3 tests
-python tests/test_phase3_learning.py
-
-# Check learning engine health
-python -c "
-from context_provider_server import ContextProvider
-import asyncio
-async def test():
-    provider = ContextProvider()
-    stats = await provider.memory_service.get_memory_stats()
-    print(f'Learning system status: {stats}')
-asyncio.run(test())
-"
-```
-
-### 📚 Phase 3 Documentation
-
-- **[Learning System Guide](docs/phase3/LEARNING_GUIDE.md)**: Comprehensive guide to intelligent features
-- **[API Reference](docs/phase3/API_REFERENCE.md)**: Complete API documentation for learning components
-- **[Examples & Use Cases](docs/phase3/EXAMPLES.md)**: Practical examples and enterprise use cases
-
-### 🎉 Implementation Roadmap Complete
-
-**✅ Phase 1**: Session initialization with memory service integration
-**✅ Phase 2**: Dynamic context file creation and management
-**✅ Phase 3**: Synergistic integration with intelligent learning
-
-The MCP Context Provider now offers enterprise-ready intelligent context evolution with self-improving contexts that learn from usage patterns and automatically optimize through real memory service integration.
-
-## Advanced Usage
-
-### Custom Context Rules
-
-Create your own context files by following the established pattern. The server supports:
-
-- Regex-based auto-corrections
-- Tool-specific preferences
-- Conditional formatting rules
-- Multi-tool context inheritance
-
-### Environment-Specific Context
-
-Use environment variables to load different context sets:
-
-```json
-{
-  "env": {
-    "CONTEXT_CONFIG_DIR": "./contexts/production",
-    "ENVIRONMENT": "prod"
-  }
-}
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Context not loading**: Check file path in Claude Desktop config
-2. **Server not starting**: Verify Python dependencies installed
-3. **Rules not applying**: Check JSON syntax in context files
-
-See [TROUBLESHOOTING.md](docs/guides/TROUBLESHOOTING.md) for detailed solutions.
-
-## Documentation
-
-- [Context Guide](docs/guides/CONTEXT_GUIDE.md): Complete context file reference
-- [Developer Guide](docs/guides/DEVELOPER_GUIDE.md): Creating custom contexts
-- [Examples](docs/EXAMPLES.md): Real-world usage examples
-- [Troubleshooting](docs/guides/TROUBLESHOOTING.md): Common issues and solutions
-
-## 📚 Wiki & Use Cases
-
-Explore advanced integrations and real-world use cases in our **[Community Wiki](https://github.com/doobidoo/MCP-Context-Provider/wiki)**:
-
-- **[Wiki Homepage](https://github.com/doobidoo/MCP-Context-Provider/wiki)**: Comprehensive guide to what the Context Provider is good for
-- **[AppleScript with Memory Integration](https://github.com/doobidoo/MCP-Context-Provider/wiki/AppleScript-with-Memory-Integration)**: Advanced workflow showcasing intelligent script management with persistent memory
-- **Integration Examples**: Community-driven examples of Context Provider workflows
-- **Best Practices**: Tips and patterns for maximizing Context Provider effectiveness
-
-*The wiki demonstrates how the Context Provider transforms from simple rule storage into intelligent, self-improving workflow automation.*
-
-## DXT Package Distribution
-
-The MCP Context Provider is available as a Desktop Extension (DXT) package for easy distribution and installation:
-
-- **Package**: `mcp-context-provider-1.0.0.dxt` (18.6 MB)
-- **Contents**: Complete server with all dependencies bundled
-- **Platform**: Windows, macOS, Linux with Python 3.8+
-- **Dependencies**: Self-contained (no external pip requirements)
-
-### Building DXT Package
-
-To build your own DXT package from source:
+Manage instincts with the CLI:
 
 ```bash
-# Install DXT CLI
-npm install -g @anthropic-ai/dxt
-
-# Build the package
-cd dxt
-dxt pack
-
-# The package will be created as mcp-context-provider-1.0.0.dxt
+mcp-cp list
+mcp-cp show <id>
+mcp-cp approve <id>
+mcp-cp reject <id>
+mcp-cp tune <id> --confidence 0.8
+mcp-cp outcome <id> + "worked well"
 ```
 
-### Distribution Notes
+## Development
 
-- The DXT package includes all Python dependencies (MCP SDK, Pydantic, etc.)
-- Total unpacked size: ~45 MB including all dependencies
-- Optimized for offline installation and deployment
-- Compatible with corporate environments and air-gapped systems
+```bash
+npm run build     # Compile TypeScript
+npm run dev       # Watch mode
+npm run lint      # Type-check only
+npm test          # Run tests (vitest)
+npm start         # stdio transport
+npm run start:http  # HTTP transport on port 3100
+```
 
-## Contributing
+## Changelog
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/new-context`
-3. Add your context file to `/contexts`
-4. Test with your Claude Desktop setup
-5. Submit a pull request
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT
