@@ -110,7 +110,13 @@ IMPORTANT interaction rules:
 When the user accepts a candidate:
 
 1. Read the existing instincts file (or create new):
-   - Check `C:/REPOSITORIES/personal/MCP-Context-Provider/instincts/learned.instincts.yaml`
+   - Locate the repo root (check `INSTINCTS_PATH` env var, or default `./instincts/`)
+   - File: `learned.instincts.yaml` — create if absent with this skeleton:
+     ```yaml
+     version: "1.0"
+     instincts: {}
+     ```
+   - IMPORTANT: The file MUST have `version: "1.0"` and `instincts:` as top-level keys. Appending bare YAML blocks without this wrapper will cause a schema validation error on server startup.
 2. Transform the candidate into a full Instinct:
    ```yaml
    id: suggested-id
@@ -120,13 +126,12 @@ When the user accepts a candidate:
    trigger_patterns: [patterns]
    confidence: <initial_confidence>
    min_confidence: 0.5
-   usage_count: 0
    approved_by: human
    active: true
    created_at: <now ISO-8601>
    outcome_log: []
    ```
-3. Append to `C:/REPOSITORIES/personal/MCP-Context-Provider/instincts/learned.instincts.yaml`
+3. Append to `<instincts-dir>/learned.instincts.yaml`
 4. Validate with Zod schema before writing
 5. Show confirmation:
    ```
@@ -171,8 +176,10 @@ Run `mcp-cp list` to see all active instincts.
 
 ## File Locations
 
-- Instinct YAML files: `C:/REPOSITORIES/personal/MCP-Context-Provider/instincts/*.instincts.yaml`
-- Learned instincts: `C:/REPOSITORIES/personal/MCP-Context-Provider/instincts/learned.instincts.yaml`
-- Schema types: `C:/REPOSITORIES/personal/MCP-Context-Provider/src/types/instinct.ts`
-- Zod validation: `C:/REPOSITORIES/personal/MCP-Context-Provider/src/schema/instinct.schema.ts`
+Paths are relative to the mcp-context-provider repo root (env `INSTINCTS_PATH` overrides default):
+
+- Instinct YAML files: `instincts/*.instincts.yaml`
+- Learned instincts: `instincts/learned.instincts.yaml`
+- Schema types: `src/types/instinct.ts`
+- Zod validation: `src/schema/instinct.schema.ts`
 - CLI for management: `mcp-cp list|show|approve|reject|tune`
