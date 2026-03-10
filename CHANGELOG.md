@@ -5,6 +5,13 @@ All notable changes to the MCP Context Provider project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0-alpha.3] - 2026-03-10
+
+### Fixed
+- **`/instill` skill**: Replaced hardcoded Windows-style paths (`C:/REPOSITORIES/...`) with generic relative paths using `INSTINCTS_PATH` env var — skill was broken on macOS/Linux
+- **`/instill` skill**: Documented that `learned.instincts.yaml` requires `version: "1.0"` and `instincts:` top-level wrapper; bare YAML appends caused schema validation errors on server startup (`Engine loaded: N errors`)
+- **`/instill` skill**: Removed `usage_count` from instinct YAML template (field not in Zod schema)
+
 ## [2.0.0-alpha.2] - 2026-03-09
 
 ### Added
