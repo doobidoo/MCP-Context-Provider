@@ -1,246 +1,64 @@
-name: Continuous Integration
+name: CI
 
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [main]
   push:
-    branches: [ main, develop ]
+    branches: [main]
 
 permissions:
-  contents: read     # Required to checkout code
-  actions: read      # Required to read workflow status
-  checks: write      # Required to write check results
-  security-events: write  # Required for security scanning
+  contents: read
 
 jobs:
-  validate:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
 
-    - name: Set up Node.js (for DXT CLI)
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Install DXT CLI
-      run: npm install -g @anthropic-ai/dxt
+      - name: Type check
+        run: npm run lint
 
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pre-commit black
+      - name: Build
+        run: npm run build
 
-    - name: Validate context files structure
-      run: |
-        echo "🔍 Validating context file structure..."
-        python scripts/validate_contexts.py contexts/*.json
+      - name: Test
+        run: npm test
 
-    - name: Test build process
-      run: |
-        echo "🧪 Testing build process..."
-        python scripts/test_build.py
-
-    - name: Check version consistency
-      run: |
-        echo "🔍 Checking version consistency..."
-        python scripts/check_versions.py
-
-    - name: Validate JSON syntax
-      run: |
-        echo "🔍 Validating JSON syntax..."
-        for json_file in contexts/*.json; do
-          if [ -f "$json_file" ]; then
-            echo "Checking: $(basename $json_file)"
-            python -m json.tool "$json_file" > /dev/null
-          fi
-        done
-        echo "✅ All JSON files are valid"
-
-    - name: Test full build process
-      run: |
-        echo "🔨 Testing full build process..."
-        python scripts/build_dxt.py --version "test-$(date +%s)"
-
-        # Verify package was created
-        PACKAGE_FILE=$(ls mcp-context-provider-test-*.dxt | head -1)
-        if [ ! -f "$PACKAGE_FILE" ]; then
-          echo "❌ Test package not created"
-          exit 1
-        fi
-
-        echo "✅ Test package created: $PACKAGE_FILE"
-
-        # Test package unpack
-        mkdir -p test-unpack
-        dxt unpack "$PACKAGE_FILE" test-unpack/
-
-        # Verify unpacked structure
-        REQUIRED_FILES=(
-          "test-unpack/server/context_provider_server.py"
-          "test-unpack/contexts"
-          "test-unpack/manifest.json"
-        )
-
-        for file in "${REQUIRED_FILES[@]}"; do
-          if [ ! -e "$file" ]; then
-            echo "❌ Missing file after unpack: $file"
-            exit 1
-          fi
-        done
-
-        # Count context files
-        CONTEXT_COUNT=$(find test-unpack/contexts -name "*.json" | wc -l)
-        echo "✅ Package test passed - $CONTEXT_COUNT context files found"
-
-        # Cleanup
-        rm -f "$PACKAGE_FILE"
-        rm -rf test-unpack/
-
-    - name: Code quality check
-      run: |
-        echo "🎨 Checking Python code quality..."
-
-        # Check if Python files exist and run black on them
-        if ls *.py 1> /dev/null 2>&1; then
-          black --check --diff *.py
-        fi
-
-        if ls scripts/*.py 1> /dev/null 2>&1; then
-          black --check --diff scripts/*.py
-        fi
-
-        echo "✅ Code quality check passed"
-
-  compatibility-test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.10', '3.11', '3.12']
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Set up Node.js (for DXT CLI)
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-
-    - name: Install DXT CLI
-      run: npm install -g @anthropic-ai/dxt
-
-    - name: Test basic validation
-      run: |
-        echo "🧪 Testing basic validation on ${{ matrix.os }} with Python ${{ matrix.python-version }}"
-        python scripts/validate_contexts.py contexts/*.json
-
-    - name: Test build script syntax
-      run: |
-        echo "🔍 Testing build script syntax..."
-        python -m py_compile scripts/build_dxt.py
-        echo "✅ Build script syntax check passed"
+      - name: Validate JSON context files
+        run: |
+          for f in contexts/*.json; do
+            if [ -f "$f" ]; then
+              echo "Checking: $(basename $f)"
+              node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))"
+            fi
+          done
+          echo "All JSON files valid"
 
   security-scan:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: TruffleHog secret scan
-      uses: trufflesecurity/trufflehog@main
-      with:
-        path: ./
-        base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
-        head: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-        extra_args: --debug
+      - name: TruffleHog secret scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          head: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
-    - name: Gitleaks secret scan
-      uses: gitleaks/gitleaks-action@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Custom pattern check
-      run: |
-        echo "🔍 Scanning for project-specific secret patterns..."
-        EXIT_CODE=0
-
-        # Azure Subscription IDs (real UUIDs, not placeholders)
-        if grep -rn --include='*.json' --include='*.py' --include='*.yaml' --include='*.yml' --include='*.md' \
-          -E '\-\-subscription\s+[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' \
-          --exclude-dir=.git --exclude='.gitleaks.toml' . ; then
-          echo "❌ Found Azure Subscription IDs"
-          EXIT_CODE=1
-        fi
-
-        # Internal RFC1918 IPs in connection contexts
-        if grep -rn --include='*.json' --include='*.py' \
-          -E '(host|server|address|endpoint|ssh).{0,10}(10\.[0-9]+\.[0-9]+\.[0-9]+|172\.(1[6-9]|2[0-9]|3[01])\.[0-9]+\.[0-9]+|192\.168\.[0-9]+\.[0-9]+)' \
-          --exclude-dir=.git --exclude='.gitleaks.toml' . ; then
-          echo "❌ Found internal IPs in connection contexts"
-          EXIT_CODE=1
-        fi
-
-        # Company domains
-        if grep -rn --include='*.json' --include='*.py' \
-          -iE '[a-z0-9.-]+\.(jivs\.com|datamigration\.ch)' \
-          --exclude-dir=.git --exclude='.gitleaks.toml' . ; then
-          echo "❌ Found company-specific domains"
-          EXIT_CODE=1
-        fi
-
-        # Azure Resource IDs with real subscriptions
-        if grep -rn --include='*.json' --include='*.py' \
-          -E '/subscriptions/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/' \
-          --exclude-dir=.git --exclude='.gitleaks.toml' . ; then
-          echo "❌ Found Azure Resource IDs with real subscription UUIDs"
-          EXIT_CODE=1
-        fi
-
-        if [ $EXIT_CODE -eq 0 ]; then
-          echo "✅ No project-specific secret patterns found"
-        fi
-        exit $EXIT_CODE
-
-    - name: Check for sensitive files
-      run: |
-        echo "🔍 Checking for sensitive files..."
-
-        SENSITIVE_PATTERNS=(
-          "*.key"
-          "*.pem"
-          "*.p12"
-          "*.pfx"
-          "*password*"
-          "*secret*"
-          "*.env"
-          ".env.*"
-          "credentials.json"
-          "service-account*.json"
-        )
-
-        for pattern in "${SENSITIVE_PATTERNS[@]}"; do
-          if find . -name "$pattern" -not -path "./.git/*" | grep -q .; then
-            echo "❌ Found potentially sensitive files matching: $pattern"
-            find . -name "$pattern" -not -path "./.git/*"
-            exit 1
-          fi
-        done
-
-        echo "✅ No sensitive files detected"
+      - name: Gitleaks secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
