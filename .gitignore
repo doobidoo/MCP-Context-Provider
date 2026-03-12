@@ -37,6 +37,9 @@ contexts/n8n_context.json
 contexts/private/
 .env.local
 
+# Learned instincts (may contain internal hostnames, customer names, infrastructure details)
+instincts/learned.instincts.yaml
+
 # IDE
 .vscode/
 .idea/
