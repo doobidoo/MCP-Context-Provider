@@ -1,0 +1,2078 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Persistent tool context for Claude Desktop – eliminate context loss between chat sessions">
+      
+      
+      
+        <link rel="canonical" href="https://doobidoo.github.io/MCP-Context-Provider/archive/CHANGELOG-v1/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>Changelog Archive — v1.x - MCP Context Provider</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog-archive-v1x" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="MCP Context Provider" class="md-header__button md-logo" aria-label="MCP Context Provider" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            MCP Context Provider
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog Archive — v1.x
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/doobidoo/MCP-Context-Provider" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    doobidoo/MCP-Context-Provider
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/INSTALLATION/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contexts-reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contexts Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../CHANGELOG/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="MCP Context Provider" class="md-nav__button md-logo" aria-label="MCP Context Provider" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    MCP Context Provider
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/doobidoo/MCP-Context-Provider" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    doobidoo/MCP-Context-Provider
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/INSTALLATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contexts-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contexts Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#184-2025-10-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.8.4] - 2025-10-05
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.8.4] - 2025-10-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#183-2025-09-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.8.3] - 2025-09-25
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.8.3] - 2025-09-25">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#182-2025-09-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.8.2] - 2025-09-18
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.8.2] - 2025-09-18">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhanced-context-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enhanced Context Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-improvements_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#181-2025-09-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.8.1] - 2025-09-18
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.8.1] - 2025-09-18">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#180-2025-09-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.8.0] - 2025-09-18
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.8.0] - 2025-09-18">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#170-2025-09-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.7.0] - 2025-09-18
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.7.0] - 2025-09-18">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#160-2025-09-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.6.0] - 2025-09-17
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.6.0] - 2025-09-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enhanced
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-quality-assurance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing &amp; Quality Assurance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-implementation-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 Implementation Complete
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#150-2025-09-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.5.0] - 2025-09-17
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.5.0] - 2025-09-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhanced_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enhanced
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-implementation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-quality-assurance_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing &amp; Quality Assurance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#foundation-for-phase-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation for Phase 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#140-2025-09-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.4.0] - 2025-09-17
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.4.0] - 2025-09-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-implementation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#foundation-for-future-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation for Future Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#130-2025-09-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.3.0] - 2025-09-17
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.3.0] - 2025-09-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#121-2025-09-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.2.1] - 2025-09-17
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.2.1] - 2025-09-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-details_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#120-2025-08-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.2.0] - 2025-08-21
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.2.0] - 2025-08-21">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-improvements_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#110-2025-01-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.1.0] - 2025-01-08
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.1.0] - 2025-01-08">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-details_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#100-2025-01-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.0.0] - 2025-01-08
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.0.0] - 2025-01-08">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-implementation_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing &amp; Quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-history-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Upgrade Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-110-to-120" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From 1.1.0 to 1.2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-100-to-110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From 1.0.0 to 1.1.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/doobidoo/MCP-Context-Provider/edit/main/docs/archive/CHANGELOG-v1.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="changelog-archive-v1x">Changelog Archive — v1.x<a class="headerlink" href="#changelog-archive-v1x" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>These entries cover the Python-era releases (v1.0.0 – v1.8.4).
+The project was rewritten in TypeScript starting with v2.0.0-alpha.1.
+For current changes, see <a href="../../CHANGELOG.md">CHANGELOG.md</a>.</p>
+</blockquote>
+<h2 id="184-2025-10-05">[1.8.4] - 2025-10-05<a class="headerlink" href="#184-2025-10-05" title="Permanent link">&para;</a></h2>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Critical</strong>: Fixed KeyError: 'insights' in session initialization learning phase (context_provider_server.py:686-688)</li>
+<li>Changed to use correct key 'insights_gained' instead of 'insights'</li>
+<li>Session initialization now completes successfully without errors</li>
+<li>Resolves context-provider showing as "not initialized" status</li>
+<li>Enables proper learning insights capture during session startup</li>
+</ul>
+<h2 id="183-2025-09-25">[1.8.3] - 2025-09-25<a class="headerlink" href="#183-2025-09-25" title="Permanent link">&para;</a></h2>
+<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Context File Ambiguity</strong>: Removed duplicate <code>contexts/general_preferences.json</code> file</li>
+<li>Resolved conflict between old <code>general_preferences.json</code> and new <code>general_preferences_context.json</code></li>
+<li>Now loads only the enhanced version with memory integration features</li>
+<li>Fixed context provider loading 9 files instead of expected 8</li>
+</ul>
+<h3 id="technical-improvements">Technical Improvements<a class="headerlink" href="#technical-improvements" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Clean context loading without duplicates</li>
+<li>Maintained all v1.7.0+ memory integration features</li>
+<li>Improved server startup reliability</li>
+</ul>
+<h2 id="182-2025-09-18">[1.8.2] - 2025-09-18<a class="headerlink" href="#182-2025-09-18" title="Permanent link">&para;</a></h2>
+<h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Phase 3 Intelligent Learning Context Enhancements</strong></li>
+<li>Auto-trigger patterns for automatic memory storage in all 8 context files</li>
+<li>Session initialization with memory searches and startup notifications</li>
+<li>Tool-specific pattern matching for intelligent automation</li>
+<li>New <code>general_preferences_context.json</code> for user workflow tracking</li>
+<li>Proactive context suggestions and effectiveness analysis capabilities</li>
+</ul>
+<h3 id="enhanced-context-files">Enhanced Context Files<a class="headerlink" href="#enhanced-context-files" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>applescript_context.json</code>: AppleScript detection and automation triggers</li>
+<li><code>terraform_context.json</code>: IaC code and command pattern triggers</li>
+<li><code>azure_context.json</code>: Cloud resource and Azure CLI triggers</li>
+<li><code>git_context.json</code>: Version control workflow triggers</li>
+<li><code>date_awareness_context.json</code>: Temporal event and scheduling triggers</li>
+<li><code>dokuwiki_context.json</code>: Wiki syntax and documentation triggers</li>
+<li><code>general_preferences_context.json</code>: User preference and workflow triggers (NEW)</li>
+</ul>
+<h3 id="technical-improvements_1">Technical Improvements<a class="headerlink" href="#technical-improvements_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Standardized session_initialization format across all context files</li>
+<li>Comprehensive pattern-based automation framework</li>
+<li>Confidence thresholds for trigger accuracy</li>
+<li>Memory integration with search and storage actions</li>
+<li>Tool-specific tagging for organized memory storage</li>
+</ul>
+<h3 id="fixed_2">Fixed<a class="headerlink" href="#fixed_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Corrected session_initialization structure to match validation requirements</li>
+</ul>
+<h2 id="181-2025-09-18">[1.8.1] - 2025-09-18<a class="headerlink" href="#181-2025-09-18" title="Permanent link">&para;</a></h2>
+<h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
+<p>-</p>
+<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<p>-</p>
+<h3 id="fixed_3">Fixed<a class="headerlink" href="#fixed_3" title="Permanent link">&para;</a></h3>
+<p>-</p>
+<h2 id="180-2025-09-18">[1.8.0] - 2025-09-18<a class="headerlink" href="#180-2025-09-18" title="Permanent link">&para;</a></h2>
+<h3 id="added_2">Added<a class="headerlink" href="#added_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Complete Build Automation System</strong>: Comprehensive CI/CD pipeline and quality assurance</li>
+<li><strong>GitHub Actions</strong>: Automated release workflow with package building and GitHub releases on git tags</li>
+<li><strong>Continuous Integration</strong>: Multi-platform testing (Ubuntu, macOS, Windows) with Python 3.8-3.11 support</li>
+<li><strong>Pre-commit Hooks</strong>: Automatic validation with JSON formatting, context validation, and build testing</li>
+<li>
+<p><strong>Security Integration</strong>: Automated secret scanning and sensitive file detection</p>
+</li>
+<li>
+<p><strong>Single Source of Truth Architecture</strong>: Eliminated duplication and maintenance issues</p>
+</li>
+<li><strong>Dynamic Build System</strong>: <code>scripts/build_dxt.py</code> builds packages from single source automatically</li>
+<li><strong>Automated Validation</strong>: Comprehensive validation scripts for context files, build process, and versions</li>
+<li>
+<p><strong>Version Management</strong>: <code>scripts/bump_version.py</code> for automated semantic versioning across all files</p>
+</li>
+<li>
+<p><strong>Quality Assurance Framework</strong>: Multi-layer validation and testing</p>
+</li>
+<li><strong>Context Validation</strong>: <code>scripts/validate_contexts.py</code> validates JSON structure and required fields</li>
+<li><strong>Build Testing</strong>: <code>scripts/test_build.py</code> tests build process without creating packages</li>
+<li><strong>Version Consistency</strong>: <code>scripts/check_versions.py</code> ensures version synchronization across files</li>
+</ul>
+<h3 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Repository Structure</strong>: Removed duplicate DXT directory from version control</li>
+<li><strong>Build Artifacts</strong>: DXT directory now generated during build, not version controlled</li>
+<li><strong>Clean Repository</strong>: Build artifacts excluded via .gitignore for cleaner development</li>
+<li>
+<p><strong>Dynamic Context Loading</strong>: Server discovers all 8 context files automatically</p>
+</li>
+<li>
+<p><strong>Installation Process</strong>: Updated to use automated build system</p>
+</li>
+<li><strong>Fresh Package Builds</strong>: Installation script builds packages from latest source</li>
+<li><strong>No Download Dependencies</strong>: Eliminates version drift from pre-built packages</li>
+<li><strong>Consistent Installation</strong>: Always installs latest server with dynamic loading</li>
+</ul>
+<h3 id="fixed_4">Fixed<a class="headerlink" href="#fixed_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Context File Discovery</strong>: Server now loads all context files instead of hardcoded 5</li>
+<li><strong>Version Synchronization</strong>: Automated version management prevents inconsistencies</li>
+<li><strong>Build Reproducibility</strong>: Eliminates manual file copying and synchronization issues</li>
+</ul>
+<h2 id="170-2025-09-18">[1.7.0] - 2025-09-18<a class="headerlink" href="#170-2025-09-18" title="Permanent link">&para;</a></h2>
+<h3 id="changed_2">Changed<a class="headerlink" href="#changed_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Repository Structure</strong>: Major reorganization for improved maintainability</li>
+<li>Created <code>docs/</code> directory with <code>guides/</code> and <code>phase3/</code> subdirectories for all documentation</li>
+<li>Created <code>scripts/</code> directory for installation and utility scripts</li>
+<li>Created <code>tests/</code> directory for all test files</li>
+<li>Moved all documentation files to appropriate subdirectories</li>
+<li>Cleaned up root directory from 37 to 22 items for better navigation</li>
+</ul>
+<h3 id="fixed_5">Fixed<a class="headerlink" href="#fixed_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Updated all documentation references to reflect new directory structure</li>
+<li>Fixed installation script paths in README.md and CLAUDE.md</li>
+<li>Corrected test file paths in documentation</li>
+</ul>
+<h3 id="removed">Removed<a class="headerlink" href="#removed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Outdated DXT package file (mcp-context-provider-1.1.0.dxt)</li>
+</ul>
+<h2 id="160-2025-09-17">[1.6.0] - 2025-09-17<a class="headerlink" href="#160-2025-09-17" title="Permanent link">&para;</a></h2>
+<h3 id="added_3">Added<a class="headerlink" href="#added_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Phase 3: Synergistic Integration with Intelligent Learning</strong>: Complete intelligent context evolution system</li>
+<li><code>ContextLearningEngine</code>: Advanced pattern recognition and context optimization engine</li>
+<li>Context effectiveness analysis with usage pattern tracking and scoring algorithms</li>
+<li>Intelligent optimization suggestions based on real memory service data analysis</li>
+<li>Automatic context optimization with pattern improvement, preference tuning, and rule refinement</li>
+<li>Proactive context suggestions based on usage patterns and missing tool contexts</li>
+<li>
+<p>Session pattern learning for continuous improvement of initialization performance</p>
+</li>
+<li>
+<p><strong>Real Memory Service Integration</strong>: Full integration with mcp-memory-service</p>
+</li>
+<li><code>MemoryServiceIntegration</code> class replacing simulation layer with actual memory service calls</li>
+<li>Automatic storage of context changes, optimizations, and learning insights in persistent memory</li>
+<li>Memory-driven effectiveness analysis using historical usage data</li>
+<li>
+<p>Context evolution tracking with comprehensive change history in memory service</p>
+</li>
+<li>
+<p><strong>Advanced MCP Tools for Learning</strong>: 4 new intelligent tools for context management</p>
+</li>
+<li><code>analyze_context_effectiveness</code>: Analyze context effectiveness with memory-driven insights</li>
+<li><code>suggest_context_optimizations</code>: Generate global optimization suggestions based on usage patterns</li>
+<li><code>get_proactive_suggestions</code>: Provide proactive context suggestions for workflow improvement</li>
+<li>
+<p><code>auto_optimize_context</code>: Automatically optimize contexts based on learning engine recommendations</p>
+</li>
+<li>
+<p><strong>Intelligent Context Evolution</strong>: Self-improving context system</p>
+</li>
+<li>Automatic detection of context usage patterns and effectiveness metrics</li>
+<li>Learning-driven context rule refinement and pattern optimization</li>
+<li>Proactive suggestion system for missing tool contexts and workflow improvements</li>
+<li>Memory-backed insights for continuous context enhancement</li>
+</ul>
+<h3 id="enhanced">Enhanced<a class="headerlink" href="#enhanced" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ContextProvider Architecture</strong>: Extended with full learning capabilities</li>
+<li>Learning engine integration with session-aware pattern recognition</li>
+<li>Automatic learning during session initialization for performance optimization</li>
+<li>Memory service integration for persistent learning data storage</li>
+<li>Context optimization framework with backup and validation systems</li>
+</ul>
+<h3 id="technical-implementation">Technical Implementation<a class="headerlink" href="#technical-implementation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Learning Engine</strong>: Sophisticated pattern recognition with effectiveness scoring</li>
+<li><strong>Memory Integration</strong>: Real mcp-memory-service with sqlite_vec backend for persistent learning</li>
+<li><strong>Auto-Optimization</strong>: Intelligent context modification with pattern improvement and preference tuning</li>
+<li><strong>Proactive Intelligence</strong>: Usage-based suggestions for missing contexts and workflow enhancements</li>
+<li><strong>Session Learning</strong>: Continuous improvement through session performance analysis</li>
+</ul>
+<h3 id="testing-quality-assurance">Testing &amp; Quality Assurance<a class="headerlink" href="#testing-quality-assurance" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Comprehensive Test Suite</strong>: <code>test_phase3_learning.py</code> with 7 test categories</li>
+<li>Learning engine initialization and memory service integration testing</li>
+<li>Context effectiveness analysis with real usage data simulation</li>
+<li>Optimization suggestion generation with global pattern analysis</li>
+<li>Session pattern learning with performance insight generation</li>
+<li>Proactive suggestion system with missing context detection</li>
+<li>Auto-optimization testing with preference tuning and rule refinement</li>
+<li>Memory integration testing with real mcp-memory-service storage and retrieval</li>
+<li><strong>100% Test Pass Rate</strong>: All Phase 3 synergistic integration features fully verified</li>
+<li><strong>Real Memory Service</strong>: Comprehensive testing with actual mcp-memory-service backend</li>
+</ul>
+<h3 id="phase-3-implementation-complete">Phase 3 Implementation Complete<a class="headerlink" href="#phase-3-implementation-complete" title="Permanent link">&para;</a></h3>
+<p>This release represents the completion of the full 3-phase roadmap:
+- <strong>Phase 1</strong>: Session initialization with memory service integration
+- <strong>Phase 2</strong>: Dynamic context file creation and management
+- <strong>Phase 3</strong>: Synergistic integration with intelligent learning</p>
+<p>The MCP Context Provider now offers:
+- <strong>Intelligent Context Evolution</strong>: Self-improving contexts that learn from usage patterns
+- <strong>Memory-Driven Insights</strong>: Persistent learning data stored in real memory service
+- <strong>Automatic Optimization</strong>: Context refinement based on effectiveness analysis
+- <strong>Proactive Intelligence</strong>: Suggestions for workflow improvements and missing contexts
+- <strong>Enterprise Ready</strong>: Complete learning framework for team knowledge propagation</p>
+<h2 id="150-2025-09-17">[1.5.0] - 2025-09-17<a class="headerlink" href="#150-2025-09-17" title="Permanent link">&para;</a></h2>
+<h3 id="added_4">Added<a class="headerlink" href="#added_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Dynamic Context Management System</strong>: Complete runtime context file creation and modification</li>
+<li><code>create_context_file</code>: Create new context files dynamically with full validation</li>
+<li><code>update_context_rules</code>: Update existing context rules with backup and validation</li>
+<li><code>add_context_pattern</code>: Add patterns to auto-trigger sections for memory integration</li>
+<li>
+<p>Support for all context file sections: syntax_rules, preferences, auto_corrections, session_initialization</p>
+</li>
+<li>
+<p><strong>Advanced Security Framework</strong>: Multi-layer validation and protection</p>
+</li>
+<li>Context name validation: alphanumeric, underscore, hyphen only with length limits</li>
+<li>Reserved name protection (system, admin, config, server)</li>
+<li>JSON structure validation with type checking and required field enforcement</li>
+<li>Input sanitization and comprehensive error reporting</li>
+<li>
+<p>Security-first approach with detailed validation feedback</p>
+</li>
+<li>
+<p><strong>Automated Backup &amp; Versioning System</strong>: Complete change tracking and recovery</p>
+</li>
+<li>Timestamped backups created automatically before any context modifications</li>
+<li>Organized backup storage in <code>contexts/backups/</code> directory</li>
+<li>Version tracking with metadata updates and modification timestamps</li>
+<li>
+<p>Rollback capability through preserved backup files</p>
+</li>
+<li>
+<p><strong>Memory Service Integration Ready</strong>: Framework for intelligent context evolution</p>
+</li>
+<li>Context usage tracking framework for effectiveness analysis</li>
+<li>Change history tracking for pattern recognition</li>
+<li>Foundation for storing pattern effectiveness data in mcp-memory-service</li>
+<li>Smart context-aware memory integration preparation</li>
+</ul>
+<h3 id="enhanced_1">Enhanced<a class="headerlink" href="#enhanced_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ContextProvider Architecture</strong>: Extended with comprehensive dynamic management</li>
+<li>Added validation methods: <code>_validate_context_name()</code>, <code>_validate_context_data()</code></li>
+<li>Implemented backup system: <code>_backup_context_file()</code></li>
+<li>Dynamic context operations: create, update, and pattern management</li>
+<li>Enhanced error handling with detailed feedback and recovery options</li>
+</ul>
+<h3 id="technical-implementation_1">Technical Implementation<a class="headerlink" href="#technical-implementation_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Security-First Design</strong>: Multiple validation layers prevent malformed or malicious contexts</li>
+<li><strong>Atomic Operations</strong>: All context modifications are atomic with backup-first approach</li>
+<li><strong>Performance Optimized</strong>: Efficient file operations with minimal I/O overhead</li>
+<li><strong>Memory Integration Ready</strong>: Prepared for seamless mcp-memory-service connection</li>
+<li><strong>Extensible Framework</strong>: Clean API design for easy addition of new management features</li>
+</ul>
+<h3 id="testing-quality-assurance_1">Testing &amp; Quality Assurance<a class="headerlink" href="#testing-quality-assurance_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Comprehensive Test Suite</strong>: <code>test_dynamic_context.py</code> with 6 test categories</li>
+<li>Context name validation testing with edge cases</li>
+<li>Context creation testing with success and failure scenarios</li>
+<li>Context update testing with backup verification</li>
+<li>Pattern addition testing for auto-trigger management</li>
+<li>Security validation testing with malformed inputs</li>
+<li>Backup system testing with versioning verification</li>
+<li><strong>100% Test Pass Rate</strong>: All dynamic context management features verified</li>
+<li><strong>Security Testing</strong>: Comprehensive validation of input sanitization and error handling</li>
+</ul>
+<h3 id="foundation-for-phase-3">Foundation for Phase 3<a class="headerlink" href="#foundation-for-phase-3" title="Permanent link">&para;</a></h3>
+<p>This release establishes the infrastructure for:
+- <strong>Intelligent Context Evolution</strong>: Learning from usage patterns and effectiveness
+- <strong>Team Knowledge Propagation</strong>: Shared context evolution across team members
+- <strong>Advanced Pattern Recognition</strong>: Automatic context optimization based on user behavior
+- <strong>Enterprise Context Analytics</strong>: Usage tracking and optimization recommendations</p>
+<h2 id="140-2025-09-17">[1.4.0] - 2025-09-17<a class="headerlink" href="#140-2025-09-17" title="Permanent link">&para;</a></h2>
+<h3 id="added_5">Added<a class="headerlink" href="#added_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Session Initialization System</strong>: Implemented automatic context rule execution at session startup</li>
+<li>New <code>execute_session_initialization()</code> method processes <code>session_initialization</code> sections from context files</li>
+<li>Automatic execution of startup actions like <code>recall_memory</code> and <code>search_by_tag</code> for memory integration</li>
+<li>Session status tracking with execution time monitoring (&lt; 2 second performance requirement)</li>
+<li>
+<p>Comprehensive error handling and logging for initialization actions</p>
+</li>
+<li>
+<p><strong>Memory Service Integration Framework</strong>: Foundation for mcp-memory-service integration</p>
+</li>
+<li>Built-in simulation layer for memory service calls (<code>recall_memory</code>, <code>search_by_tag</code>)</li>
+<li>Memory retrieval results storage and analysis capabilities</li>
+<li>Designed for easy replacement with actual mcp-memory-service calls</li>
+<li>
+<p>Smart context-aware memory integration patterns</p>
+</li>
+<li>
+<p><strong>New MCP Tools</strong>: Extended server with session management capabilities</p>
+</li>
+<li><code>execute_session_initialization</code>: Manually trigger session startup actions</li>
+<li>
+<p><code>get_session_status</code>: Retrieve detailed session initialization status and results</p>
+</li>
+<li>
+<p><strong>Enhanced Context System</strong>:</p>
+</li>
+<li><code>memory_context.json</code>: Comprehensive memory service integration patterns</li>
+<li><code>date_awareness_context.json</code>: Temporal context awareness features</li>
+<li>Session initialization configuration in existing context files</li>
+</ul>
+<h3 id="changed_3">Changed<a class="headerlink" href="#changed_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ContextProvider Architecture</strong>: Extended with session state management</li>
+<li>Added <code>session_status</code> tracking for initialization state</li>
+<li>Enhanced singleton pattern with session-aware capabilities</li>
+<li>Improved context loading with session initialization detection</li>
+</ul>
+<h3 id="technical-implementation_2">Technical Implementation<a class="headerlink" href="#technical-implementation_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Performance Optimized</strong>: Session initialization completes in under 0.01 seconds</li>
+<li><strong>Memory Integration Ready</strong>: Framework supports real mcp-memory-service integration</li>
+<li><strong>Error Resilient</strong>: Graceful handling of failed initialization actions</li>
+<li><strong>Extensible Design</strong>: Easy addition of new session initialization actions</li>
+</ul>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>CLAUDE.md</strong>: Comprehensive development guide for Claude Code instances</li>
+<li><strong>Test Framework</strong>: Added <code>test_session_init.py</code> for development testing</li>
+<li><strong>Architecture Documentation</strong>: Updated with session initialization patterns</li>
+</ul>
+<h3 id="foundation-for-future-features">Foundation for Future Features<a class="headerlink" href="#foundation-for-future-features" title="Permanent link">&para;</a></h3>
+<p>This release establishes the foundation for:
+- <strong>Phase 2</strong>: Dynamic context file creation and management via LLM tools
+- <strong>Phase 3</strong>: Synergistic integration with advanced learning capabilities
+- <strong>Enterprise Features</strong>: Team knowledge propagation and context analytics</p>
+<h2 id="130-2025-09-17">[1.3.0] - 2025-09-17<a class="headerlink" href="#130-2025-09-17" title="Permanent link">&para;</a></h2>
+<h3 id="added_6">Added<a class="headerlink" href="#added_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Dynamic Context Loading</strong>: Implemented automatic discovery and loading of context files</li>
+<li>Server now uses glob patterns to discover <code>*_context.json</code> files automatically</li>
+<li>No more hardcoded context file lists - any new context files are automatically detected</li>
+<li>Added support for <code>AUTO_LOAD_CONTEXTS</code> environment variable (defaults to <code>true</code>)</li>
+<li>AppleScript context and any future contexts load automatically without code changes</li>
+</ul>
+<h3 id="changed_4">Changed<a class="headerlink" href="#changed_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Context Loading System</strong>: Replaced hardcoded context file list with dynamic file discovery</li>
+<li><code>load_all_contexts()</code> method now scans the contexts directory using glob patterns</li>
+<li>Improved error handling and logging for context file loading</li>
+<li>Better debugging output showing discovered and loaded contexts</li>
+</ul>
+<h3 id="fixed_6">Fixed<a class="headerlink" href="#fixed_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>AppleScript Context Loading</strong>: AppleScript context now loads automatically as intended</li>
+<li>Previously required manual addition to hardcoded list</li>
+<li>Now discovered and loaded dynamically like all other contexts</li>
+</ul>
+<h3 id="technical-details">Technical Details<a class="headerlink" href="#technical-details" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The server now properly implements the documented behavior of "automatically detects and loads any <code>*_context.json</code> files"</li>
+<li>Environment variable <code>AUTO_LOAD_CONTEXTS=false</code> can disable auto-loading if needed</li>
+<li>Improved logging shows context discovery and loading progress</li>
+<li>Future-proof: new context files require no server code changes</li>
+</ul>
+<h2 id="121-2025-09-17">[1.2.1] - 2025-09-17<a class="headerlink" href="#121-2025-09-17" title="Permanent link">&para;</a></h2>
+<h3 id="fixed_7">Fixed<a class="headerlink" href="#fixed_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>macOS Configuration Path Issue</strong>: Fixed incorrect Claude Desktop configuration path detection</li>
+<li><code>install.sh</code>: Added proper macOS detection using <code>$OSTYPE</code> to use <code>~/Library/Application Support/Claude/</code> instead of <code>~/.config/claude/</code></li>
+<li><code>verify_install.py</code>: Updated <code>find_claude_config()</code> function to use correct macOS path</li>
+<li>Updated error messages to show platform-specific paths for better troubleshooting</li>
+</ul>
+<h3 id="changed_5">Changed<a class="headerlink" href="#changed_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Documentation Updates</strong>: Corrected macOS paths throughout documentation</li>
+<li><code>README.md</code>: Separated Linux/macOS configuration file locations</li>
+<li><code>QUICKSTART.md</code>: Updated configuration paths and uninstall instructions</li>
+<li><code>TROUBLESHOOTING.md</code>: Fixed all references to use platform-specific paths for config files and logs</li>
+<li><strong>Version References</strong>: Updated all package references from 1.1.0 to 1.2.1</li>
+</ul>
+<h3 id="technical-details_1">Technical Details<a class="headerlink" href="#technical-details_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The installation scripts now correctly detect macOS and place configuration files in the proper location that Claude Desktop actually uses</li>
+<li>Windows and Linux path detection were already correct and remain unchanged</li>
+<li>This resolves the issue where the installer would create config files in the wrong location on macOS systems</li>
+</ul>
+<h2 id="120-2025-08-21">[1.2.0] - 2025-08-21<a class="headerlink" href="#120-2025-08-21" title="Permanent link">&para;</a></h2>
+<h3 id="fixed_8">Fixed<a class="headerlink" href="#fixed_8" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Issue #1</strong>: DXT Package Installation Not Working as Documented</li>
+<li>Removed references to non-existent <code>dxt install</code> command</li>
+<li>Fixed bundled dependencies compatibility issues with Python 3.13+</li>
+<li>Added proper virtual environment-based installation approach</li>
+</ul>
+<h3 id="added_7">Added<a class="headerlink" href="#added_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Automated Installation Scripts</strong>: Cross-platform installation automation</li>
+<li><code>install.sh</code>: Unix/Linux/macOS automated installer with error handling</li>
+<li><code>install.bat</code>: Windows automated installer with proper path handling</li>
+<li><strong>Installation Verification</strong>: <code>verify_install.py</code> script for comprehensive installation checks</li>
+<li><strong>Quick Start Guide</strong>: <code>QUICKSTART.md</code> with step-by-step installation instructions</li>
+<li><strong>Enhanced Documentation</strong>:</li>
+<li>Updated README.md with accurate installation methods</li>
+<li>Added platform-specific installation instructions</li>
+<li>Improved troubleshooting documentation</li>
+</ul>
+<h3 id="changed_6">Changed<a class="headerlink" href="#changed_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Installation Process</strong>: Now uses virtual environment approach instead of bundled dependencies</li>
+<li><strong>Documentation Structure</strong>: Reorganized installation options with automated scripts as primary method</li>
+<li><strong>DXT Package Usage</strong>: Updated to use <code>dxt unpack</code> instead of non-existent <code>dxt install</code></li>
+</ul>
+<h3 id="technical-improvements_2">Technical Improvements<a class="headerlink" href="#technical-improvements_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Error Handling</strong>: Comprehensive error detection and reporting in installation scripts</li>
+<li><strong>Cross-Platform Support</strong>: Proper path handling for Windows, macOS, and Linux</li>
+<li><strong>Installation Verification</strong>: Automated checks for Python version, dependencies, and configuration</li>
+<li><strong>User Experience</strong>: Clear progress indicators and helpful error messages</li>
+</ul>
+<h2 id="110-2025-01-08">[1.1.0] - 2025-01-08<a class="headerlink" href="#110-2025-01-08" title="Permanent link">&para;</a></h2>
+<h3 id="added_8">Added<a class="headerlink" href="#added_8" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>DXT Package Distribution</strong>: Complete Desktop Extension (DXT) installer for easy installation</li>
+<li>Self-contained package with all Python dependencies bundled</li>
+<li>Cross-platform support (Windows, macOS, Linux)</li>
+<li>Automatic Claude Desktop configuration</li>
+<li>Single-command installation: <code>dxt install mcp-context-provider-1.1.0.dxt</code></li>
+<li><strong>Enhanced Documentation</strong>: Updated README.md with DXT installation instructions</li>
+<li><strong>DXT Build System</strong>: Added complete DXT directory structure and build process</li>
+<li><strong>Distribution Ready</strong>: 18.6 MB compressed package (44.6 MB unpacked)</li>
+</ul>
+<h3 id="changed_7">Changed<a class="headerlink" href="#changed_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Installation Methods</strong>: Now supports both DXT (recommended) and manual installation</li>
+<li><strong>README Structure</strong>: Reorganized with DXT installation as primary method</li>
+<li><strong>Package Metadata</strong>: Updated manifest.json with comprehensive DXT schema compliance</li>
+</ul>
+<h3 id="technical-details_2">Technical Details<a class="headerlink" href="#technical-details_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Package size: 18.6 MB compressed, 44.6 MB unpacked</li>
+<li>Bundled dependencies: MCP SDK 1.13.0, Pydantic 2.11.7, and all required packages</li>
+<li>Platform compatibility: Python 3.8+ on Windows, macOS, Linux</li>
+<li>Installation time: &lt; 30 seconds with DXT CLI</li>
+</ul>
+<h2 id="100-2025-01-08">[1.0.0] - 2025-01-08<a class="headerlink" href="#100-2025-01-08" title="Permanent link">&para;</a></h2>
+<h3 id="added_9">Added<a class="headerlink" href="#added_9" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Initial Release</strong>: Complete MCP Context Provider implementation</li>
+<li><strong>Core Server</strong>: Python MCP server with STDIO JSON-RPC protocol</li>
+<li><strong>Context System</strong>: Tool-specific context rules and preferences</li>
+<li><strong>Auto-Corrections</strong>: Regex-based syntax transformations</li>
+<li><strong>Persistent Context</strong>: Survives Claude Desktop restarts and chat sessions</li>
+</ul>
+<h3 id="context-files">Context Files<a class="headerlink" href="#context-files" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>DokuWiki Context</strong>: Markdown to DokuWiki syntax conversion</li>
+<li><strong>Terraform Context</strong>: Resource naming conventions and best practices</li>
+<li><strong>Azure Context</strong>: Resource naming and compliance rules</li>
+<li><strong>Git Context</strong>: Commit message conventions and workflow patterns</li>
+<li><strong>General Preferences</strong>: Cross-tool preferences and standards</li>
+</ul>
+<h3 id="mcp-tools">MCP Tools<a class="headerlink" href="#mcp-tools" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>list_available_contexts</code>: List all loaded context configurations</li>
+<li><code>get_context_rules</code>: Retrieve context rules for specific tool category</li>
+<li><code>apply_auto_corrections</code>: Apply automatic syntax corrections to text</li>
+<li><code>get_tool_preferences</code>: Get preferences for specific tool category</li>
+</ul>
+<h3 id="documentation_1">Documentation<a class="headerlink" href="#documentation_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>README.md</strong>: Comprehensive installation and usage guide</li>
+<li><strong>CONTEXT_GUIDE.md</strong>: Complete context file reference</li>
+<li><strong>DEVELOPER_GUIDE.md</strong>: Guide for creating custom contexts</li>
+<li><strong>EXAMPLES.md</strong>: Real-world usage examples</li>
+<li><strong>TROUBLESHOOTING.md</strong>: Common issues and solutions</li>
+</ul>
+<h3 id="technical-implementation_3">Technical Implementation<a class="headerlink" href="#technical-implementation_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>MCP Protocol</strong>: Full compliance with MCP 1.9.4+ specification</li>
+<li><strong>Error Handling</strong>: Robust error handling and validation</li>
+<li><strong>Extensibility</strong>: Easy addition of new context files</li>
+<li><strong>Performance</strong>: Fast startup and minimal resource usage</li>
+<li><strong>Security</strong>: No hardcoded secrets or credentials</li>
+</ul>
+<h3 id="testing-quality">Testing &amp; Quality<a class="headerlink" href="#testing-quality" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Server Testing</strong>: Comprehensive MCP server functionality tests</li>
+<li><strong>Context Validation</strong>: All context files validated against schema</li>
+<li><strong>Integration Testing</strong>: Verified with Claude Desktop integration</li>
+<li><strong>Documentation</strong>: Complete documentation suite with examples</li>
+</ul>
+<hr />
+<h2 id="version-history-summary">Version History Summary<a class="headerlink" href="#version-history-summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>v1.2.0</strong>: Fixed DXT installation issues and added automated installation scripts</li>
+<li><strong>v1.1.0</strong>: Added DXT package distribution and enhanced installation options</li>
+<li><strong>v1.0.0</strong>: Initial release with core MCP server and context system</li>
+</ul>
+<h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
+<h3 id="from-110-to-120">From 1.1.0 to 1.2.0<a class="headerlink" href="#from-110-to-120" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Breaking Change</strong>: DXT bundled dependencies no longer recommended due to Python 3.13+ compatibility</li>
+<li><strong>Migration</strong>: Use new automated installation scripts or manual virtual environment setup</li>
+<li><strong>Benefits</strong>: More reliable installation across different Python versions and Linux distributions</li>
+<li><strong>No Context Changes</strong>: All existing context files and server functionality remain identical</li>
+</ul>
+<h3 id="from-100-to-110">From 1.0.0 to 1.1.0<a class="headerlink" href="#from-100-to-110" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Existing Users</strong>: Can continue using manual installation method</li>
+<li><strong>New Users</strong>: Recommended to use DXT installation for easier setup</li>
+<li><strong>No Breaking Changes</strong>: All existing context files and configurations remain compatible</li>
+<li><strong>Enhanced Distribution</strong>: DXT package provides better deployment and management options</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025-2026 doobidoo – MIT License
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/doobidoo/MCP-Context-Provider" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
