@@ -1,10 +1,8 @@
 # MCP Context Provider
 
-
-  https://github.com/user-attachments/assets/ade8f937-5dd9-4e45-99da-17ac0c7475b2
-
+  https://github.com/user-attachments/assets/d9c6c325-00f1-44d9-a805-b1d6588c0acf
+  
   *Persistent context and learned instincts for Claude Desktop and Claude Code — surviving across sessions.*
-
 
 A TypeScript MCP server that gives Claude persistent **Contexts** (static tool rules) and **Instincts** (learned, confidence-scored rules distilled from sessions). No more re-establishing context in every new chat.
 
