@@ -143,3 +143,26 @@ Endpoints: `POST /mcp` (MCP protocol), `GET /health` (status check)
 ## Skills
 
 - `/instill` — distill instincts from a session (global skill, works in any project)
+
+## Development Processes
+
+### Agents (`.claude/agents/`)
+
+| Agent | Purpose |
+|-------|---------|
+| `changelog-archival.md` | Archive old changelog entries when rotating major versions |
+| `github-release-manager.md` | Version bump, changelog update, tag, push, GitHub release |
+
+### Directives (`.claude/directives/`)
+
+| Directive | Purpose |
+|-----------|---------|
+| `version-management.md` | Semver policy, two-file sync (package.json + VERSION), changelog format |
+
+### Release Workflow
+
+1. Use the **Release Manager agent** — never bump versions manually
+2. Version lives in two files: `package.json` and `VERSION` (must always match)
+3. Releases happen on `main` branch, tagged `vX.Y.Z[-pre.N]`
+4. Tag push triggers `.github/workflows/release.yml` (test → build → GitHub release)
+5. Current phase: **alpha** (v2.0.0-alpha.x) — see directive for phase progression

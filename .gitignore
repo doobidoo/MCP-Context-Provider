@@ -59,9 +59,11 @@ test_phase3_learning.py
 claude_desktop_config_with_context.json
 claude_desktop_config.json
 
-# Claude Desktop (keep skills tracked)
+# Claude Desktop (keep skills, agents, directives tracked)
 .claude/*
 !.claude/skills/
+!.claude/agents/
+!.claude/directives/
 
 # Temporary files
 *.tmp
