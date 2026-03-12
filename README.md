@@ -168,6 +168,34 @@ npm start         # stdio transport
 npm run start:http  # HTTP transport on port 3100
 ```
 
+## FAQ
+
+### Can I use `/instill` in Claude Desktop?
+
+No. `/instill` is a **Claude Code skill** (`.claude/skills/instill.md`) and only works in the Claude Code CLI. Claude Desktop does not have a skill system.
+
+However, you can achieve the same result in Claude Desktop:
+
+1. **MCP tools work in both** - The `list_instincts` and `build_injection` tools are available in Claude Desktop via the MCP server.
+2. **For the instill workflow**, create a Claude Desktop **Project** and paste the instill instructions as Custom Instructions. Claude Desktop can then use `desktop-commander` or similar MCP servers to write YAML files.
+
+The reason `/instill` is not exposed as an MCP tool: it is an **interactive, multi-step workflow** (analyze conversation, present candidates, await user decision, write YAML). MCP tools return a single response and cannot drive multi-turn interactions.
+
+### Do `learned.instincts.yaml` files contain sensitive data?
+
+Potentially yes. Instincts distilled from work sessions may contain internal hostnames, customer names, infrastructure details, or operational procedures. The `learned.instincts.yaml` file is tracked by git by default, so **review its contents before pushing** to public repositories. Consider adding it to `.gitignore` if your instincts contain proprietary information.
+
+### What is the difference between Contexts and Instincts?
+
+| | Contexts | Instincts |
+|---|---|---|
+| **Format** | JSON (`*_context.json`) | YAML (`*.instincts.yaml`) |
+| **Source** | Manually authored | Distilled from sessions via `/instill` |
+| **Size** | 200-1000 tokens | 20-80 tokens |
+| **Matching** | Tool-pattern globs | Regex trigger patterns |
+| **Lifecycle** | Static, versioned | Confidence-scored, evolves over time |
+| **Approval** | None needed | Requires `approved_by: human` |
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).
