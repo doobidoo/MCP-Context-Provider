@@ -33,6 +33,8 @@ env/
 contexts/azure-vm-sql-server_context.json
 contexts/uptime-kuma_context.json
 contexts/vaultwarden_context.json
+contexts/n8n_context.json
+contexts/private/
 .env.local
 
 # IDE
