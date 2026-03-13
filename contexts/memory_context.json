@@ -17,7 +17,12 @@
         {
           "action": "search_by_tag",
           "parameters": {
-            "tags": ["in-progress", "active", "reminder", "follow-up"]
+            "tags": [
+              "in-progress",
+              "active",
+              "reminder",
+              "follow-up"
+            ]
           },
           "description": "Find ongoing tasks and reminders"
         }
@@ -26,6 +31,28 @@
     }
   },
   "auto_store_triggers": {
+    "explicit_save_commands": {
+      "patterns": [
+        "merke dir",
+        "speicher das",
+        "speicher:",
+        "ins Memory",
+        "ab ins Memory",
+        "bitte merken",
+        "nicht vergessen:",
+        "wichtig:",
+        "lessons learned:",
+        "lesson learned",
+        "merken:",
+        "save that",
+        "remember this"
+      ],
+      "action": "store_memory",
+      "tags": [
+        "explicit-save"
+      ],
+      "priority": "critical"
+    },
     "decisions_and_agreements": {
       "patterns": [
         "I decided to",
@@ -33,10 +60,25 @@
         "The plan is",
         "Let's go with",
         "We'll use",
-        "The approach will be"
+        "The approach will be",
+        "Ich habe entschieden",
+        "Ich entscheide mich für",
+        "Wir haben vereinbart",
+        "Der Plan ist",
+        "Wir nehmen",
+        "Wir verwenden",
+        "Der Ansatz ist",
+        "Wir gehen mit",
+        "Entschieden:",
+        "machen wir so",
+        "nehmen wir",
+        "geht mit"
       ],
       "action": "store_memory",
-      "tags": ["decision", "{project_name}"],
+      "tags": [
+        "decision",
+        "{project_name}"
+      ],
       "priority": "high"
     },
     "personal_preferences": {
@@ -46,10 +88,21 @@
         "I never",
         "I like to",
         "My preference is",
-        "I usually"
+        "I usually",
+        "Ich bevorzuge",
+        "Ich mache immer",
+        "Ich mache nie",
+        "Ich mag",
+        "Meine Präferenz ist",
+        "Normalerweise",
+        "Ich nutze lieber",
+        "Am liebsten"
       ],
       "action": "store_memory",
-      "tags": ["preference", "personal"],
+      "tags": [
+        "preference",
+        "personal"
+      ],
       "priority": "medium"
     },
     "activities_completed": {
@@ -60,10 +113,25 @@
         "I worked on",
         "I implemented",
         "I fixed",
-        "I resolved"
+        "I resolved",
+        "Ich habe",
+        "Ich hab",
+        "Fertig gestellt",
+        "Abgeschlossen",
+        "Implementiert",
+        "Behoben",
+        "Erledigt",
+        "Ich habe implementiert",
+        "Ich habe behoben",
+        "Ich habe fertiggestellt",
+        "Ich habe gearbeitet an"
       ],
       "action": "store_memory",
-      "tags": ["activity", "completed", "{date}"],
+      "tags": [
+        "activity",
+        "completed",
+        "{date}"
+      ],
       "priority": "high"
     },
     "technical_solutions": {
@@ -73,10 +141,27 @@
         "The solution is",
         "It works by",
         "The workaround is",
-        "To resolve this"
+        "To resolve this",
+        "Die Lösung war",
+        "Das hat es behoben",
+        "Der Workaround ist",
+        "Es funktioniert durch",
+        "Das Problem lässt sich lösen",
+        "Die Lösung ist",
+        "Gelöst durch",
+        "Fix war",
+        "Behoben durch",
+        "funktioniert so:",
+        "trick ist:",
+        "der fix:",
+        "lösung:"
       ],
       "action": "store_memory",
-      "tags": ["solution", "technical", "{tool_name}"],
+      "tags": [
+        "solution",
+        "technical",
+        "{tool_name}"
+      ],
       "priority": "high"
     },
     "learning_moments": {
@@ -86,10 +171,25 @@
         "It turns out",
         "The issue was",
         "I found out",
-        "The problem was"
+        "The problem was",
+        "Ich habe gelernt",
+        "Ich habe entdeckt",
+        "Es stellt sich heraus",
+        "Das Problem war",
+        "Ich habe herausgefunden",
+        "Ursache war",
+        "Ich weiß jetzt",
+        "Neu gelernt:",
+        "lessons learned",
+        "lesson learned",
+        "take-away:",
+        "takeaway:"
       ],
       "action": "store_memory",
-      "tags": ["learning", "insight"],
+      "tags": [
+        "learning",
+        "insight"
+      ],
       "priority": "medium"
     },
     "future_tasks": {
@@ -99,10 +199,26 @@
         "Next time",
         "TODO:",
         "Remember to",
-        "Don't forget to"
+        "Don't forget to",
+        "Ich muss noch",
+        "Ich sollte",
+        "Nächstes Mal",
+        "Nicht vergessen",
+        "Daran denken",
+        "Noch zu tun",
+        "Ausstehend:",
+        "Muss ich noch",
+        "todo:",
+        "to-do:",
+        "offen:",
+        "noch machen:"
       ],
       "action": "store_memory",
-      "tags": ["todo", "future", "in-progress"],
+      "tags": [
+        "todo",
+        "future",
+        "in-progress"
+      ],
       "priority": "high"
     },
     "project_context": {
@@ -110,15 +226,51 @@
         "Working on project",
         "The project",
         "In the {project} project",
-        "For {company}"
+        "For {company}",
+        "Arbeite an",
+        "Das Projekt",
+        "Im Projekt",
+        "Für den Kunden",
+        "Bei DMI",
+        "Beim Kunden",
+        "Projekt:",
+        "bei Mercedes",
+        "bei Helvetia",
+        "bei Bosch",
+        "bei Vetter"
       ],
       "action": "store_memory",
-      "tags": ["project", "{project_name}"],
+      "tags": [
+        "project",
+        "{project_name}"
+      ],
       "priority": "medium"
     }
   },
   "auto_retrieve_triggers": {
+    "problem_solving": {
+      "tags": [
+        "solution",
+        "{topic}"
+      ],
+      "action": "search_by_tag",
+      "patterns": [
+        "How did I fix",
+        "What was the solution for",
+        "Last time this happened",
+        "Previous fix for",
+        "How did we solve",
+        "Wie habe ich das behoben",
+        "Was war die Lösung für",
+        "Letztes Mal",
+        "Wie haben wir das gelöst",
+        "Was war der Fix für",
+        "hatten wir das nicht schon",
+        "hatten wir das mal"
+      ]
+    },
     "temporal_queries": {
+      "action": "recall_memory",
       "patterns": [
         "What did I",
         "When did I",
@@ -126,45 +278,57 @@
         "Recently",
         "Yesterday",
         "This morning",
-        "Earlier today"
+        "Earlier today",
+        "Was habe ich",
+        "Wann habe ich",
+        "Letzte Woche",
+        "Kürzlich",
+        "Gestern",
+        "Heute Morgen",
+        "Vorhin",
+        "Zuletzt"
       ],
-      "action": "recall_memory",
       "extract_timeframe": true
     },
-    "continuation_patterns": {
-      "patterns": [
-        "Continue with",
-        "Where were we",
-        "Back to",
-        "Resume",
-        "Pick up where",
-        "Let's get back to"
-      ],
-      "action": "retrieve_memory",
-      "additional_tags": ["in-progress"]
-    },
     "reference_patterns": {
+      "action": "retrieve_memory",
       "patterns": [
         "As we discussed",
         "Like before",
         "Remember when",
         "That thing about",
         "You mentioned",
-        "We talked about"
+        "We talked about",
+        "Wie besprochen",
+        "Wie vorhin",
+        "Erinnerst du dich",
+        "Das Thema mit",
+        "Du hast erwähnt",
+        "Wir haben darüber geredet",
+        "weißt du noch",
+        "hatten wir da nicht was"
       ],
-      "action": "retrieve_memory",
       "use_context": true
     },
-    "problem_solving": {
+    "continuation_patterns": {
+      "action": "retrieve_memory",
       "patterns": [
-        "How did I fix",
-        "What was the solution for",
-        "Last time this happened",
-        "Previous fix for",
-        "How did we solve"
+        "Continue with",
+        "Where were we",
+        "Back to",
+        "Resume",
+        "Pick up where",
+        "Let's get back to",
+        "Weiter mit",
+        "Wo waren wir",
+        "Zurück zu",
+        "Fortfahren",
+        "Weitermachen mit",
+        "Nochmal zu"
       ],
-      "action": "search_by_tag",
-      "tags": ["solution", "{topic}"]
+      "additional_tags": [
+        "in-progress"
+      ]
     }
   },
   "smart_tagging": {
@@ -182,14 +346,49 @@
     },
     "tool_detection": {
       "patterns": {
-        "terraform": ["terraform", "tf", "hcl"],
-        "docker": ["docker", "dockerfile", "container"],
-        "kubernetes": ["k8s", "kubernetes", "kubectl"],
-        "azure": ["azure", "az", "arm"],
-        "aws": ["aws", "amazon", "s3", "ec2"],
-        "git": ["git", "github", "commit", "branch"],
-        "python": ["python", "pip", "venv"],
-        "javascript": ["javascript", "js", "node", "npm"]
+        "terraform": [
+          "terraform",
+          "tf",
+          "hcl"
+        ],
+        "docker": [
+          "docker",
+          "dockerfile",
+          "container"
+        ],
+        "kubernetes": [
+          "k8s",
+          "kubernetes",
+          "kubectl"
+        ],
+        "azure": [
+          "azure",
+          "az",
+          "arm"
+        ],
+        "aws": [
+          "aws",
+          "amazon",
+          "s3",
+          "ec2"
+        ],
+        "git": [
+          "git",
+          "github",
+          "commit",
+          "branch"
+        ],
+        "python": [
+          "python",
+          "pip",
+          "venv"
+        ],
+        "javascript": [
+          "javascript",
+          "js",
+          "node",
+          "npm"
+        ]
       }
     }
   },
@@ -223,9 +422,12 @@
     }
   },
   "metadata": {
-    "version": "1.0.0",
-    "last_updated": "2025-01-17",
-    "applies_to_tools": ["memory", "mcp-memory"],
+    "version": "1.2.0",
+    "last_updated": "2026-03-09T15:03:43.100254",
+    "applies_to_tools": [
+      "memory",
+      "mcp-memory"
+    ],
     "priority": "high",
     "author": "hkr"
   }
