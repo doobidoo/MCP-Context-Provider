@@ -1,0 +1,31 @@
+{
+  "name": "context-provider",
+  "description": "MCP context & instinct engine — learned rules from sessions with confidence scoring. Provides tool-aware context injection and 6 MCP tools.",
+  "version": "2.0.0-alpha.4",
+  "author": {
+    "name": "doobidoo"
+  },
+  "homepage": "https://github.com/doobidoo/MCP-Context-Provider",
+  "repository": "https://github.com/doobidoo/MCP-Context-Provider",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "context",
+    "instinct",
+    "learning",
+    "claude-code",
+    "confidence-scoring",
+    "tool-context"
+  ],
+  "category": "code-intelligence",
+  "mcpServers": {
+    "context-provider": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/dist/server/index.js"],
+      "env": {
+        "CONTEXTS_PATH": "${CLAUDE_PLUGIN_ROOT}/contexts",
+        "INSTINCTS_PATH": "${CLAUDE_PLUGIN_ROOT}/instincts"
+      }
+    }
+  }
+}
