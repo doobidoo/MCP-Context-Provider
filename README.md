@@ -71,13 +71,39 @@ Add to `~/.mcp.json`:
 
 ### `/instill` Skill (Claude Code)
 
-Install the skill globally as a symlink (stays current with `git pull`):
+Install the skill globally (stays current with `git pull`):
 
 ```bash
-ln -s /path/to/mcp-context-provider/.claude/skills/instill.md ~/.claude/skills/instill.md
+mkdir -p ~/.claude/skills/instill
+ln -s /path/to/mcp-context-provider/.claude/skills/instill.md ~/.claude/skills/instill/SKILL.md
 ```
 
 Then use `/instill` at the end of productive sessions to distill learned patterns into instinct candidates.
+
+### Auto-Trigger Hook (Optional)
+
+The instill-trigger hook automatically detects mistakes during a session and nudges Claude to suggest `/instill` when a threshold is reached. It monitors:
+
+- **User corrections** (UserPromptSubmit) — "no not that", "that's wrong", "still broken", etc.
+- **Tool failures** (PostToolUse) — non-zero exit codes, tracebacks, permission errors
+
+Install the hook:
+
+```bash
+cp hooks/instill-trigger.js ~/.claude/hooks/core/instill-trigger.js
+```
+
+Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToolUse`:
+
+```json
+{
+  "type": "command",
+  "command": "node --no-warnings \"~/.claude/hooks/core/instill-trigger.js\"",
+  "timeout": 3
+}
+```
+
+**Scoring:** Corrections weighted 1.5x, tool failures 0.5x. Combined threshold: 3.0. Max 1 nudge per session. All tunable via `CONFIG` object in the hook file.
 
 ## MCP Tools
 
