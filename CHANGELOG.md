@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-alpha.5] - 2026-03-15
+
+### Added
+- **Instill Auto-Trigger Hook** (`hooks/instill-trigger.js`): Hybrid hook registered on both `UserPromptSubmit` and `PostToolUse` that detects user corrections and tool failures, tracks a per-session counter, and injects a `systemMessage` nudging Claude to suggest `/instill` when a configurable threshold is reached
+  - 20+ correction detection patterns with false-positive filtering
+  - Tool failure detection for Bash/Edit/Write (exit codes, tracebacks, permission errors) with benign-pattern exclusion
+  - Weighted scoring: corrections 1.5x, failures 0.5x, combined threshold 3.0
+  - Max 1 nudge per session, all thresholds tunable via CONFIG object
+  - Per-session state stored in `/tmp/claude-instill-<session_id>.json`
+
+### Fixed
+- **`/instill` skill global installation**: Skill must be installed as `~/.claude/skills/instill/SKILL.md` (directory per skill), not as a loose `.md` file in the skills directory — updated README with correct symlink instructions
+
+### Changed
+- **README.md**: Added auto-trigger hook documentation, installation instructions, and scoring details; fixed skill installation path to use correct `<name>/SKILL.md` directory structure
+
 ## [2.0.0-alpha.4] - 2026-03-12
 
 ### Added
