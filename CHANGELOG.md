@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Claude Code Plugin Marketplace** (`.claude-plugin/`): `marketplace.json` and `plugin.json` for distribution via the Anthropic plugin marketplace and self-hosted marketplaces
+  - MCP server auto-configured with `${CLAUDE_PLUGIN_ROOT}` path resolution
+  - Plugin category: `code-intelligence`
+  - Installable via `/plugin marketplace add doobidoo/MCP-Context-Provider`
+
+### Fixed
+- **MCP server connection failure with Claude Code**: Documented that Claude Code does not support the `cwd` field in MCP server configs — relative paths resolve from the wrong directory, causing silent connection failures. Added absolute path requirement notes to README.md and CLAUDE.md
+
 ## [2.0.0-alpha.5] - 2026-03-15
 
 ### Added

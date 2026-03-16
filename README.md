@@ -69,6 +69,19 @@ Add to `~/.mcp.json`:
 }
 ```
 
+> **Important:** Use absolute paths for both `args` and `env` values. Claude Code does not support the `cwd` field in MCP server configs — relative paths will resolve from the wrong directory and the server will fail to connect.
+
+### Claude Code Plugin (Marketplace)
+
+Install directly from the marketplace:
+
+```bash
+/plugin marketplace add doobidoo/MCP-Context-Provider
+/plugin install context-provider
+```
+
+This auto-configures the MCP server with correct paths — no manual `.mcp.json` editing needed.
+
 ### `/instill` Skill (Claude Code)
 
 Install the skill globally (stays current with `git pull`):
