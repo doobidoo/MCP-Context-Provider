@@ -1,4 +1,4 @@
-# CLAUDE.md — mcp-context-provider v2.x
+# CLAUDE.md — mcp-context-provider v2.0.0-alpha.5
 
 > Clean rewrite from Python v1.8.x to TypeScript.
 
@@ -44,6 +44,8 @@ src/
     registry.ts       approve/reject/tune/outcome/remove operations
     formatter.ts      ANSI terminal formatting
 
+hooks/                Claude Code hooks
+  instill-trigger.js  Auto-detect corrections/failures → nudge /instill
 instincts/            YAML instinct files (*.instincts.yaml)
 contexts/             JSON context files (*_context.json)
 .claude/skills/       Claude Code skills
@@ -91,19 +93,23 @@ The server exposes 6 tools via MCP protocol:
 ```json
 {
   "command": "node",
-  "args": ["dist/server/index.js"],
+  "args": ["/absolute/path/to/mcp-context-provider/dist/server/index.js"],
   "env": {
-    "CONTEXTS_PATH": "./contexts",
-    "INSTINCTS_PATH": "./instincts"
+    "CONTEXTS_PATH": "/absolute/path/to/mcp-context-provider/contexts",
+    "INSTINCTS_PATH": "/absolute/path/to/mcp-context-provider/instincts"
   }
 }
 ```
+
+> **Note:** Use absolute paths. Claude Code does not support the `cwd` field in MCP
+> server configs, so relative paths like `./contexts` will resolve from the wrong
+> directory and the server will fail to connect.
 
 **HTTP** — for remote deployment or multi-client scenarios:
 ```json
 {
   "command": "node",
-  "args": ["dist/server/index.js", "--http"],
+  "args": ["/absolute/path/to/mcp-context-provider/dist/server/index.js", "--http"],
   "env": {
     "MCP_SERVER_PORT": "3100"
   }
@@ -144,6 +150,51 @@ Endpoints: `POST /mcp` (MCP protocol), `GET /health` (status check)
 
 - `/instill` — distill instincts from a session (global skill, works in any project)
 
+### Skill Installation
+
+Install globally as a symlink (directory-per-skill convention):
+
+```bash
+mkdir -p ~/.claude/skills/instill
+ln -s /path/to/mcp-context-provider/.claude/skills/instill.md ~/.claude/skills/instill/SKILL.md
+```
+
+## Hooks
+
+### Instill Auto-Trigger (`hooks/instill-trigger.js`)
+
+A hybrid Claude Code hook that monitors sessions for "mistake signals" and nudges Claude to suggest `/instill` when a threshold is reached.
+
+**Hook events:** `UserPromptSubmit`, `PostToolUse`
+
+**Detection:**
+- **Corrections** (UserPromptSubmit) — 20+ regex patterns detect "no not that", "that's wrong", "still broken", explicit preferences, frustration signals; false-positive filtering excludes questions and uncertainty
+- **Tool failures** (PostToolUse) — exit codes, tracebacks, permission errors on Bash/Edit/Write; benign patterns (no files found, nothing to commit, already exists) are excluded
+
+**Scoring:**
+- Corrections weighted 1.5x, tool failures 0.5x
+- Combined threshold: 3.0 (configurable via `CONFIG` object)
+- Max 1 nudge per session
+- Per-session state stored in `/tmp/claude-instill-<session_id>.json`
+
+**Installation:**
+
+```bash
+cp hooks/instill-trigger.js ~/.claude/hooks/core/instill-trigger.js
+```
+
+Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToolUse`:
+
+```json
+{
+  "type": "command",
+  "command": "node --no-warnings \"~/.claude/hooks/core/instill-trigger.js\"",
+  "timeout": 3
+}
+```
+
+**Output:** JSON `{ "systemMessage": "..." }` when threshold is met, silent otherwise.
+
 ## Development Processes
 
 ### Agents (`.claude/agents/`)
@@ -165,4 +216,4 @@ Endpoints: `POST /mcp` (MCP protocol), `GET /health` (status check)
 2. Version lives in two files: `package.json` and `VERSION` (must always match)
 3. Releases happen on `main` branch, tagged `vX.Y.Z[-pre.N]`
 4. Tag push triggers `.github/workflows/release.yml` (test → build → GitHub release)
-5. Current phase: **alpha** (v2.0.0-alpha.x) — see directive for phase progression
+5. Current phase: **alpha** (v2.0.0-alpha.5) — see directive for phase progression
