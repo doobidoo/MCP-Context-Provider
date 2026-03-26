@@ -16,6 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **MCP server connection failure with Claude Code**: Documented that Claude Code does not support the `cwd` field in MCP server configs — relative paths resolve from the wrong directory, causing silent connection failures. Added absolute path requirement notes to README.md and CLAUDE.md
 
+## [2.0.0-alpha.6] - 2026-03-26
+
+### Fixed
+- **MCP SDK crash with Claude.ai**: Updated `@modelcontextprotocol/sdk` from 1.27.1 to 1.28.0 to support protocol version `2025-11-25` sent by Claude.ai - SDK 1.27.1 crashed silently on unrecognized protocol versions
+
+### Changed
+- **DokuWiki context**: Updated literal_text rules and bridge port configuration
+- **MCP config**: Updated `.mcp.json` server configuration
+
 ## [2.0.0-alpha.5] - 2026-03-15
 
 ### Added
