@@ -32,7 +32,7 @@ export interface MemorySearchResult {
 // ---------------------------------------------------------------------------
 
 export interface MemoryBridgeConfig {
-  /** Base URL of the memory service HTTP API. @default "http://127.0.0.1:8000/api" */
+  /** Base URL of the memory service HTTP API. @default "http://127.0.0.1:8001/api" */
   baseUrl: string;
 
   /** API key for authentication (sent as X-API-Key header). */
