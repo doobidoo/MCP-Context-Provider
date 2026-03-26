@@ -20,6 +20,9 @@ import {
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import { Engine } from '../engine/engine.js';
+import { InstinctLoader } from '../engine/instinct-loader.js';
+import { Registry } from '../cli/registry.js';
+import type { InstinctFile } from '../types/instinct.js';
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -36,6 +39,8 @@ const USE_HTTP = process.argv.includes('--http');
 // Engine setup
 // ---------------------------------------------------------------------------
 
+const registry = new Registry(resolve(INSTINCTS_PATH));
+
 const engine = new Engine({
   contextsPath: resolve(CONTEXTS_PATH),
   instinctsPath: resolve(INSTINCTS_PATH),
@@ -49,7 +54,7 @@ const engine = new Engine({
 // ---------------------------------------------------------------------------
 
 const server = new Server(
-  { name: 'context-provider', version: '2.0.0-alpha.2' },
+  { name: 'context-provider', version: '2.0.0-alpha.6' },
   { capabilities: { tools: {} } },
 );
 
@@ -131,6 +136,68 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       inputSchema: {
         type: 'object' as const,
         properties: {},
+      },
+    },
+    {
+      name: 'store_instinct',
+      description:
+        'Store a new instinct candidate. Created as inactive with auto approval — use approve_instinct for human approval.',
+      inputSchema: {
+        type: 'object' as const,
+        properties: {
+          id: { type: 'string', description: 'Unique kebab-case ID (e.g. "git-conventional-commits")' },
+          rule: { type: 'string', description: 'The instinct rule text (20-80 tokens)' },
+          domain: { type: 'string', description: 'Knowledge domain (e.g. "git", "typescript", "docker")' },
+          tags: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'Tags for matching and categorization',
+          },
+          trigger_patterns: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'Regex patterns that trigger this instinct',
+          },
+          confidence: { type: 'number', description: 'Initial confidence 0.0-1.0 (default 0.6)' },
+          filename: { type: 'string', description: 'Target YAML file (default "learned.instincts.yaml")' },
+        },
+        required: ['id', 'rule', 'domain', 'tags', 'trigger_patterns'],
+      },
+    },
+    {
+      name: 'approve_instinct',
+      description: 'Approve an instinct for active use (sets approved_by to human)',
+      inputSchema: {
+        type: 'object' as const,
+        properties: {
+          id: { type: 'string', description: 'Instinct ID to approve' },
+        },
+        required: ['id'],
+      },
+    },
+    {
+      name: 'reject_instinct',
+      description: 'Reject/deactivate an instinct and lower its confidence',
+      inputSchema: {
+        type: 'object' as const,
+        properties: {
+          id: { type: 'string', description: 'Instinct ID to reject' },
+        },
+        required: ['id'],
+      },
+    },
+    {
+      name: 'record_outcome',
+      description: 'Record a positive, negative, or neutral outcome for an instinct',
+      inputSchema: {
+        type: 'object' as const,
+        properties: {
+          id: { type: 'string', description: 'Instinct ID' },
+          result: { type: 'string', enum: ['positive', 'negative', 'neutral'], description: 'Outcome result' },
+          delta: { type: 'number', description: 'Confidence change (e.g. +0.05 or -0.1)' },
+          note: { type: 'string', description: 'Optional note explaining the outcome' },
+        },
+        required: ['id', 'result', 'delta'],
       },
     },
   ],
@@ -242,6 +309,90 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         usage_count: i.usage_count,
       }));
       return { content: [{ type: 'text', text: JSON.stringify(instincts, null, 2) }] };
+    }
+
+    case 'store_instinct': {
+      const id = String(args?.['id'] ?? '');
+      const rule = String(args?.['rule'] ?? '');
+      const domain = String(args?.['domain'] ?? '');
+      const tags = (args?.['tags'] as string[]) ?? [];
+      const trigger_patterns = (args?.['trigger_patterns'] as string[]) ?? [];
+      const confidence = Number(args?.['confidence'] ?? 0.6);
+      const filename = String(args?.['filename'] ?? 'learned.instincts.yaml');
+
+      if (!id || !rule || !domain) {
+        return { content: [{ type: 'text', text: 'Error: id, rule, and domain are required' }] };
+      }
+
+      const loader = new InstinctLoader(resolve(INSTINCTS_PATH));
+      let instinctFile: InstinctFile;
+      try {
+        instinctFile = await loader.load(filename);
+      } catch {
+        instinctFile = { version: '1.0', instincts: {} };
+      }
+
+      if (instinctFile.instincts[id]) {
+        return { content: [{ type: 'text', text: `Error: instinct "${id}" already exists` }] };
+      }
+
+      const now = new Date().toISOString();
+      instinctFile.instincts[id] = {
+        id,
+        rule,
+        domain,
+        tags,
+        trigger_patterns,
+        confidence,
+        min_confidence: 0.5,
+        usage_count: 0,
+        approved_by: 'auto',
+        outcome_log: [],
+        active: false,
+        created_at: now,
+        updated_at: now,
+      };
+
+      await loader.save(filename, instinctFile);
+      return {
+        content: [{ type: 'text', text: JSON.stringify({ stored: id, file: filename, status: 'inactive — use approve_instinct to activate' }, null, 2) }],
+      };
+    }
+
+    case 'approve_instinct': {
+      const id = String(args?.['id'] ?? '');
+      if (!id) return { content: [{ type: 'text', text: 'Error: id is required' }] };
+      try {
+        const instinct = await registry.approve(id);
+        return { content: [{ type: 'text', text: JSON.stringify({ approved: id, confidence: instinct.confidence, active: instinct.active }, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: 'text', text: `Error: ${e instanceof Error ? e.message : String(e)}` }] };
+      }
+    }
+
+    case 'reject_instinct': {
+      const id = String(args?.['id'] ?? '');
+      if (!id) return { content: [{ type: 'text', text: 'Error: id is required' }] };
+      try {
+        const instinct = await registry.reject(id);
+        return { content: [{ type: 'text', text: JSON.stringify({ rejected: id, confidence: instinct.confidence, active: instinct.active }, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: 'text', text: `Error: ${e instanceof Error ? e.message : String(e)}` }] };
+      }
+    }
+
+    case 'record_outcome': {
+      const id = String(args?.['id'] ?? '');
+      const result = String(args?.['result'] ?? '') as 'positive' | 'negative' | 'neutral';
+      const delta = Number(args?.['delta'] ?? 0);
+      const note = args?.['note'] ? String(args['note']) : undefined;
+      if (!id || !result) return { content: [{ type: 'text', text: 'Error: id and result are required' }] };
+      try {
+        const instinct = await registry.recordOutcome(id, result, delta, note);
+        return { content: [{ type: 'text', text: JSON.stringify({ id, result, new_confidence: instinct.confidence, outcomes: instinct.outcome_log.length }, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: 'text', text: `Error: ${e instanceof Error ? e.message : String(e)}` }] };
+      }
     }
 
     default:
