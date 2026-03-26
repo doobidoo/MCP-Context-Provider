@@ -115,6 +115,21 @@
         "Tags:",
         "#tag"
       ]
+    },
+    "literal_text": {
+      "format": "%%{}%%",
+      "description": "Renders text literally without wiki formatting. MUST always be closed - an unclosed %% breaks the entire page rendering.",
+      "rules": [
+        "Every opening %% MUST have a matching closing %%",
+        "Never use %% for decorative purposes - only when literal rendering is actually needed",
+        "Prefer ''..'' for inline code or <code> blocks for longer content",
+        "If the text does not contain DokuWiki special characters, do NOT use %% at all"
+      ],
+      "examples": {
+        "correct": "Use %%$env:PATH%% to access the variable",
+        "correct2": "The pattern is %%{kunde}-data%%",
+        "wrong": "Use %% without closing - breaks entire page from this point onward"
+      }
     }
   },
   "preferences": {
