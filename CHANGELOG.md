@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-alpha.7] - 2026-03-26
+
 ### Added
+- **Instinct write tools for MCP server**: 4 new MCP tools (`store_instinct`, `approve_instinct`, `reject_instinct`, `record_outcome`) that delegate to the existing Registry class - Claude Desktop could only read instincts but not write them. Server now exposes 10 tools (was 6)
 - **Claude Code Plugin Marketplace** (`.claude-plugin/`): `marketplace.json` and `plugin.json` for distribution via the Anthropic plugin marketplace and self-hosted marketplaces
   - MCP server auto-configured with `${CLAUDE_PLUGIN_ROOT}` path resolution
   - Plugin category: `code-intelligence`
