@@ -118,6 +118,10 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 
 **Scoring:** Corrections weighted 1.5x, tool failures 0.5x. Combined threshold: 3.0. Max 1 nudge per session. All tunable via `CONFIG` object in the hook file.
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/doobidoo-mcp-context-provider).
+
 ## MCP Tools
 
 | Tool | Description |
