@@ -19,7 +19,7 @@ import { HttpMemoryBridge } from '../bridge/http-bridge.js';
 import { InstinctSync, type SyncResult } from '../bridge/sync.js';
 import { ContextLoader, type LoadResult } from './context-loader.js';
 import { ContextMatcher } from './context-matcher.js';
-import { InstinctLoader } from './instinct-loader.js';
+import { InstinctLoader, type RepairAction } from './instinct-loader.js';
 import { InstinctMatcher } from './instinct-matcher.js';
 
 // ---------------------------------------------------------------------------
@@ -69,6 +69,21 @@ export interface EngineConfig {
 
   /** Memory Bridge configuration. Omit to disable memory bridge. */
   memoryBridge?: Partial<MemoryBridgeConfig>;
+
+  /**
+   * When true, instinct files that the loader had to auto-correct on load
+   * (e.g. legacy array form, missing ids) get rewritten to disk in canonical
+   * form, with a `.bak` copy of the original. Defaults to false so that
+   * `initialize()` is side-effect free unless explicitly opted in.
+   */
+  autoRepair?: boolean;
+}
+
+/** Auto-repair event surfaced by the engine's initialize() result. */
+export interface FileRepair {
+  file: string;
+  repairs: RepairAction[];
+  persisted: boolean;
 }
 
 export class Engine {
@@ -82,6 +97,7 @@ export class Engine {
   private contexts: Map<string, Context> = new Map();
   private instinctFiles: Map<string, InstinctFile> = new Map();
   private loadErrors: LoadResult['errors'] = [];
+  private fileRepairs: FileRepair[] = [];
   private memoryConnected = false;
 
   constructor(private readonly config: EngineConfig) {
@@ -109,24 +125,46 @@ export class Engine {
     contextsLoaded: number;
     instinctsLoaded: number;
     errors: LoadResult['errors'];
+    repairs: FileRepair[];
   }> {
     // Load contexts
     const contextResult = await this.contextLoader.loadAll();
     this.contexts = contextResult.contexts;
     this.loadErrors = contextResult.errors;
+    this.fileRepairs = [];
 
     // Load instincts (try all .instincts.yaml files)
     let instinctCount = 0;
     try {
       const { readdir } = await import('node:fs/promises');
       const files = await readdir(this.config.instinctsPath);
-      const yamlFiles = files.filter((f) => f.endsWith('.instincts.yaml'));
+      const yamlFiles = files
+        .filter((f) => f.endsWith('.instincts.yaml'))
+        .filter((f) => !f.endsWith('.bak'));
 
       for (const file of yamlFiles) {
         try {
-          const instinctFile = await this.instinctLoader.load(file);
+          const { file: instinctFile, repairs } =
+            await this.instinctLoader.loadWithRepairs(file);
           this.instinctFiles.set(file, instinctFile);
           instinctCount += Object.keys(instinctFile.instincts).length;
+
+          if (repairs.length > 0) {
+            let persisted = false;
+            if (this.config.autoRepair) {
+              try {
+                await this.instinctLoader.repair(file);
+                persisted = true;
+              } catch (e) {
+                const msg = e instanceof Error ? e.message : String(e);
+                this.loadErrors.push({
+                  file,
+                  error: `auto-repair persist failed: ${msg}`,
+                });
+              }
+            }
+            this.fileRepairs.push({ file, repairs, persisted });
+          }
         } catch (e) {
           const msg = e instanceof Error ? e.message : String(e);
           this.loadErrors.push({ file, error: msg });
@@ -140,6 +178,7 @@ export class Engine {
       contextsLoaded: this.contexts.size,
       instinctsLoaded: instinctCount,
       errors: this.loadErrors,
+      repairs: this.fileRepairs,
     };
   }
 
@@ -227,6 +266,11 @@ export class Engine {
   /** Get load errors from initialization. */
   getLoadErrors(): ReadonlyArray<{ file: string; error: string }> {
     return this.loadErrors;
+  }
+
+  /** Get auto-repair events from initialization. */
+  getFileRepairs(): ReadonlyArray<FileRepair> {
+    return this.fileRepairs;
   }
 
   /** Get auto-corrections for a tool. */
