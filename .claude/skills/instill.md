@@ -107,35 +107,62 @@ IMPORTANT interaction rules:
 
 ### Step 5: On Accept
 
-When the user accepts a candidate:
+When the user accepts a candidate, **prefer the MCP tool path** over direct file editing. The MCP server validates with Zod and handles the canonical file format for you — direct YAML editing has historically been the source of schema-mismatch bugs (see issue #10).
 
-1. Read the existing instincts file (or create new):
-   - Locate the repo root (check `INSTINCTS_PATH` env var, or default `./instincts/`)
-   - File: `learned.instincts.yaml` — create if absent with this skeleton:
-     ```yaml
-     version: "1.0"
-     instincts: {}
-     ```
-   - IMPORTANT: The file MUST have `version: "1.0"` and `instincts:` as top-level keys. Appending bare YAML blocks without this wrapper will cause a schema validation error on server startup.
-2. Transform the candidate into a full Instinct:
-   ```yaml
-   id: suggested-id
-   rule: "The rule text"
-   domain: category
-   tags: [tags]
-   trigger_patterns: [patterns]
-   confidence: <initial_confidence>
-   min_confidence: 0.5
-   approved_by: human
-   active: true
-   created_at: <now ISO-8601>
-   outcome_log: []
+#### Preferred path — MCP tools (mcp-context-provider must be configured)
+
+1. Call `store_instinct` with the candidate fields:
+   ```json
+   {
+     "id": "suggested-id",
+     "rule": "The rule text",
+     "domain": "category",
+     "tags": ["tag1", "tag2"],
+     "trigger_patterns": ["pattern1", "pattern2"],
+     "confidence": 0.7
+   }
    ```
-3. Append to `<instincts-dir>/learned.instincts.yaml`
-4. Validate with Zod schema before writing
+   This creates the instinct in `learned.instincts.yaml` as **inactive** with `approved_by: auto`.
+
+2. Call `approve_instinct` with `{ "id": "suggested-id" }` to flip the entry to `approved_by: human` and `active: true`. Without this call the instinct will not be injected into future sessions.
+
+3. Show confirmation:
+   ```
+   ✓ Stored and approved `suggested-id` (confidence: 0.7, domain: X)
+   ```
+
+#### Fallback path — direct file edit (only if MCP tools unavailable)
+
+Use this path only when `store_instinct` is not reachable (e.g. the skill is running in an environment where mcp-context-provider is not installed).
+
+1. Locate the repo root (check `INSTINCTS_PATH` env var, or default `./instincts/`)
+2. Read `learned.instincts.yaml` — create if absent with this skeleton:
+   ```yaml
+   version: "1.0"
+   instincts: {}
+   ```
+   **IMPORTANT:** The file MUST have `version: "1.0"` and `instincts:` as top-level keys, with instincts stored as a **map keyed by id**, not as a top-level list. Bare YAML arrays will be silently dropped by the loader on older versions and auto-repaired (with a `.bak` copy) on v2.0.0-alpha.8+.
+3. Insert the candidate under `instincts:` using its `id` as the key:
+   ```yaml
+   instincts:
+     suggested-id:
+       id: suggested-id
+       rule: "The rule text"
+       domain: category
+       tags: [tag1, tag2]
+       trigger_patterns: [pattern1, pattern2]
+       confidence: 0.7
+       min_confidence: 0.5
+       usage_count: 0
+       approved_by: human
+       active: true
+       created_at: "<now ISO-8601>"
+       outcome_log: []
+   ```
+4. Validate the file by running the server init once (`Engine.initialize()`) or by schema-checking before committing.
 5. Show confirmation:
    ```
-   Saved `suggested-id` (confidence: 0.7, domain: X)
+   Saved `suggested-id` (confidence: 0.7, domain: X) [file-edit fallback]
    ```
 
 ### Step 6: On Edit
