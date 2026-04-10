@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-alpha.9] - 2026-04-10
+
+### Fixed
+- **`/instill` skill routing** ([#10](https://github.com/doobidoo/MCP-Context-Provider/issues/10)): The skill now delegates to the `store_instinct` MCP tool instead of writing YAML directly, ensuring every new instinct flows through the same validation and repair pipeline as the loader.
+- **`memory_context` priority enum**: Changed priority from `critical` to `high` to match the Zod context schema enum — the invalid value was silently rejected on load.
+
+### Changed
+- **`.gitignore`**: excluded `contexts/linkedin_context.json` (local-only context) and timestamped `*.bak-*` backup files created by the auto-repair loader.
+
 ## [2.0.0-alpha.8] - 2026-04-10
 
 ### Fixed
