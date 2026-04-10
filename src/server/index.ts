@@ -34,6 +34,9 @@ const MEMORY_BRIDGE_URL = process.env['MEMORY_BRIDGE_URL'];
 const MEMORY_BRIDGE_API_KEY = process.env['MEMORY_BRIDGE_API_KEY'];
 const SERVER_PORT = parseInt(process.env['MCP_SERVER_PORT'] ?? '3100', 10);
 const USE_HTTP = process.argv.includes('--http');
+// Default: auto-repair is ON. Set MCP_CP_AUTO_REPAIR=0 to keep loader
+// side-effect free (in-memory corrections only, no disk writes).
+const AUTO_REPAIR = (process.env['MCP_CP_AUTO_REPAIR'] ?? '1') !== '0';
 
 // ---------------------------------------------------------------------------
 // Engine setup
@@ -47,6 +50,7 @@ const engine = new Engine({
   memoryBridge: MEMORY_BRIDGE_URL
     ? { baseUrl: MEMORY_BRIDGE_URL, apiKey: MEMORY_BRIDGE_API_KEY }
     : undefined,
+  autoRepair: AUTO_REPAIR,
 });
 
 // ---------------------------------------------------------------------------
@@ -408,13 +412,34 @@ async function main() {
   // Initialize engine
   const result = await engine.initialize();
   const info = `Engine loaded: ${result.contextsLoaded} contexts, ${result.instinctsLoaded} instincts`;
-  if (result.errors.length > 0) {
-    console.error(
-      `${info}, ${result.errors.length} errors:`,
-      result.errors.map((e) => e.file),
+  console.error(info);
+
+  if (result.repairs.length > 0) {
+    const totalFixes = result.repairs.reduce(
+      (sum, r) => sum + r.repairs.length,
+      0,
     );
-  } else {
-    console.error(info);
+    const mode = AUTO_REPAIR ? 'auto-repaired on disk (.bak kept)' : 'in-memory only — set MCP_CP_AUTO_REPAIR=1 to persist';
+    console.error(
+      `[mcp-cp] Auto-corrected ${totalFixes} issue(s) across ${result.repairs.length} file(s) — ${mode}:`,
+    );
+    for (const r of result.repairs) {
+      const tag = r.persisted ? '✓ persisted' : '~ in-memory';
+      console.error(`  ${tag}  ${r.file}`);
+      for (const action of r.repairs) {
+        console.error(`      · ${action.kind}: ${action.detail}`);
+      }
+    }
+  }
+
+  if (result.errors.length > 0) {
+    console.error(`[mcp-cp] ${result.errors.length} unrecoverable load error(s):`);
+    for (const e of result.errors) {
+      console.error(`  ⚠️  ${e.file}: ${e.error}`);
+    }
+    console.error(
+      '  → These files were skipped. Fix them manually and restart.',
+    );
   }
 
   // Connect memory bridge if configured
