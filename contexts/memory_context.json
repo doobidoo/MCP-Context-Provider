@@ -51,7 +51,7 @@
       "tags": [
         "explicit-save"
       ],
-      "priority": "critical"
+      "priority": "high"
     },
     "decisions_and_agreements": {
       "patterns": [
