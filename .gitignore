@@ -34,6 +34,7 @@ contexts/azure-vm-sql-server_context.json
 contexts/uptime-kuma_context.json
 contexts/vaultwarden_context.json
 contexts/n8n_context.json
+contexts/linkedin_context.json
 contexts/private/
 .env.local
 
@@ -71,6 +72,7 @@ claude_desktop_config.json
 # Temporary files
 *.tmp
 *.bak
+*.bak-*
 *.backup
 
 # Context backups (may contain sensitive data)
