@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-alpha.8] - 2026-04-10
+
+### Fixed
+- **Legacy instinct YAML files silently dropped on load** ([#10](https://github.com/doobidoo/MCP-Context-Provider/issues/10)): Earlier versions of the `/instill` skill appended new instincts as top-level YAML arrays, which the strict Zod schema silently rejected. Users lost every learned instinct without noticing — reporter had 87 entries accumulated over ~6 weeks that were never injected.
+
+### Added
+- **Auto-repair loader** (`src/engine/instinct-loader.ts`): The loader now detects and auto-corrects three classes of damage at the system boundary:
+  - **Shape normalization**: top-level array → canonical `{version, instincts}` object
+  - **ID synthesis**: entries without `id` get a kebab-case slug generated from the first 4 words of their rule text
+  - **Collision resolution**: duplicate ids are suffixed numerically (`foo` → `foo-2`)
+- **Repair reporting**: every fix is tracked in a `RepairAction[]` report returned alongside the parsed file. New methods: `loadWithRepairs()`, `repair()`. The `repair()` method persists canonical form back to disk with a `.bak` copy of the original.
+- **Engine auto-repair integration**: `Engine.initialize()` now collects repairs per file and, when `autoRepair: true`, persists corrections to disk. New accessor `getFileRepairs()`.
+- **`MCP_CP_AUTO_REPAIR` environment variable**: enables persistent repair mode in the server (default: `1`). Set to `0` to keep `initialize()` side-effect free (in-memory corrections only).
+- **8 regression tests** (`src/__tests__/instinct-loader.test.ts`): canonical load, array normalization, id synthesis, collision resolution, entries too short to slug, content-validation-after-repair, persistent repair with `.bak` handling, no-op repair on clean files.
+
+### Changed
+- **Visible load errors on stdio startup**: the server now logs every repaired file with its actions, plus full Zod validation errors for unrecoverable files. Previously only bare filenames were shown, hiding the root cause from users.
+
 ## [2.0.0-alpha.7] - 2026-03-26
 
 ### Added
