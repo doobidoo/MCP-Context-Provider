@@ -2,293 +2,221 @@
   "tool_category": "writing",
   "auto_convert": false,
   "metadata": {
-    "version": "1.0.0",
-    "last_updated": "2025-12-02T10:24:04.705369",
+    "version": "2.0.0",
+    "last_updated": "2026-04-29T14:00:00.000000",
     "created_by": "dynamic_context_management",
-    "applies_to_tools": [
-      "text_editing",
-      "writing",
-      "rewriting"
-    ],
-    "priority": "high"
+    "applies_to_tools": ["text_editing", "writing", "rewriting"],
+    "priority": "high",
+    "changelog": "v2.0.0: Added 17 structural patterns from blader/humanizer (Wikipedia AI Cleanup). Added German banned words, patterns, and auto_corrections."
   },
-  "description": "Rewrites AI-sounding text to clear, specific human voice. Removes buzzwords, clich\u00c3\u00a9s, and formulaic patterns while preserving original content, ideas, and structure.",
+  "description": "Rewrites AI-sounding text to clear, specific human voice. Removes buzzwords, clichés, and formulaic patterns in English and German while preserving original content, ideas, and structure. Based on Wikipedia Signs of AI Writing guide (29 patterns).",
   "syntax_rules": {
     "banned_words": {
       "description": "Words that must be removed or replaced with short, concrete language",
       "tier1_overused": [
-        "delve",
-        "realm",
-        "harness",
-        "unlock",
-        "tapestry",
-        "paradigm",
-        "landscape",
-        "intricate",
-        "showcasing",
-        "crucial",
-        "pivotal",
-        "meticulously",
-        "vibrant",
-        "unparalleled",
-        "underscore",
-        "leverage",
-        "synergy",
-        "testament",
-        "commendable",
-        "meticulous",
-        "highlight",
-        "emphasize",
-        "boast",
-        "align",
-        "foster",
-        "showcase",
-        "enhance",
-        "holistic",
-        "garner",
-        "accentuate"
-      ],
-      "tier2_tech_hype": [
-        "cutting-edge",
-        "revolutionize",
-        "groundbreaking",
-        "game-changer",
-        "pioneering",
-        "trailblazing",
-        "unleash",
-        "versatile",
-        "transformative",
-        "redefine",
-        "seamless",
-        "optimize",
-        "scalable",
-        "robust",
-        "breakthrough",
-        "empower",
-        "streamline",
-        "innovative",
-        "potential",
-        "findings",
-        "surpass"
+        "delve", "realm", "harness", "unlock", "tapestry", "paradigm",
+        "landscape", "intricate", "showcasing", "crucial", "pivotal",
+        "meticulously", "vibrant", "unparalleled", "underscore", "leverage",
+        "synergy", "testament", "commendable", "meticulous", "highlight",
+        "emphasize", "boast", "align", "foster", "showcase", "enhance",
+        "holistic", "garner", "accentuate"
+      ],      "tier2_tech_hype": [
+        "cutting-edge", "revolutionize", "groundbreaking", "game-changer",
+        "pioneering", "trailblazing", "unleash", "versatile", "transformative",
+        "redefine", "seamless", "optimize", "scalable", "robust", "breakthrough",
+        "empower", "streamline", "innovative", "potential", "findings", "surpass"
       ],
       "tier3_ai_marketing": [
-        "intelligent",
-        "smart",
-        "next-gen",
-        "frictionless",
-        "elevate",
-        "adaptive",
-        "effortless",
-        "data-driven",
-        "insightful",
-        "proactive",
-        "mission-critical",
-        "visionary",
-        "disruptive",
-        "reimagine",
-        "agile",
-        "customizable",
-        "personalized",
-        "unprecedented",
-        "intuitive",
-        "leading-edge",
-        "synergize",
-        "democratize",
-        "automate",
-        "accelerate",
-        "state-of-the-art",
-        "dynamic",
-        "reliable",
-        "efficient",
-        "cloud-native",
-        "immersive",
-        "predictive",
-        "transparent",
-        "proprietary",
-        "integrated",
-        "plug-and-play",
-        "turnkey",
-        "future-proof",
-        "AI-powered",
-        "next-generation",
-        "always-on",
-        "hyper-personalized",
-        "results-driven",
-        "machine-first",
-        "paradigm-shifting"
+        "intelligent", "smart", "next-gen", "frictionless", "elevate", "adaptive",
+        "effortless", "data-driven", "insightful", "proactive", "mission-critical",
+        "visionary", "disruptive", "reimagine", "agile", "customizable",
+        "personalized", "unprecedented", "intuitive", "leading-edge", "synergize",
+        "democratize", "automate", "accelerate", "state-of-the-art", "dynamic",
+        "reliable", "efficient", "cloud-native", "immersive", "predictive",
+        "transparent", "proprietary", "integrated", "plug-and-play", "turnkey",
+        "future-proof", "AI-powered", "next-generation", "always-on",
+        "hyper-personalized", "results-driven", "machine-first", "paradigm-shifting"
+      ],
+      "tier4_german_buzzwords": [
+        "wegweisend", "zukunftsweisend", "ganzheitlich", "massgeblich",
+        "richtungsweisend", "bahnbrechend", "vielschichtig", "facettenreich",
+        "umfassend", "nachhaltig (als Buzzword)", "synergetisch", "zielführend",
+        "lösungsorientiert", "praxisnah", "bedarfsgerecht", "zeitgemäss",
+        "Mehrwert", "Stellenwert", "Tragweite", "Handlungsspielraum"
       ]
-    },
-    "banned_patterns": {
+    },    "banned_patterns": {
       "in_a_world_where": {
         "detect": "In a world where [scary/overwhelming change], [virtue/edge] becomes [currency/advantage]",
-        "rewrite_options": [
-          "Today, [specific change]. So [practical implication for reader].",
-          "Because [concrete change], do [specific action] to get [specific result]."
-        ]
+        "detect_de": "In einer Welt, in der... / In der heutigen Zeit...",
+        "rewrite_options": ["Today, [specific change]. So [practical implication].", "Because [concrete change], do [specific action]."]
       },
       "most_people_vs_few": {
         "detect": "Most people [lazy thing]. The few who win [disciplined thing].",
-        "rewrite_options": [
-          "Among [group], [specific stat/observation]. What works: [one tactic].",
-          "Personal stance: I do [specific practice] to avoid [specific downside]."
-        ]
+        "detect_de": "Die meisten... Doch die wenigen, die...",
+        "rewrite_options": ["Among [group], [specific stat]. What works: [one tactic]."]
       },
       "stop_start_switch": {
         "detect": "Stop [old habit]. Start [new habit].",
-        "rewrite_options": [
-          "If you're doing [X], switch to [Y] when [condition], because [reason].",
-          "Replace [X] with [Y]: [1-3 concrete steps]."
-        ]
+        "detect_de": "Hören Sie auf mit... Fangen Sie an mit...",
+        "rewrite_options": ["If you're doing [X], switch to [Y] when [condition], because [reason]."]
       },
       "journey_narrative": {
         "detect": "The journey from [A] to [B] is/was [superlative]",
-        "rewrite_options": [
-          "Moving from [A] to [B] took [time/effort]. Here's what changed: [specifics]."
-        ]
+        "detect_de": "Die Reise von [A] nach [B]... / Der Weg von...",
+        "rewrite_options": ["Moving from [A] to [B] took [time/effort]. Here's what changed: [specifics]."]
       },
       "embrace_the_future": {
         "detect": "Embrace [trend/technology] to stay ahead/competitive",
-        "rewrite_options": [
-          "Use [specific tool/method] for [specific benefit]. Example: [concrete case]."
-        ]
+        "detect_de": "Setzen Sie auf [Trend], um wettbewerbsfähig zu bleiben",
+        "rewrite_options": ["Use [specific tool/method] for [specific benefit]. Example: [concrete case]."]
+      },      "significance_inflation": {
+        "detect": "marking a pivotal moment in the evolution of...",
+        "detect_de": "markiert einen Meilenstein in der Entwicklung von... / stellt einen Wendepunkt dar",
+        "fix": "State the plain fact. 'was established in 1989 to collect regional statistics'"
+      },
+      "copula_avoidance": {
+        "detect": "serves as... / features... / boasts... / stands as... / functions as...",
+        "detect_de": "dient als... / zeichnet sich aus durch... / fungiert als... / besticht durch...",
+        "fix": "Use 'is' or 'has'. Direct verbs over fancy circumlocutions."
+      },
+      "negative_parallelism": {
+        "detect": "It's not just X, it's Y / It's not about X, it's about Y / ..., no guessing",
+        "detect_de": "Es geht nicht nur um X, sondern um Y / Nicht nur... sondern auch...",
+        "fix": "State the point directly without the theatrical setup."
+      },
+      "rule_of_three": {
+        "detect": "innovation, inspiration, and insights / ideate, iterate, and deliver",
+        "detect_de": "Innovation, Inspiration und Insights / planen, umsetzen und optimieren",
+        "fix": "Use the natural number of items. Don't force triplets."
+      },
+      "synonym_cycling": {
+        "detect": "protagonist... main character... central figure... hero (cycling synonyms for same thing)",
+        "detect_de": "Lösung... Ansatz... Konzept... Methode (for the same thing)",
+        "fix": "Pick one term and repeat it. Repetition is clearer than forced variation."
+      },
+      "false_ranges": {
+        "detect": "from the Big Bang to dark matter / from ideation to deployment",
+        "detect_de": "von der Idee bis zur Umsetzung / vom Konzept bis zum Produkt",
+        "fix": "List the topics directly instead of implying a spectrum."
+      },      "em_dash_overuse": {
+        "detect": "Excessive use of em dashes (—) for parenthetical asides",
+        "detect_de": "Übermässiger Einsatz von Gedankenstrichen",
+        "fix": "Prefer commas, periods, or parentheses. One em dash per paragraph max."
+      },
+      "boldface_overuse": {
+        "detect": "**OKRs**, **KPIs**, **BMC** — bolding every term",
+        "fix": "Remove bold from inline terms. Bold is for headings, not emphasis carpet-bombing."
+      },
+      "inline_header_lists": {
+        "detect": "**Performance:** Performance improved / **Speed:** Code generation is faster",
+        "detect_de": "**Leistung:** Die Leistung hat sich verbessert",
+        "fix": "Convert to prose. If it repeats the header word, the header was unnecessary."
+      },
+      "title_case_headings": {
+        "detect": "Strategic Negotiations And Partnerships",
+        "detect_de": "Strategische Verhandlungen Und Partnerschaften",
+        "fix": "Use sentence case: 'Strategic negotiations and partnerships'"
+      },
+      "persuasive_authority_tropes": {
+        "detect": "At its core... / What matters is... / The key takeaway is...",
+        "detect_de": "Im Kern... / Entscheidend ist... / Die zentrale Erkenntnis...",
+        "fix": "State the point directly. The reader decides what's 'core'."
+      },
+      "signposting_announcements": {
+        "detect": "Let's dive in / Here's what you need to know / In this article we will...",
+        "detect_de": "Schauen wir uns das genauer an / Im Folgenden werden wir...",
+        "fix": "Start with the content. No throat-clearing."
+      },
+      "excessive_hedging": {
+        "detect": "could potentially possibly / it might arguably be said that",
+        "detect_de": "könnte möglicherweise unter Umständen / es liesse sich argumentieren, dass",
+        "fix": "Pick one hedge word or commit to the claim."
+      },
+      "generic_conclusions": {
+        "detect": "The future looks bright / Exciting times lie ahead / In conclusion...",
+        "detect_de": "Die Zukunft sieht vielversprechend aus / Es bleibt spannend / Zusammenfassend lässt sich sagen...",
+        "fix": "End with specific plans, facts, or next steps. Or just stop."
       }
+    },    "replacement_guidance": {
+      "leverage": ["use", "apply", "rely on"],
+      "utilize": ["use"],
+      "optimize": ["improve", "speed up", "fix"],
+      "streamline": ["simplify", "cut steps from", "shorten"],
+      "empower": ["let", "help", "give [person] control over"],
+      "transformative": ["useful", "changes how we [verb]"],
+      "seamless": ["smooth", "without [specific friction]"],
+      "robust": ["stable", "handles [specific edge case]"],
+      "scalable": ["grows with [specific metric]"],
+      "innovative": ["new", "different because [reason]"],
+      "cutting-edge": ["recent", "uses [specific tech]"],
+      "game-changer": ["matters because [specific reason]"],
+      "paradigm": ["approach", "method", "way of thinking"],
+      "landscape": ["market", "field", "situation"],
+      "ecosystem": ["system", "tools", "environment"],
+      "synergy": ["combination", "overlap", "shared benefit"],
+      "holistic": ["complete", "full", "end-to-end"],
+      "dynamic": ["changing", "active", "responsive to [trigger]"],
+      "serves as": ["is"],
+      "features": ["has", "includes"],
+      "boasts": ["has"],
+      "stands as": ["is"],
+      "functions as": ["is", "works as"]
     },
-    "replacement_guidance": {
-      "leverage": [
-        "use",
-        "apply",
-        "rely on"
-      ],
-      "utilize": [
-        "use"
-      ],
-      "optimize": [
-        "improve",
-        "speed up",
-        "fix"
-      ],
-      "streamline": [
-        "simplify",
-        "cut steps from",
-        "shorten"
-      ],
-      "empower": [
-        "let",
-        "help",
-        "give [person] control over"
-      ],
-      "transformative": [
-        "useful",
-        "changes how we [verb]"
-      ],
-      "seamless": [
-        "smooth",
-        "without [specific friction]"
-      ],
-      "robust": [
-        "stable",
-        "handles [specific edge case]"
-      ],
-      "scalable": [
-        "grows with [specific metric]"
-      ],
-      "innovative": [
-        "new",
-        "different because [reason]"
-      ],
-      "cutting-edge": [
-        "recent",
-        "uses [specific tech]"
-      ],
-      "game-changer": [
-        "matters because [specific reason]"
-      ],
-      "paradigm": [
-        "approach",
-        "method",
-        "way of thinking"
-      ],
-      "landscape": [
-        "market",
-        "field",
-        "situation"
-      ],
-      "ecosystem": [
-        "system",
-        "tools",
-        "environment"
-      ],
-      "synergy": [
-        "combination",
-        "overlap",
-        "shared benefit"
-      ],
-      "holistic": [
-        "complete",
-        "full",
-        "end-to-end"
-      ],
-      "dynamic": [
-        "changing",
-        "active",
-        "responsive to [trigger]"
-      ]
+    "replacement_guidance_de": {
+      "wegweisend": ["wichtig", "nützlich"],
+      "zukunftsweisend": ["neu", "geplant für"],
+      "ganzheitlich": ["vollständig", "komplett", "end-to-end"],
+      "massgeblich": ["stark", "deutlich"],
+      "zielführend": ["nützlich", "hilfreich", "praktisch"],
+      "dient als": ["ist"],
+      "zeichnet sich aus durch": ["hat", "bietet"],
+      "fungiert als": ["ist", "arbeitet als"],
+      "besticht durch": ["hat", "bietet"],
+      "spielt eine entscheidende Rolle": ["ist wichtig für", "beeinflusst"],
+      "bietet eine Vielzahl von": ["hat mehrere", "bietet X und Y"],
+      "im Rahmen von": ["bei", "in", "während"],
+      "stellt sicher": ["sorgt dafür", "prüft"]
     }
   },
-  "preferences": {
-    "preserve_content": true,
-    "preserve_pov": true,
-    "preserve_tense": true,
-    "preserve_structure": true,
-    "output_only_edited_text": true,
-    "no_explanatory_notes": true
-  },
   "auto_corrections": {
-    "delve into": {"pattern": "delve into", "replacement": "look at"},
-    "delve deeper": {"pattern": "delve deeper", "replacement": "dig into"},
-    "it's important to note": {"pattern": "it's important to note", "replacement": "[delete or state the fact directly]"},
-    "it's worth noting": {"pattern": "it's worth noting", "replacement": "[delete or state the fact directly]"},
-    "at the end of the day": {"pattern": "at the end of the day", "replacement": "[delete]"},
-    "in today's fast-paced world": {"pattern": "in today's fast-paced world", "replacement": "[delete or be specific about what changed]"},
-    "navigate the complexities": {"pattern": "navigate the complexities", "replacement": "handle"},
-    "unlock the potential": {"pattern": "unlock the potential", "replacement": "get more from"},
-    "harness the power": {"pattern": "harness the power", "replacement": "use"},
-    "in this article": {"pattern": "in this article", "replacement": "[delete - reader knows where they are]"},
-    "without further ado": {"pattern": "without further ado", "replacement": "[delete]"}
+    "delve into": { "pattern": "delve into", "replacement": "look at" },
+    "delve deeper": { "pattern": "delve deeper", "replacement": "dig into" },
+    "its_important_to_note": { "pattern": "it's important to note", "replacement": "[delete or state the fact directly]" },
+    "its_worth_noting": { "pattern": "it's worth noting", "replacement": "[delete or state the fact directly]" },
+    "at_the_end_of_the_day": { "pattern": "at the end of the day", "replacement": "[delete]" },
+    "in_todays_fast_paced": { "pattern": "in today's fast-paced world", "replacement": "[delete or be specific]" },
+    "navigate_complexities": { "pattern": "navigate the complexities", "replacement": "handle" },
+    "unlock_the_potential": { "pattern": "unlock the potential", "replacement": "get more from" },
+    "harness_the_power": { "pattern": "harness the power", "replacement": "use" },
+    "in_this_article": { "pattern": "in this article", "replacement": "[delete]" },
+    "without_further_ado": { "pattern": "without further ado", "replacement": "[delete]" },
+    "serves_as": { "pattern": "serves as", "replacement": "is" },
+    "stands_as": { "pattern": "stands as", "replacement": "is" },
+    "functions_as": { "pattern": "functions as", "replacement": "is" },
+    "lets_dive_in": { "pattern": "let's dive in", "replacement": "[delete - start with content]" },
+    "heres_what_you_need": { "pattern": "here's what you need to know", "replacement": "[delete - start with content]" },
+    "at_its_core": { "pattern": "at its core", "replacement": "[delete - state the point]" },
+    "the_future_looks_bright": { "pattern": "the future looks bright", "replacement": "[delete or give specific plans]" },
+    "exciting_times": { "pattern": "exciting times lie ahead", "replacement": "[delete]" },
+    "em_dash_excessive": { "pattern": "more than one em dash (—) per paragraph", "replacement": "Use commas or periods instead" },
+    "in_der_heutigen_zeit": { "pattern": "in der heutigen Zeit", "replacement": "[streichen oder konkret werden]" },
+    "es_ist_wichtig": { "pattern": "es ist wichtig zu beachten", "replacement": "[streichen, Fakt direkt nennen]" },
+    "zusammenfassend": { "pattern": "zusammenfassend lässt sich sagen", "replacement": "[streichen oder konkretes Fazit]" },
+    "es_bleibt_spannend": { "pattern": "es bleibt spannend", "replacement": "[streichen oder nächste Schritte nennen]" }
   },
   "auto_store_triggers": {
     "writing_edits": {
-      "tags": [
-        "writing",
-        "anti-ai",
-        "rewrite"
-      ],
+      "patterns": ["rewrite", "rephrase", "make it sound human", "remove buzzwords", "anti-ai", "humanize", "humanizer"],
       "action": "store_with_metadata",
-      "patterns": [
-        "rewrite",
-        "rephrase",
-        "make it sound human",
-        "remove buzzwords",
-        "anti-ai"
-      ],
+      "tags": ["writing", "anti-ai", "rewrite", "humanizer"],
       "confidence_threshold": 0.7
     }
   },
   "auto_retrieve_triggers": {
     "writing_help": {
+      "patterns": ["sounds too AI", "rewrite this", "make it natural", "too corporate", "buzzword", "humanize", "klingt nach KI", "zu künstlich"],
       "action": "search_and_suggest",
-      "patterns": [
-        "sounds too AI",
-        "rewrite this",
-        "make it natural",
-        "too corporate",
-        "buzzword"
-      ],
-      "search_tags": [
-        "writing",
-        "anti-ai",
-        "rewrite"
-      ],
+      "search_tags": ["writing", "anti-ai", "rewrite", "humanizer"],
       "confidence_threshold": 0.7
     }
   },
@@ -298,9 +226,19 @@
       "on_startup": [
         {
           "action": "notify",
-          "message": "Anti-AI voice context loaded. Will detect and replace AI-sounding language."
+          "message": "Anti-AI voice context loaded (v2.0 + humanizer patterns). Will detect and replace AI-sounding language in EN and DE."
         }
       ]
     }
+  },
+  "preferences": {
+    "preserve_content": true,
+    "preserve_pov": true,
+    "preserve_tense": true,
+    "preserve_structure": true,
+    "output_only_edited_text": true,
+    "no_explanatory_notes": true,
+    "audit_pass": true,
+    "audit_pass_description": "After first rewrite, do a second pass checking for any remaining AI-isms that slipped through"
   }
 }
