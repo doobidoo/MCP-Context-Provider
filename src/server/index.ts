@@ -136,10 +136,31 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: 'list_instincts',
-      description: 'List all loaded instincts with their confidence scores',
+      description:
+        'List loaded instincts with filtering and pagination. Returns {total, matched, returned, offset, items}. Use include_rules=false for compact listings when many instincts are loaded (MCP client UIs may truncate large responses around 40-50KB).',
       inputSchema: {
         type: 'object' as const,
-        properties: {},
+        properties: {
+          domain: { type: 'string', description: 'Filter by domain (exact match)' },
+          tag: { type: 'string', description: 'Filter by tag (membership in tags array)' },
+          active_only: {
+            type: 'boolean',
+            description: 'Return only active instincts (default false)',
+          },
+          include_rules: {
+            type: 'boolean',
+            description:
+              'Include rule text in items (default true). Set false for compact listing of large instinct sets.',
+          },
+          limit: {
+            type: 'number',
+            description: 'Maximum entries to return (default 1000, max 5000)',
+          },
+          offset: {
+            type: 'number',
+            description: 'Starting offset for pagination (default 0)',
+          },
+        },
       },
     },
     {
@@ -303,16 +324,46 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     case 'list_instincts': {
-      const instincts = engine.getAllInstincts().map((i) => ({
-        id: i.id,
-        domain: i.domain,
-        rule: i.rule,
-        confidence: i.confidence,
-        active: i.active,
-        approved_by: i.approved_by,
-        usage_count: i.usage_count,
-      }));
-      return { content: [{ type: 'text', text: JSON.stringify(instincts, null, 2) }] };
+      const all = engine.getAllInstincts();
+      const total = all.length;
+
+      const domainFilter = args?.['domain'] as string | undefined;
+      const tagFilter = args?.['tag'] as string | undefined;
+      const activeOnly = args?.['active_only'] === true;
+      const includeRules = args?.['include_rules'] !== false; // default true
+      const limit = Math.min(Math.max(Number(args?.['limit'] ?? 1000), 1), 5000);
+      const offset = Math.max(Number(args?.['offset'] ?? 0), 0);
+
+      const filtered = all.filter((i) => {
+        if (domainFilter && i.domain !== domainFilter) return false;
+        if (tagFilter && !(i.tags ?? []).includes(tagFilter)) return false;
+        if (activeOnly && !i.active) return false;
+        return true;
+      });
+      const matched = filtered.length;
+
+      const page = filtered.slice(offset, offset + limit);
+      const items = page.map((i) => {
+        const base: Record<string, unknown> = {
+          id: i.id,
+          domain: i.domain,
+          confidence: i.confidence,
+          active: i.active,
+          approved_by: i.approved_by,
+          usage_count: i.usage_count,
+        };
+        if (includeRules) base['rule'] = i.rule;
+        return base;
+      });
+
+      const response = {
+        total,
+        matched,
+        returned: items.length,
+        offset,
+        items,
+      };
+      return { content: [{ type: 'text', text: JSON.stringify(response, null, 2) }] };
     }
 
     case 'store_instinct': {
