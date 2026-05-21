@@ -10,7 +10,7 @@
     ],
     "priority": "high"
   },
-  "description": "[REDACTED] ManageEngine Support Center - Solutions Database Context. This context provides information about the PostgreSQL 'solution' table structure and usage guidelines for querying [REDACTED] support solutions.",
+  "description": "ManageEngine Support Center - Solutions Database Context. This context provides information about the PostgreSQL 'solution' table structure and usage guidelines for querying ManageEngine support solutions.",
   "syntax_rules": {
     "table_schema": {
       "solutionid": "bigint - Primary key, unique identifier for each solution",
@@ -63,9 +63,9 @@
     ]
   },
   "preferences": {
-    "database_context": "ManageEngine Support Center ([REDACTED])",
+    "database_context": "ManageEngine Support Center",
     "table_name": "solution",
-    "business_purpose": "Store and manage IT support solutions, knowledge base articles, and troubleshooting guides for [REDACTED] clients",
+    "business_purpose": "Store and manage IT support solutions, knowledge base articles, and troubleshooting guides for support clients",
     "central_hub": "The solution table is the central entity connecting topics, statuses, organizations, users, workorders, and feedback"
   },
   "auto_store_triggers": {
@@ -90,7 +90,7 @@
       "on_startup": [
         {
           "action": "notify",
-          "message": "[REDACTED] ManageEngine Solutions context loaded. Use SQL queries against the 'solution' table."
+          "message": "ManageEngine Solutions context loaded. Use SQL queries against the 'solution' table."
         }
       ]
     }

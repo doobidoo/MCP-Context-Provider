@@ -231,13 +231,9 @@
         "Das Projekt",
         "Im Projekt",
         "Für den Kunden",
-        "Bei [REDACTED]",
         "Beim Kunden",
         "Projekt:",
-        "bei [REDACTED]",
-        "bei [REDACTED]",
-        "bei [REDACTED]",
-        "bei [REDACTED]"
+        "bei {company}"
       ],
       "action": "store_memory",
       "tags": [
