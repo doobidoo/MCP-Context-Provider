@@ -14,6 +14,11 @@ export interface RegistryEntry {
   instinct: Instinct;
 }
 
+export interface ListResult {
+  entries: RegistryEntry[];
+  skipped: Array<{ file: string; error: string }>;
+}
+
 export class Registry {
   private readonly loader: InstinctLoader;
 
@@ -26,8 +31,9 @@ export class Registry {
   // -------------------------------------------------------------------------
 
   /** Load all instincts from all YAML files. */
-  async listAll(): Promise<RegistryEntry[]> {
+  async listAll(): Promise<ListResult> {
     const entries: RegistryEntry[] = [];
+    const skipped: Array<{ file: string; error: string }> = [];
     const files = await this.yamlFiles();
 
     for (const file of files) {
@@ -36,12 +42,14 @@ export class Registry {
         for (const instinct of Object.values(instinctFile.instincts)) {
           entries.push({ file, instinct });
         }
-      } catch {
-        // Skip invalid files
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        process.stderr.write(`\x1b[33m⚠\x1b[0m Skipped ${file}: ${message}\n`);
+        skipped.push({ file, error: message });
       }
     }
 
-    return entries;
+    return { entries, skipped };
   }
 
   /** Find a specific instinct by ID across all files. */
@@ -55,8 +63,9 @@ export class Registry {
         if (instinct) {
           return { file, instinctFile, instinct };
         }
-      } catch {
-        // Skip
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        process.stderr.write(`\x1b[33m⚠\x1b[0m Skipped ${file}: ${message}\n`);
       }
     }
 

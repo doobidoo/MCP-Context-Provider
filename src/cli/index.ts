@@ -69,8 +69,18 @@ function parseArgs(argv: string[]): ParsedArgs {
 // Commands
 // ---------------------------------------------------------------------------
 
-async function cmdList(registry: Registry): Promise<void> {
-  const entries = await registry.listAll();
+async function cmdList(registry: Registry, strict = false): Promise<void> {
+  const { entries, skipped } = await registry.listAll();
+
+  if (skipped.length > 0) {
+    console.error('');
+    console.error(warn(`${skipped.length} file(s) skipped due to parse/validation errors (details above).`));
+    if (strict) {
+      process.exitCode = 1;
+      return;
+    }
+    console.error('');
+  }
 
   if (entries.length === 0) {
     console.log(warn('No instincts found. Use /instill to extract some.'));
@@ -78,7 +88,7 @@ async function cmdList(registry: Registry): Promise<void> {
   }
 
   const instincts = entries.map((e) => e.instinct);
-  console.log(formatSummary(instincts));
+  console.log(formatSummary(instincts, skipped.length));
   console.log('');
 
   for (const entry of entries) {
@@ -215,6 +225,7 @@ function cmdHelp(): void {
 
 \x1b[1mOptions:\x1b[0m
   --path <dir>                 Instincts directory (default: ./instincts)
+  --strict                     (list only) Exit non-zero if any instinct file fails to parse
   --help                       Show this help
 `);
 }
@@ -238,7 +249,7 @@ async function main(): Promise<void> {
   switch (command) {
     case 'list':
     case 'ls':
-      await cmdList(registry);
+      await cmdList(registry, 'strict' in flags);
       break;
 
     case 'show':
