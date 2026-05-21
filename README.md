@@ -1,5 +1,7 @@
 # MCP Context Provider
 
+> **Status:** beta — feature-complete, API stabilizing. See [CHANGELOG.md](CHANGELOG.md) for the latest release.
+
   https://github.com/user-attachments/assets/d9c6c325-00f1-44d9-a805-b1d6588c0acf
   
   *Persistent context and learned instincts for Claude Desktop and Claude Code — surviving across sessions.*
@@ -18,7 +20,7 @@ Two core concepts:
 Four subsystems:
 
 - **Engine** — loads, matches, and merges contexts + instincts into injection payloads
-- **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport, 6 MCP tools
+- **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport, 10 MCP tools
 - **CLI** (`mcp-cp`) — approval registry for instinct lifecycle management
 - **Memory Bridge** — optional sync of instincts to mcp-memory-service
 

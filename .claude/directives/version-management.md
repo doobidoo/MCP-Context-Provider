@@ -19,7 +19,7 @@ This project follows [Semantic Versioning 2.0.0](https://semver.org/):
 
 ### Pre-Release Phase
 
-Current phase: **alpha** (v2.0.0-alpha.x)
+Current phase: **beta** (v2.0.0-beta.x)
 
 Progression: `alpha` → `beta` → `rc` → `stable`
 

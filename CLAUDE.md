@@ -1,4 +1,4 @@
-# CLAUDE.md — mcp-context-provider v2.0.0-alpha.5
+# CLAUDE.md — mcp-context-provider (v2.0 beta)
 
 > Clean rewrite from Python v1.8.x to TypeScript.
 
