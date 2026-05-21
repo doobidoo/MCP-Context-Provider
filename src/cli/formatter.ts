@@ -88,18 +88,24 @@ export function formatInstinctDetail(inst: Instinct): string {
   return lines.join('\n');
 }
 
-export function formatSummary(instincts: Instinct[]): string {
+export function formatSummary(instincts: Instinct[], skippedFiles = 0): string {
   const active = instincts.filter((i) => i.active !== false).length;
   const humanApproved = instincts.filter((i) => i.approved_by === 'human').length;
   const avgConf = instincts.length > 0
     ? instincts.reduce((s, i) => s + i.confidence, 0) / instincts.length
     : 0;
 
-  return [
+  const lines = [
     `${c.bold}Instinct Registry${c.reset}`,
     `  ${c.dim}total:${c.reset} ${instincts.length}  ${c.dim}active:${c.reset} ${active}  ${c.dim}human-approved:${c.reset} ${humanApproved}`,
     `  ${c.dim}avg confidence:${c.reset} ${confidenceBar(avgConf)}`,
-  ].join('\n');
+  ];
+
+  if (skippedFiles > 0) {
+    lines.push(`  ${c.yellow}⚠ skipped files:${c.reset} ${skippedFiles} (use --strict to exit non-zero on parse errors)`);
+  }
+
+  return lines.join('\n');
 }
 
 export function success(msg: string): string {
