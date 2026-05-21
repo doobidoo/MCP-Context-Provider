@@ -56,15 +56,31 @@ afterEach(async () => {
 describe('Registry', () => {
   describe('listAll', () => {
     it('lists all instincts from YAML files', async () => {
-      const entries = await registry.listAll();
+      const { entries, skipped } = await registry.listAll();
       expect(entries).toHaveLength(2);
+      expect(skipped).toHaveLength(0);
       expect(entries.map((e) => e.instinct.id).sort()).toEqual(['docker-multi', 'test-rule']);
     });
 
     it('returns empty for non-existent directory', async () => {
       const empty = new Registry('/nonexistent/path');
-      const entries = await empty.listAll();
+      const { entries, skipped } = await empty.listAll();
       expect(entries).toEqual([]);
+      expect(skipped).toEqual([]);
+    });
+
+    it('reports skipped files with parse errors to skipped array', async () => {
+      // Write an invalid YAML file alongside the valid one
+      await writeFile(
+        join(tmpDir, 'broken.instincts.yaml'),
+        'instincts:\n  bad-entry:\n    rule: "\\.eml$"\n',  // invalid YAML escape in double-quoted scalar
+        'utf-8',
+      );
+      const { entries, skipped } = await registry.listAll();
+      expect(entries).toHaveLength(2);   // valid file still loaded
+      expect(skipped).toHaveLength(1);
+      expect(skipped[0]!.file).toBe('broken.instincts.yaml');
+      expect(skipped[0]!.error).toBeTruthy();
     });
   });
 
@@ -171,7 +187,7 @@ describe('Registry', () => {
       expect(result).toBeNull();
 
       // Other instincts still exist
-      const remaining = await registry.listAll();
+      const { entries: remaining } = await registry.listAll();
       expect(remaining).toHaveLength(1);
     });
 
