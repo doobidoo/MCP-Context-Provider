@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-beta.1] - 2026-05-21
+
+### Changed
+- **Phase transition: alpha → beta.** Feature set is complete (10 MCP tools, stdio + HTTP transport, full CLI, memory bridge, auto-repair loader, plugin marketplace integration, hooks). API is stabilizing — no breaking changes planned before stable.
+- **README**: tool count corrected from 6 → 10 (write tools shipped in alpha.7 were never reflected in the architecture summary)
+- **README**: added explicit `Status: beta` line under the title
+- **CLAUDE.md**: removed pinned alpha.5 reference from header (was stale since alpha.6), now reads `(v2.0 beta)` to avoid future drift
+- **Version directive** (`.claude/directives/version-management.md`): current phase pointer alpha → beta
+
+### Fixed
+- **`/instill` skill** ([.claude/skills/instill.md](.claude/skills/instill.md)): frontmatter `user_invocable` moved into `metadata` block to match the schema; description rewritten in the `Use when…` trigger format
+- **`/instill` skill**: instincts directory now resolves with a global fallback. Order: (1) `INSTINCTS_PATH` env, (2) `./instincts/` only when CWD is the mcp-context-provider repo, (3) `~/.claude/skills/instill/instincts/`. Previously the skill assumed it was always running inside the repo, which broke when invoked from other projects.
+
 ## [2.0.0-alpha.10] - 2026-05-21
 
 ### Fixed
