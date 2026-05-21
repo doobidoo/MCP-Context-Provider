@@ -1,7 +1,8 @@
 ---
 name: instill
-description: Distill instincts from the current session. Extracts compact, reusable rules from conversation patterns and saves them as YAML instinct candidates for approval.
-user_invocable: true
+description: Use when distilling instincts or reusable rules from the current session. Extracts compact patterns from conversation and saves them as YAML instinct candidates for approval.
+metadata:
+  user_invocable: "true"
 ---
 
 # /instill — Distill Instincts from Session
@@ -135,8 +136,12 @@ When the user accepts a candidate, **prefer the MCP tool path** over direct file
 
 Use this path only when `store_instinct` is not reachable (e.g. the skill is running in an environment where mcp-context-provider is not installed).
 
-1. Locate the repo root (check `INSTINCTS_PATH` env var, or default `./instincts/`)
-2. Read `learned.instincts.yaml` — create if absent with this skeleton:
+1. **Resolve the instincts directory** (check in order, use first that exists):
+   1. `INSTINCTS_PATH` env var (if set)
+   2. `./instincts/` relative to CWD — but **only** if CWD contains a `package.json` with `"name": "mcp-context-provider"` (i.e., you're inside the repo)
+   3. `~/.claude/skills/instill/instincts/` (global fallback for when skill runs from any project)
+   - Create the resolved directory if it doesn't exist yet
+2. Read `learned.instincts.yaml` inside the resolved dir — create if absent with this skeleton:
    ```yaml
    version: "1.0"
    instincts: {}
@@ -203,10 +208,11 @@ Run `mcp-cp list` to see all active instincts.
 
 ## File Locations
 
-Paths are relative to the mcp-context-provider repo root (env `INSTINCTS_PATH` overrides default):
+Paths resolved at runtime (see Step 5 fallback path for resolution order):
 
-- Instinct YAML files: `instincts/*.instincts.yaml`
-- Learned instincts: `instincts/learned.instincts.yaml`
-- Schema types: `src/types/instinct.ts`
-- Zod validation: `src/schema/instinct.schema.ts`
+- Instinct YAML files: `<resolved-instincts-dir>/*.instincts.yaml`
+- Learned instincts: `<resolved-instincts-dir>/learned.instincts.yaml`
+- Global fallback dir: `~/.claude/skills/instill/instincts/`
+- Schema types (repo only): `src/types/instinct.ts`
+- Zod validation (repo only): `src/schema/instinct.schema.ts`
 - CLI for management: `mcp-cp list|show|approve|reject|tune`
