@@ -40,7 +40,7 @@
       "tier4_german_buzzwords": [
         "wegweisend", "zukunftsweisend", "ganzheitlich", "massgeblich",
         "richtungsweisend", "bahnbrechend", "vielschichtig", "facettenreich",
-        "umfassend", "nachhaltig (als Buzzword)", "synergetisch", "zielführend",
+        "umfassend", "nachhaltig", "synergetisch", "zielführend",
         "lösungsorientiert", "praxisnah", "bedarfsgerecht", "zeitgemäss",
         "Mehrwert", "Stellenwert", "Tragweite", "Handlungsspielraum"
       ]
@@ -179,8 +179,8 @@
     }
   },
   "auto_corrections": {
-    "delve into": { "pattern": "delve into", "replacement": "look at" },
-    "delve deeper": { "pattern": "delve deeper", "replacement": "dig into" },
+    "delve_into": { "pattern": "delve into", "replacement": "look at" },
+    "delve_deeper": { "pattern": "delve deeper", "replacement": "dig into" },
     "its_important_to_note": { "pattern": "it's important to note", "replacement": "[delete or state the fact directly]" },
     "its_worth_noting": { "pattern": "it's worth noting", "replacement": "[delete or state the fact directly]" },
     "at_the_end_of_the_day": { "pattern": "at the end of the day", "replacement": "[delete]" },
@@ -198,7 +198,6 @@
     "at_its_core": { "pattern": "at its core", "replacement": "[delete - state the point]" },
     "the_future_looks_bright": { "pattern": "the future looks bright", "replacement": "[delete or give specific plans]" },
     "exciting_times": { "pattern": "exciting times lie ahead", "replacement": "[delete]" },
-    "em_dash_excessive": { "pattern": "more than one em dash (—) per paragraph", "replacement": "Use commas or periods instead" },
     "in_der_heutigen_zeit": { "pattern": "in der heutigen Zeit", "replacement": "[streichen oder konkret werden]" },
     "es_ist_wichtig": { "pattern": "es ist wichtig zu beachten", "replacement": "[streichen, Fakt direkt nennen]" },
     "zusammenfassend": { "pattern": "zusammenfassend lässt sich sagen", "replacement": "[streichen oder konkretes Fazit]" },

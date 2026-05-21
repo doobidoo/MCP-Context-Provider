@@ -331,8 +331,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const tagFilter = args?.['tag'] as string | undefined;
       const activeOnly = args?.['active_only'] === true;
       const includeRules = args?.['include_rules'] !== false; // default true
-      const limit = Math.min(Math.max(Number(args?.['limit'] ?? 1000), 1), 5000);
-      const offset = Math.max(Number(args?.['offset'] ?? 0), 0);
+      const limitVal = Number(args?.['limit'] ?? 1000);
+      const limit = Math.min(Math.max(Number.isNaN(limitVal) ? 1000 : limitVal, 1), 5000);
+      const offsetVal = Number(args?.['offset'] ?? 0);
+      const offset = Math.max(Number.isNaN(offsetVal) ? 0 : offsetVal, 0);
 
       const filtered = all.filter((i) => {
         if (domainFilter && i.domain !== domainFilter) return false;
@@ -363,7 +365,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         offset,
         items,
       };
-      return { content: [{ type: 'text', text: JSON.stringify(response, null, 2) }] };
+      return { content: [{ type: 'text', text: JSON.stringify(response) }] };
     }
 
     case 'store_instinct': {
