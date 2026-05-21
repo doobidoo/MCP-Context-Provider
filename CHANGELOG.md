@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-alpha.10] - 2026-05-21
+
+### Fixed
+- **`anti_ai_voice` context** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): Removed non-matchable `em_dash_excessive` entry from `auto_corrections` (pattern was a plain English sentence, not a regex; logic is covered by `banned_patterns.em_dash_overuse`)
+- **`anti_ai_voice` context** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): `"nachhaltig (als Buzzword)"` → `"nachhaltig"` in `tier4_german_buzzwords` — parenthetical was matched as part of the literal string
+- **`anti_ai_voice` context** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): Renamed `auto_corrections` keys `"delve into"` / `"delve deeper"` → `"delve_into"` / `"delve_deeper"` for consistency with all other keys
+- **`list_instincts` MCP tool** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): Added `Number.isNaN` guard for `limit` and `offset` — non-numeric inputs previously produced `NaN`, causing `slice()` to return an empty array silently
+- **`list_instincts` MCP tool** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): Removed JSON pretty-print (`null, 2`) from response to reduce payload size and mitigate MCP client truncation at the ~40–50 KB limit
+- **CLI `mcp-cp list` silently swallows YAML parse errors** ([#12](https://github.com/doobidoo/MCP-Context-Provider/issues/12), [#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): `listAll()` and `find()` now write a `⚠ Skipped <file>: <message>` warning to stderr instead of silently dropping invalid instinct files. `listAll()` returns `{ entries, skipped }` for programmatic access to parse failures.
+
+### Added
+- **`mcp-cp list --strict`** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): New flag that exits non-zero when any instinct file fails to parse — useful for CI pipelines. Summary line now shows skipped file count with a hint to use `--strict`.
+
 ## [2.0.0-alpha.9] - 2026-04-10
 
 ### Fixed
