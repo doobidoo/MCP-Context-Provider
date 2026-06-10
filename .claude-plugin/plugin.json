@@ -5,8 +5,8 @@
   "author": {
     "name": "doobidoo"
   },
-  "homepage": "https://github.com/doobidoo/MCP-Context-Provider",
-  "repository": "https://github.com/doobidoo/MCP-Context-Provider",
+  "homepage": "https://codeberg.org/doobidoo/MCP-Context-Provider",
+  "repository": "https://codeberg.org/doobidoo/MCP-Context-Provider",
   "license": "MIT",
   "keywords": [
     "mcp",

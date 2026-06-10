@@ -153,7 +153,7 @@
       "ide": "vscode",
       "terminal": "cross_platform_compatible",
       "version_control": "git",
-      "ci_cd": "github_actions",
+      "ci_cd": "woodpecker_ci",
       "monitoring": "application_insights"
     },
     "extensions": {

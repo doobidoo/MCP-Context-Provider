@@ -1,0 +1,39 @@
+when:
+  event: [push, pull_request]
+
+steps:
+  install:
+    image: node:20
+    commands:
+      - npm ci
+
+  lint:
+    image: node:20
+    commands:
+      - npm run lint
+
+  build:
+    image: node:20
+    commands:
+      - npm run build
+
+  test:
+    image: node:20
+    commands:
+      - npm test
+
+  validate-json:
+    image: node:20
+    commands:
+      - for f in contexts/*.json; do if [ -f "$f" ]; then echo "Checking: $(basename $f)"; node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))"; fi; done
+      - echo "All JSON files valid"
+
+  release:
+    when:
+      event: tag
+      tag: v*
+    image: node:20
+    commands:
+      - npm ci
+      - npm run build
+      - npm test

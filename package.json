@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/doobidoo/MCP-Context-Provider.git"
+    "url": "https://codeberg.org/doobidoo/MCP-Context-Provider.git"
   },
   "keywords": [
     "mcp",
@@ -31,6 +31,9 @@
     "claude-code"
   ],
   "author": "doobidoo",
+  "publishConfig": {
+    "registry": "https://npm.codeberg.org"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=20"

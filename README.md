@@ -27,7 +27,7 @@ Four subsystems:
 ## Quick Start
 
 ```bash
-git clone https://github.com/doobidoo/MCP-Context-Provider.git
+git clone https://codeberg.org/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 npm install
 npm run build
@@ -78,7 +78,7 @@ Add to `~/.mcp.json`:
 Install directly from the marketplace:
 
 ```bash
-/plugin marketplace add doobidoo/MCP-Context-Provider
+/plugin marketplace add codeberg/doobidoo/MCP-Context-Provider
 /plugin install context-provider
 ```
 

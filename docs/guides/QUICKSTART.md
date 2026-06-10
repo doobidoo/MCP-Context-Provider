@@ -19,13 +19,13 @@ The MCP Context Provider gives Claude persistent memory across chat sessions. In
 **For Linux/macOS/Unix:**
 ```bash
 # One-line install
-curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.sh | bash
+curl -sSL https://codeberg.org/doobidoo/MCP-Context-Provider/raw/branch/main/install.sh | bash
 ```
 
 **For Windows:**
 ```powershell
 # Download and run installer
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.bat" -OutFile "install.bat"
+Invoke-WebRequest -Uri "https://codeberg.org/doobidoo/MCP-Context-Provider/raw/branch/main/install.bat" -OutFile "install.bat"
 .\install.bat
 ```
 
@@ -57,7 +57,7 @@ python --version  # Should be 3.8+
 
 ```bash
 # Download the DXT package
-wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.2.1.dxt
+wget https://codeberg.org/doobidoo/MCP-Context-Provider/raw/branch/main/mcp-context-provider-1.2.1.dxt
 
 # Extract to your preferred location
 dxt unpack mcp-context-provider-1.2.1.dxt ~/mcp-context-provider
@@ -276,7 +276,7 @@ Use different contexts for different projects:
 
 - **Installation issues:** Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 - **Context customization:** Read [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md)  
-- **Bug reports:** Open an issue on [GitHub](https://github.com/doobidoo/MCP-Context-Provider/issues)
+- **Bug reports:** Open an issue on [Codeberg](https://codeberg.org/doobidoo/MCP-Context-Provider/issues)
 
 ---
 

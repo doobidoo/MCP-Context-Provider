@@ -202,7 +202,7 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 | Agent | Purpose |
 |-------|---------|
 | `changelog-archival.md` | Archive old changelog entries when rotating major versions |
-| `github-release-manager.md` | Version bump, changelog update, tag, push, GitHub release |
+| `codeberg-release-manager.md` | Version bump, changelog update, tag, push, Codeberg release |
 
 ### Directives (`.claude/directives/`)
 
@@ -215,5 +215,5 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 1. Use the **Release Manager agent** — never bump versions manually
 2. Version lives in two files: `package.json` and `VERSION` (must always match)
 3. Releases happen on `main` branch, tagged `vX.Y.Z[-pre.N]`
-4. Tag push triggers `.github/workflows/release.yml` (test → build → GitHub release)
+4. Tag push triggers `.woodpecker.yml` (test → build → release pipeline)
 5. Current phase: **alpha** (v2.0.0-alpha.5) — see directive for phase progression

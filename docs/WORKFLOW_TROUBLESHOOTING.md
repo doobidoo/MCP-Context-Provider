@@ -1,48 +1,31 @@
-# GitHub Actions Workflow Troubleshooting Guide
+# CI Pipeline Troubleshooting Guide
 
-This guide provides comprehensive troubleshooting steps to ensure GitHub Actions workflows run successfully in the MCP Context Provider repository.
+> **Note:** This project has migrated from GitHub Actions to Codeberg/Woodpecker CI.
+> The instructions below reference the old GitHub Actions setup. See `.woodpecker.yml` for the current CI configuration.
+
+This guide provides comprehensive troubleshooting steps to ensure CI workflows run successfully in the MCP Context Provider repository.
 
 ## 🔍 Quick Diagnostic Commands
 
 ```bash
-# Validate all workflows
-python scripts/test_workflows.py --report
+# Validate CI config
+yamllint .woodpecker.yml
 
-# Check recent workflow runs
-gh run list --limit=10
-
-# View specific workflow run details
-gh run view <run-id>
-
-# View failed workflow logs
-gh run view <run-id> --log-failed
+# Run tests locally
+npm run lint && npm test
 ```
 
 ## 🛠️ Common Issues and Solutions
 
-### 1. Permission Errors (403 Forbidden)
+### 1. Woodpecker CI Failures (migration from GitHub Actions)
 
-**Symptoms:**
-- `⚠️ GitHub release failed with status: 403`
-- `Resource not accessible by integration`
-- Release creation fails
+This project has migrated from GitHub Actions to Woodpecker CI (`.woodpecker.yml`).
+The old `.github/workflows/` files are kept for reference only.
 
-**Root Cause:**
-Missing or insufficient `GITHUB_TOKEN` permissions in workflow.
-
-**Solution:**
-Ensure workflows have proper permissions block:
-
-```yaml
-permissions:
-  contents: write    # Required to create releases and upload assets
-  actions: read      # Required to read workflow status
-  checks: read       # Required to read check results
-```
-
-**Applied Fix:**
-- ✅ Added permissions to `.github/workflows/release.yml`
-- ✅ Added permissions to `.github/workflows/ci.yml`
+For Woodpecker CI issues, check:
+- Woodpecker UI on Codeberg (https://codeberg.org/doobidoo/MCP-Context-Provider/ci)
+- Pipeline logs for specific step failures
+- Verify `.woodpecker.yml` syntax with `yamllint`
 
 ### 2. Missing Files During Build
 
@@ -166,200 +149,120 @@ python scripts/test_workflows.py --report
 python scripts/test_workflows.py --workflow release.yml
 ```
 
-### Manual Validation Checklist
+### Manual Validation Checklist (for `.woodpecker.yml`)
 
-1. **Permissions Block Present**
-   - [ ] `contents: write` for releases
-   - [ ] `actions: read` for workflow status
-   - [ ] `checks: write` for CI results
+1. **Step Configuration**
+   - [ ] `image` specified for all steps
+   - [ ] `commands` array with correct shell commands
+   - [ ] `when` conditions for conditional steps (tag events, etc.)
 
 2. **Trigger Configuration**
-   - [ ] Appropriate triggers defined (`push`, `pull_request`, etc.)
-   - [ ] Correct tag patterns for releases
-   - [ ] Branch filters for CI
+   - [ ] Appropriate `when.event` triggers defined (`push`, `pull_request`, `tag`)
+   - [ ] Correct tag patterns for releases (`v*`)
 
-3. **Job Structure**
-   - [ ] `runs-on` specified for all jobs
-   - [ ] Required steps present
-   - [ ] Action versions up to date
-
-4. **Security**
+3. **Security**
    - [ ] No hardcoded secrets or tokens
-   - [ ] Proper use of `${{ secrets.GITHUB_TOKEN }}`
-   - [ ] Environment variables properly configured
+   - [ ] Environment variables from CI secrets
 
-5. **File Dependencies**
+4. **File Dependencies**
    - [ ] All referenced files exist in repository
    - [ ] Build scripts executable and functional
    - [ ] Required dependencies installed
 
-## 🚀 Best Practices for Reliable Workflows
+## 🚀 Best Practices for Reliable CI
 
-### 1. Use Explicit Permissions
+### 1. Test Locally First
 
-Always define minimum required permissions:
+Before pushing:
 
-```yaml
-permissions:
-  contents: write    # Only what you need
-  actions: read      # Be specific
+```bash
+# Run tests
+npm run lint && npm test
+
+# Check woodpecker config syntax
+yamllint .woodpecker.yml
 ```
 
-### 2. Version Pin Actions
+### 2. Handle Errors Gracefully
 
-Use specific action versions for reliability:
-
-```yaml
-- uses: actions/checkout@v4  # ✅ Pinned version
-- uses: actions/checkout@main  # ❌ Unstable
-```
-
-### 3. Add Validation Steps
-
-Include validation in workflows:
-
-```yaml
-- name: Validate workflows
-  run: python scripts/test_workflows.py
-
-- name: Validate build process
-  run: python scripts/test_build.py
-```
-
-### 4. Handle Errors Gracefully
-
-Add error handling and cleanup:
+Always add cleanup steps and conditional execution:
 
 ```yaml
 - name: Cleanup on failure
-  if: failure()
-  run: |
-    rm -f *.dxt
-    rm -rf dxt/
+  when:
+    status: failure
+  commands:
+    - rm -rf temp/
 ```
 
-### 5. Test Locally First
-
-Before pushing tags:
-
-```bash
-# Test build process
-python scripts/build_dxt.py --version 1.8.0
-
-# Validate workflows
-python scripts/test_workflows.py --report
-
-# Check workflow syntax
-yamllint .github/workflows/
-```
-
-## 📋 Workflow Health Monitoring
+## 📋 CI Health Monitoring
 
 ### Regular Checks
 
-1. **Monthly Workflow Review**
-   ```bash
-   # Check recent workflow success rates
-   gh run list --limit=20
-
-   # Review failed runs
-   gh run list --status=failure --limit=10
-   ```
-
-2. **Action Version Updates**
-   ```bash
-   # Check for outdated actions
-   python scripts/test_workflows.py --report
-   ```
-
-3. **Permission Audits**
-   ```bash
-   # Review workflow permissions
-   grep -r "permissions:" .github/workflows/
-   ```
+1. **Monitor Pipeline Results**
+   - Check Woodpecker CI dashboard on Codeberg
+   - Review step logs for failures
+   - Track flaky tests
 
 ### Metrics to Track
 
-- Workflow success rate (target: >95%)
+- Pipeline success rate (target: >95%)
 - Build time (target: <5 minutes)
 - Time to release (target: <10 minutes)
-- Failed workflow recovery time
 
 ## 🆘 Emergency Procedures
 
-### Workflow Completely Broken
+### Pipeline Completely Broken
 
 1. **Immediate Actions:**
    ```bash
-   # Disable automatic workflows
-   gh workflow disable <workflow-name>
-
-   # Create manual release
-   gh release create v1.8.0 --generate-notes package.dxt
+   # Run tests locally
+   npm run lint && npm test
    ```
 
 2. **Root Cause Analysis:**
    ```bash
    # Check recent changes
-   git log --oneline -10 .github/workflows/
+   git log --oneline -10 .woodpecker.yml
 
    # Compare with working version
-   git show HEAD~1:.github/workflows/release.yml
+   git diff HEAD~1 .woodpecker.yml
    ```
 
 3. **Recovery:**
    ```bash
    # Revert to working version
-   git checkout HEAD~1 -- .github/workflows/
+   git checkout HEAD~1 -- .woodpecker.yml
 
-   # Test and commit fix
-   python scripts/test_workflows.py --report
-   git commit -m "fix: restore working workflow"
+   # Test locally
+   npm test
+   git commit -m "fix: restore working CI config"
    ```
 
 ### Release Pipeline Blocked
 
 1. **Manual Release Process:**
    ```bash
-   # Build package locally
-   python scripts/build_dxt.py --version 1.8.0
+   # Build locally
+   npm run build
 
-   # Create release manually
-   gh release create v1.8.0 \\
-     --title "Manual Release v1.8.0" \\
-     --notes "Emergency manual release" \\
-     mcp-context-provider-1.8.0.dxt
-   ```
-
-2. **Hotfix Workflow:**
-   ```bash
-   # Create hotfix branch
-   git checkout -b hotfix/workflow-fix
-
-   # Apply minimal fix
-   # Test thoroughly
-   # Fast-track review and merge
+   # Create release with tea CLI
+   tea release create \
+     --title "v2.0.0" \
+     --tag v2.0.0
    ```
 
 ## 📞 Getting Help
 
 ### Internal Resources
 
-- **Workflow Validation**: `python scripts/test_workflows.py --report`
-- **Build Testing**: `python scripts/test_build.py`
+- **CI Config**: `.woodpecker.yml`
 - **Documentation**: `docs/guides/DEVELOPER_GUIDE.md`
 
 ### External Resources
 
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [Workflow Syntax Reference](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions)
-- [Troubleshooting Workflows](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows)
-
-### Emergency Contacts
-
-- Repository Maintainer: Check GitHub repository settings
-- CI/CD Issues: Create issue with `workflow` label
-- Security Concerns: Follow security policy guidelines
+- [Woodpecker CI Documentation](https://woodpecker-ci.org/docs/intro)
+- [Codeberg CI Docs](https://docs.codeberg.org/ci/)
 
 ---
 

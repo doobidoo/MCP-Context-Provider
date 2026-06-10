@@ -30,7 +30,7 @@ The Context Provider ships with three memory-related contexts covering different
 ### `memory_context.json` – MCP Memory Auto-Trigger
 
 **Category**: `memory`  
-**Purpose**: Proactive storage and retrieval rules for the [MCP Memory Service](https://github.com/doobidoo/mcp-memory-service). Defines when Claude should automatically store memories and when to proactively retrieve them based on conversation patterns.
+**Purpose**: Proactive storage and retrieval rules for the [MCP Memory Service](https://codeberg.org/doobidoo/mcp-memory-service). Defines when Claude should automatically store memories and when to proactively retrieve them based on conversation patterns.
 
 **Session Initialization**: On startup, loads recent activity (last 24h) and retrieves any open tasks tagged `in-progress`, `active`, or `follow-up`.
 
@@ -58,7 +58,7 @@ The Context Provider ships with three memory-related contexts covering different
 ### `python_mcp_memory_context.json` – MCP Memory Service Development
 
 **Category**: `python-mcp-memory`  
-**Purpose**: Specialized context for **developing and extending the MCP Memory Service itself**. Provides FastAPI patterns, MCP protocol conventions, storage backend configurations, and Cloudflare integration rules. Activate this when working on the [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) codebase.
+**Purpose**: Specialized context for **developing and extending the MCP Memory Service itself**. Provides FastAPI patterns, MCP protocol conventions, storage backend configurations, and Cloudflare integration rules. Activate this when working on the [mcp-memory-service](https://codeberg.org/doobidoo/mcp-memory-service) codebase.
 
 **Session Initialization**: Loads last 7 days of MCP Memory Service development activity, retrieves architecture and backend config context, and surfaces any open `mcp-memory-service` tasks.
 
@@ -95,7 +95,7 @@ async def handle_store_memory(arguments: dict) -> list[TextContent]:
 ### `shodh_memory_context.json` – SHODH Episodic Memory
 
 **Category**: `memory`  
-**Purpose**: Context rules for the [SHODH Cloudflare Memory](https://github.com/doobidoo/shodh-memory) backend — a separate memory system focused on episodic memory with emotional metadata, credibility scoring, and associative retrieval. Used as the backend for the SecondBrain app.
+**Purpose**: Context rules for the [SHODH Cloudflare Memory](https://codeberg.org/doobidoo/shodh-memory) backend — a separate memory system focused on episodic memory with emotional metadata, credibility scoring, and associative retrieval. Used as the backend for the SecondBrain app.
 
 **Key Differentiators vs. `memory_context.json`**:
 

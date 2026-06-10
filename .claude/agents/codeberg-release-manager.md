@@ -1,6 +1,6 @@
-# GitHub Release Manager Agent
+# Codeberg Release Manager Agent
 
-> Handles version bumps, changelog updates, tagging, and GitHub releases for mcp-context-provider.
+> Handles version bumps, changelog updates, tagging, and Codeberg releases for mcp-context-provider.
 
 ## Prerequisites
 
@@ -48,7 +48,6 @@ If tests or build fail, **stop and report**. Do not proceed with a broken releas
 
 **package.json** — update the `"version"` field:
 ```bash
-# Use npm version (updates package.json, does NOT create git tag with --no-git-tag-version)
 npm version <new-version> --no-git-tag-version
 ```
 
@@ -96,20 +95,37 @@ git push origin main
 git push origin vX.Y.Z
 ```
 
-The tag push triggers the release GitHub Actions workflow (`.github/workflows/release.yml`).
+The tag push triggers the CI pipeline (`.woodpecker.yml`).
 
-### Step 7: Create GitHub Release (if workflow not configured)
+### Step 7: Create Codeberg Release (via Forgejo API)
 
-If the GitHub Actions workflow is not yet set up or fails:
-
+Install `tea` (Forgejo CLI) if not available:
 ```bash
-gh release create vX.Y.Z \
-  --title "vX.Y.Z" \
-  --generate-notes \
-  --prerelease  # Only for alpha/beta/rc versions
+# macOS
+brew install tea
 ```
 
-Use `--prerelease` flag for any version containing a pre-release identifier.
+Then create the release:
+
+```bash
+# Authentication
+tea login add
+
+# Create release
+tea release create \
+  --title "vX.Y.Z" \
+  --notes "$(git tag -l --format='%(contents)' vX.Y.Z)" \
+  --tag vX.Y.Z \
+  vX.Y.Z
+```
+
+Use `--prerelease` flag for any version containing a pre-release identifier:
+```bash
+tea release create \
+  --title "vX.Y.Z" \
+  --tag vX.Y.Z \
+  --prerelease
+```
 
 ## Post-Release Verification
 
@@ -121,8 +137,8 @@ git tag -l "vX.Y.Z"
 node -e "console.log(require('./package.json').version)"
 cat VERSION
 
-# Verify GitHub release
-gh release view vX.Y.Z
+# Verify Codeberg release
+tea release list
 ```
 
 ## Rules
@@ -131,6 +147,6 @@ gh release view vX.Y.Z
 - **Never skip build** — TypeScript must compile cleanly
 - **Two-file sync** — package.json and VERSION must always match
 - **Main branch only** — no release branches for this project
-- **Tag triggers CI** — the `v*` tag push triggers the release workflow
-- **Pre-release flag** — always mark alpha/beta/rc as pre-release on GitHub
+- **Tag triggers CI** — the `v*` tag push triggers the CI pipeline
+- **Pre-release flag** — always mark alpha/beta/rc as pre-release on Codeberg
 - **Clean working directory** — commit or stash all changes before starting

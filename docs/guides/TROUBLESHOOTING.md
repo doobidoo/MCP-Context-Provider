@@ -27,14 +27,14 @@ Common issues and solutions for the MCP Context Provider.
 **Solution**:
 ```bash
 # Method 1: Use automated installation script (recommended)
-curl -sSL https://raw.githubusercontent.com/doobidoo/MCP-Context-Provider/main/install.sh | bash
+curl -sSL https://codeberg.org/doobidoo/MCP-Context-Provider/raw/branch/main/install.sh | bash
 
 # Method 2: Manual DXT unpack + virtual environment
 # 1. Install DXT CLI
 npm install -g @anthropic-ai/dxt
 
 # 2. Download and unpack
-wget https://github.com/doobidoo/MCP-Context-Provider/raw/main/mcp-context-provider-1.2.1.dxt
+wget https://codeberg.org/doobidoo/MCP-Context-Provider/raw/branch/main/mcp-context-provider-1.2.1.dxt
 dxt unpack mcp-context-provider-1.2.1.dxt ~/mcp-context-provider
 
 # 3. Set up virtual environment

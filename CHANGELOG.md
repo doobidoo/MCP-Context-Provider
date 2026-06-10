@@ -23,20 +23,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0-alpha.10] - 2026-05-21
 
 ### Fixed
-- **`anti_ai_voice` context** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): Removed non-matchable `em_dash_excessive` entry from `auto_corrections` (pattern was a plain English sentence, not a regex; logic is covered by `banned_patterns.em_dash_overuse`)
-- **`anti_ai_voice` context** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): `"nachhaltig (als Buzzword)"` → `"nachhaltig"` in `tier4_german_buzzwords` — parenthetical was matched as part of the literal string
-- **`anti_ai_voice` context** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): Renamed `auto_corrections` keys `"delve into"` / `"delve deeper"` → `"delve_into"` / `"delve_deeper"` for consistency with all other keys
-- **`list_instincts` MCP tool** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): Added `Number.isNaN` guard for `limit` and `offset` — non-numeric inputs previously produced `NaN`, causing `slice()` to return an empty array silently
-- **`list_instincts` MCP tool** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): Removed JSON pretty-print (`null, 2`) from response to reduce payload size and mitigate MCP client truncation at the ~40–50 KB limit
-- **CLI `mcp-cp list` silently swallows YAML parse errors** ([#12](https://github.com/doobidoo/MCP-Context-Provider/issues/12), [#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): `listAll()` and `find()` now write a `⚠ Skipped <file>: <message>` warning to stderr instead of silently dropping invalid instinct files. `listAll()` returns `{ entries, skipped }` for programmatic access to parse failures.
+- **`anti_ai_voice` context** ([#16](https://codeberg.org/doobidoo/MCP-Context-Provider/pull/16)): Removed non-matchable `em_dash_excessive` entry from `auto_corrections` (pattern was a plain English sentence, not a regex; logic is covered by `banned_patterns.em_dash_overuse`)
+- **`anti_ai_voice` context** ([#16](https://codeberg.org/doobidoo/MCP-Context-Provider/pull/16)): `"nachhaltig (als Buzzword)"` → `"nachhaltig"` in `tier4_german_buzzwords` — parenthetical was matched as part of the literal string
+- **`anti_ai_voice` context** ([#16](https://codeberg.org/doobidoo/MCP-Context-Provider/pull/16)): Renamed `auto_corrections` keys `"delve into"` / `"delve deeper"` → `"delve_into"` / `"delve_deeper"` for consistency with all other keys
+- **`list_instincts` MCP tool** ([#16](https://codeberg.org/doobidoo/MCP-Context-Provider/pull/16)): Added `Number.isNaN` guard for `limit` and `offset` — non-numeric inputs previously produced `NaN`, causing `slice()` to return an empty array silently
+- **`list_instincts` MCP tool** ([#16](https://codeberg.org/doobidoo/MCP-Context-Provider/pull/16)): Removed JSON pretty-print (`null, 2`) from response to reduce payload size and mitigate MCP client truncation at the ~40–50 KB limit
+- **CLI `mcp-cp list` silently swallows YAML parse errors** ([#12](https://codeberg.org/doobidoo/MCP-Context-Provider/issues/12), [#16](https://codeberg.org/doobidoo/MCP-Context-Provider/pull/16)): `listAll()` and `find()` now write a `⚠ Skipped <file>: <message>` warning to stderr instead of silently dropping invalid instinct files. `listAll()` returns `{ entries, skipped }` for programmatic access to parse failures.
 
 ### Added
-- **`mcp-cp list --strict`** ([#16](https://github.com/doobidoo/MCP-Context-Provider/pull/16)): New flag that exits non-zero when any instinct file fails to parse — useful for CI pipelines. Summary line now shows skipped file count with a hint to use `--strict`.
+- **`mcp-cp list --strict`** ([#16](https://codeberg.org/doobidoo/MCP-Context-Provider/pull/16)): New flag that exits non-zero when any instinct file fails to parse — useful for CI pipelines. Summary line now shows skipped file count with a hint to use `--strict`.
 
 ## [2.0.0-alpha.9] - 2026-04-10
 
 ### Fixed
-- **`/instill` skill routing** ([#10](https://github.com/doobidoo/MCP-Context-Provider/issues/10)): The skill now delegates to the `store_instinct` MCP tool instead of writing YAML directly, ensuring every new instinct flows through the same validation and repair pipeline as the loader.
+- **`/instill` skill routing** ([#10](https://codeberg.org/doobidoo/MCP-Context-Provider/issues/10)): The skill now delegates to the `store_instinct` MCP tool instead of writing YAML directly, ensuring every new instinct flows through the same validation and repair pipeline as the loader.
 - **`memory_context` priority enum**: Changed priority from `critical` to `high` to match the Zod context schema enum — the invalid value was silently rejected on load.
 
 ### Changed
@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0-alpha.8] - 2026-04-10
 
 ### Fixed
-- **Legacy instinct YAML files silently dropped on load** ([#10](https://github.com/doobidoo/MCP-Context-Provider/issues/10)): Earlier versions of the `/instill` skill appended new instincts as top-level YAML arrays, which the strict Zod schema silently rejected. Users lost every learned instinct without noticing — reporter had 87 entries accumulated over ~6 weeks that were never injected.
+- **Legacy instinct YAML files silently dropped on load** ([#10](https://codeberg.org/doobidoo/MCP-Context-Provider/issues/10)): Earlier versions of the `/instill` skill appended new instincts as top-level YAML arrays, which the strict Zod schema silently rejected. Users lost every learned instinct without noticing — reporter had 87 entries accumulated over ~6 weeks that were never injected.
 
 ### Added
 - **Auto-repair loader** (`src/engine/instinct-loader.ts`): The loader now detects and auto-corrects three classes of damage at the system boundary:
@@ -101,9 +101,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Changelog Archival Agent** (`.claude/agents/changelog-archival.md`): On-demand changelog rotation for major version transitions
-- **Release Manager Agent** (`.claude/agents/github-release-manager.md`): Guided version bump, changelog update, tagging, and GitHub release workflow
+- **Release Manager Agent** (`.claude/agents/codeberg-release-manager.md`): Guided version bump, changelog update, tagging, and Codeberg release workflow
 - **Version Management Directive** (`.claude/directives/version-management.md`): Semver policy, two-file sync, pre-release phase progression
-- **Release GitHub Actions Workflow** (`.github/workflows/release.yml`): Tag-triggered CI pipeline — test, build, create GitHub release with auto pre-release detection
+- **Release CI Pipeline** (`.woodpecker.yml`): Tag-triggered CI pipeline — test, build, create Codeberg release with auto pre-release detection
 - **`[Unreleased]` section** in CHANGELOG.md for accumulating changes between releases
 
 ### Changed

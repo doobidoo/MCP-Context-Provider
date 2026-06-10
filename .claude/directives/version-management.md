@@ -41,7 +41,7 @@ Follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/):
 
 - Releases happen on the **main branch** (no release branches)
 - Tag format: `vX.Y.Z` or `vX.Y.Z-pre.N` (e.g., `v2.0.0-alpha.4`)
-- **Always use the Release Manager agent** (`.claude/agents/github-release-manager.md`)
+- **Always use the Release Manager agent** (`.claude/agents/codeberg-release-manager.md`)
 - Never bump versions manually — the agent ensures consistency
 
 ## Version Bump Decision Matrix

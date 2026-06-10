@@ -18,7 +18,7 @@ The MCP Context Provider is a **context and instinct engine** for Claude Desktop
 ## Quick Start
 
 ```bash
-git clone https://github.com/doobidoo/MCP-Context-Provider.git
+git clone https://codeberg.org/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 npm install && npm run build
 npm link   # recommended: makes mcp-cp and mcp-context-provider available globally
@@ -106,4 +106,4 @@ See [Installation - The /instill Skill](guides/INSTALLATION.md#the-instill-skill
 
 ## License
 
-MIT License - see [LICENSE](https://github.com/doobidoo/MCP-Context-Provider/blob/main/LICENSE)
+MIT License - see [LICENSE](https://codeberg.org/doobidoo/MCP-Context-Provider/src/branch/main/LICENSE)

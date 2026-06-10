@@ -95,7 +95,7 @@
       "release_branches": "release/*",
       "hotfix_branches": "hotfix/*"
     },
-    "github_flow": {
+    "git_flow": {
       "main_branch": "main",
       "feature_branches": "feature/*",
       "workflow": "feature -> main via PR"
@@ -177,7 +177,7 @@
     "applies_to_tools": [
       "bash:git",
       "git:*",
-      "github:*",
+      "git:*",
       "gitlab:*"
     ]
   },

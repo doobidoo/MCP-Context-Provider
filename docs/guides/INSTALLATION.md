@@ -8,7 +8,7 @@
 ## Install & Build
 
 ```bash
-git clone https://github.com/doobidoo/MCP-Context-Provider.git
+git clone https://codeberg.org/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 npm install
 npm run build
@@ -181,7 +181,7 @@ The HTTP server exposes:
 
 ## Optional: Memory Bridge
 
-Connect to [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) for instinct persistence across machines:
+Connect to [mcp-memory-service](https://codeberg.org/doobidoo/mcp-memory-service) for instinct persistence across machines:
 
 ```json
 {

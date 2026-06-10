@@ -1,9 +1,9 @@
 site_name: MCP Context Provider
 site_description: Persistent tool context for Claude Desktop – eliminate context loss between chat sessions
-site_url: https://doobidoo.github.io/MCP-Context-Provider/
-repo_url: https://github.com/doobidoo/MCP-Context-Provider
+site_url: https://codeberg.org/doobidoo/MCP-Context-Provider/
+repo_url: https://codeberg.org/doobidoo/MCP-Context-Provider
 repo_name: doobidoo/MCP-Context-Provider
-edit_uri: edit/main/docs/
+edit_uri: _edit/main/docs/
 
 theme:
   name: material
@@ -63,7 +63,7 @@ extra:
   version:
     provider: mike
   social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/doobidoo/MCP-Context-Provider
+    - icon: fontawesome/brands/git-alt
+      link: https://codeberg.org/doobidoo/MCP-Context-Provider
 
 copyright: Copyright &copy; 2025-2026 doobidoo – MIT License

@@ -26,7 +26,7 @@ Comprehensive guide for developing, extending, and customizing the MCP Context P
 
 1. **Clone and setup**:
    ```bash
-   git clone https://github.com/your-repo/MCP-Context-Provider.git
+   git clone https://codeberg.org/doobidoo/MCP-Context-Provider.git
    cd MCP-Context-Provider
    python -m venv venv
    source venv/bin/activate  # or venv\Scripts\activate on Windows
