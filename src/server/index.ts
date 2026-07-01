@@ -225,6 +225,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         required: ['id', 'result', 'delta'],
       },
     },
+    {
+      name: 'sync_instincts',
+      description: 'Push all local YAML instincts to mcp-memory-service. Requires memory bridge to be configured and connected.',
+      inputSchema: { type: 'object' as const, properties: {} },
+    },
   ],
 }));
 
@@ -450,6 +455,29 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       } catch (e) {
         return { content: [{ type: 'text', text: `Error: ${e instanceof Error ? e.message : String(e)}` }] };
       }
+    }
+
+    case 'sync_instincts': {
+      if (!MEMORY_BRIDGE_URL) {
+        return { content: [{ type: 'text', text: 'Error: MEMORY_BRIDGE_URL not configured' }] };
+      }
+      const connected = await engine.connectMemory();
+      if (!connected) {
+        return { content: [{ type: 'text', text: 'Error: memory bridge not reachable' }] };
+      }
+      const result = await engine.syncToMemory();
+      if (!result) {
+        return { content: [{ type: 'text', text: 'Error: sync failed (bridge not initialized)' }] };
+      }
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          pushed: result.pushed.length,
+          orphaned: result.orphaned.length,
+          errors: result.errors.length,
+          memory_count: result.memoryCount,
+          details: result,
+        }, null, 2) }],
+      };
     }
 
     default:
