@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Instincts store no longer depends on the launch directory** ([#1](https://codeberg.org/doobidoo/MCP-Context-Provider/issues/1)): the default was `./instincts` resolved against whatever CWD the MCP host started the server from, so the store silently split per launch directory — four disjoint stores had accumulated with zero overlap between them, and instincts had landed in unrelated repositories. Resolution is now `INSTINCTS_PATH` → `./instincts` only when the CWD is an `mcp-context-provider` checkout → `$XDG_DATA_HOME/mcp-context-provider/instincts` → `~/.local/share/mcp-context-provider/instincts`.
+- **Contexts path had the same CWD dependency**: `CONTEXTS_PATH` → `./contexts` when in a checkout → the `contexts/` directory shipped with the package. Contexts are versioned with the code, so the packaged directory is the correct fallback.
+- **Server and CLI could operate on different stores**: both now resolve through `src/config/paths.ts`. `mcp-cp` no longer defaults to `./instincts`.
+- **Loader rejected files whose `instincts:` key held a list** instead of a map keyed by id — a shape some `/instill` runs produced. It is now normalized like the legacy top-level array form, and a missing or unknown `version` is defaulted to `"1.0"` instead of failing the schema literal.
+- **Server version was hardcoded** (`2.0.0-alpha.6` while the package was at `2.0.0-beta.1`) and is now read from `package.json`.
+
+### Added
+- **`mcp-cp import <file>`**: merge a YAML instinct file into the active store. Existing ids are never overwritten; legacy shapes are repaired on read. `--into <name>` picks the target file, `--dry-run` previews.
+- **`mcp-cp path`**: print the resolved store directory and which rule produced it.
+- **Startup path logging**: both resolved paths go to stderr at startup, and the server warns when the store sits inside a git working tree that is not this repository's checkout — the signal that a CWD was picked up by accident.
+- **`list_instincts`** now returns `store: { path, resolved_from }`, and the HTTP `/health` payload reports both paths plus the server version. A store you cannot locate from inside a session is a store you cannot trust.
+
+### Changed
+- **`/instill` skill** ([.claude/skills/instill.md](.claude/skills/instill.md)): the documented file-edit fallback named `~/.claude/skills/instill/instincts/`, a path the server has never read — instincts written there were stranded. The skill now names the same locations the server resolves, tells you to ask `mcp-cp path`, and describes direct file edits as a last resort rather than an equivalent path.
+
 ## [2.0.0-beta.1] - 2026-05-21
 
 ### Changed

@@ -129,17 +129,57 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 | `list_available_contexts` | List all loaded contexts |
 | `apply_auto_corrections` | Apply correction patterns to text |
 | `build_injection` | Combined context + instinct injection payload |
-| `list_instincts` | List all instincts with confidence scores |
+| `list_instincts` | List all instincts with confidence scores, plus the resolved store path |
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `CONTEXTS_PATH` | `./contexts` | Path to `*_context.json` files |
-| `INSTINCTS_PATH` | `./instincts` | Path to `*.instincts.yaml` files |
+| `CONTEXTS_PATH` | packaged `contexts/` | Path to `*_context.json` files |
+| `INSTINCTS_PATH` | `~/.local/share/mcp-context-provider/instincts` | Path to `*.instincts.yaml` files — see [Store Location](#store-location) |
 | `MEMORY_BRIDGE_URL` | — | Memory service base URL (enables bridge) |
 | `MEMORY_BRIDGE_API_KEY` | — | API key for memory service |
 | `MCP_SERVER_PORT` | `3100` | HTTP server port (only with `--http`) |
+
+## Store Location
+
+The instincts store never depends on the directory the MCP host happened to launch
+the server from. It resolves in this order:
+
+1. `INSTINCTS_PATH` — explicit override, always wins
+2. `./instincts` — only when the working directory is an `mcp-context-provider`
+   checkout (the development case)
+3. `$XDG_DATA_HOME/mcp-context-provider/instincts` — when `XDG_DATA_HOME` is set
+4. `~/.local/share/mcp-context-provider/instincts` — the default
+
+Contexts resolve the same way, except the fallback is the `contexts/` directory
+shipped with the package: contexts are authored and versioned with the code,
+instincts are learned user data.
+
+To see which store is active:
+
+```bash
+mcp-cp path                     # prints the resolved directory
+node dist/server/index.js       # logs both paths to stderr at startup
+```
+
+The resolved path is also part of the `list_instincts` response (`store.path`,
+`store.resolved_from`) and of the `/health` payload in HTTP mode.
+
+If the resolved store sits inside a git working tree that is not this
+repository's checkout, the server warns at startup — that is the signal it
+picked up a working directory by accident and that learned instincts are about
+to be committed somewhere they do not belong.
+
+Merging a store from elsewhere:
+
+```bash
+mcp-cp import /path/to/learned.instincts.yaml --dry-run   # preview
+mcp-cp import /path/to/learned.instincts.yaml             # merge
+```
+
+Existing ids are never overwritten — a merge only adds. Legacy file shapes
+(top-level array, or `instincts:` as a list) are normalized on read.
 
 ## Context Files
 
@@ -166,7 +206,9 @@ Add a new context by dropping a `*_context.json` file in `contexts/` and restart
 
 ## Instincts
 
-Instincts are YAML files in `instincts/*.instincts.yaml`. They are distilled from sessions via `/instill` and require human approval.
+Instincts are YAML files named `*.instincts.yaml` in the resolved store (see
+[Store Location](#store-location)). They are distilled from sessions via
+`/instill` and require human approval.
 
 ```yaml
 version: "1.0"
@@ -196,6 +238,8 @@ mcp-cp approve <id>
 mcp-cp reject <id>
 mcp-cp tune <id> --confidence 0.8
 mcp-cp outcome <id> + "worked well"
+mcp-cp path
+mcp-cp import <file> [--into <name>] [--dry-run]
 ```
 
 ## Development
@@ -224,7 +268,13 @@ The reason `/instill` is not exposed as an MCP tool: it is an **interactive, mul
 
 ### Do `learned.instincts.yaml` files contain sensitive data?
 
-Potentially yes. Instincts distilled from work sessions may contain internal hostnames, customer names, infrastructure details, or operational procedures. The `learned.instincts.yaml` file is tracked by git by default, so **review its contents before pushing** to public repositories. Consider adding it to `.gitignore` if your instincts contain proprietary information.
+Potentially yes. Instincts distilled from work sessions may contain internal hostnames, customer names, infrastructure details, or operational procedures.
+
+This is why the default store is a user-level directory outside any repository
+(`~/.local/share/mcp-context-provider/instincts`) and why the server warns when
+the resolved store sits inside an unrelated git working tree. If you do point
+`INSTINCTS_PATH` at a checkout, add `instincts/learned.instincts.yaml` to that
+repository's `.gitignore` and **review its contents before pushing**.
 
 ### What is the difference between Contexts and Instincts?
 

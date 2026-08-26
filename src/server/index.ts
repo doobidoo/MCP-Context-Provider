@@ -18,7 +18,15 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { createServer } from 'node:http';
-import { resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { mkdir } from 'node:fs/promises';
+import { join } from 'node:path';
+import {
+  foreignGitTreeWarning,
+  packageRoot,
+  resolveContextsPath,
+  resolveInstinctsPath,
+} from '../config/paths.js';
 import { Engine } from '../engine/engine.js';
 import { InstinctLoader } from '../engine/instinct-loader.js';
 import { Registry } from '../cli/registry.js';
@@ -28,8 +36,8 @@ import type { InstinctFile } from '../types/instinct.js';
 // Configuration
 // ---------------------------------------------------------------------------
 
-const CONTEXTS_PATH = process.env['CONTEXTS_PATH'] ?? './contexts';
-const INSTINCTS_PATH = process.env['INSTINCTS_PATH'] ?? './instincts';
+const CONTEXTS = resolveContextsPath();
+const INSTINCTS = resolveInstinctsPath();
 const MEMORY_BRIDGE_URL = process.env['MEMORY_BRIDGE_URL'];
 const MEMORY_BRIDGE_API_KEY = process.env['MEMORY_BRIDGE_API_KEY'];
 const SERVER_PORT = parseInt(process.env['MCP_SERVER_PORT'] ?? '3100', 10);
@@ -42,11 +50,11 @@ const AUTO_REPAIR = (process.env['MCP_CP_AUTO_REPAIR'] ?? '1') !== '0';
 // Engine setup
 // ---------------------------------------------------------------------------
 
-const registry = new Registry(resolve(INSTINCTS_PATH));
+const registry = new Registry(INSTINCTS.path);
 
 const engine = new Engine({
-  contextsPath: resolve(CONTEXTS_PATH),
-  instinctsPath: resolve(INSTINCTS_PATH),
+  contextsPath: CONTEXTS.path,
+  instinctsPath: INSTINCTS.path,
   memoryBridge: MEMORY_BRIDGE_URL
     ? { baseUrl: MEMORY_BRIDGE_URL, apiKey: MEMORY_BRIDGE_API_KEY }
     : undefined,
@@ -57,8 +65,20 @@ const engine = new Engine({
 // MCP Server definition
 // ---------------------------------------------------------------------------
 
+const SERVER_VERSION = ((): string => {
+  try {
+    const manifest: unknown = JSON.parse(
+      readFileSync(join(packageRoot, 'package.json'), 'utf-8'),
+    );
+    const version = (manifest as { version?: unknown }).version;
+    return typeof version === 'string' ? version : '0.0.0';
+  } catch {
+    return '0.0.0';
+  }
+})();
+
 const server = new Server(
-  { name: 'context-provider', version: '2.0.0-alpha.6' },
+  { name: 'context-provider', version: SERVER_VERSION },
   { capabilities: { tools: {} } },
 );
 
@@ -137,7 +157,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: 'list_instincts',
       description:
-        'List loaded instincts with filtering and pagination. Returns {total, matched, returned, offset, items}. Use include_rules=false for compact listings when many instincts are loaded (MCP client UIs may truncate large responses around 40-50KB).',
+        'List loaded instincts with filtering and pagination. Returns {total, matched, returned, offset, store, items} where store reports the resolved instincts directory and how it was resolved. Use include_rules=false for compact listings when many instincts are loaded (MCP client UIs may truncate large responses around 40-50KB).',
       inputSchema: {
         type: 'object' as const,
         properties: {
@@ -368,6 +388,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         matched,
         returned: items.length,
         offset,
+        store: { path: INSTINCTS.path, resolved_from: INSTINCTS.source },
         items,
       };
       return { content: [{ type: 'text', text: JSON.stringify(response) }] };
@@ -386,7 +407,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return { content: [{ type: 'text', text: 'Error: id, rule, and domain are required' }] };
       }
 
-      const loader = new InstinctLoader(resolve(INSTINCTS_PATH));
+      const loader = new InstinctLoader(INSTINCTS.path);
       let instinctFile: InstinctFile;
       try {
         instinctFile = await loader.load(filename);
@@ -490,6 +511,22 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 // ---------------------------------------------------------------------------
 
 async function main() {
+  // Make the resolved store visible before anything else: a store nobody can
+  // locate is a store nobody can trust (Codeberg issue #1).
+  console.error(`[mcp-cp] v${SERVER_VERSION}`);
+  console.error(`[mcp-cp] contexts:  ${CONTEXTS.path}  (${CONTEXTS.source})`);
+  console.error(
+    `[mcp-cp] instincts: ${INSTINCTS.path}  (${INSTINCTS.source}${
+      INSTINCTS.source === 'repo-cwd' ? ' — development store, not the user-level one' : ''
+    })`,
+  );
+
+  const gitWarning = foreignGitTreeWarning(INSTINCTS.path);
+  if (gitWarning) console.error(`[mcp-cp] warning: ${gitWarning}`);
+
+  // The instincts store is user data and may not exist yet on a fresh install.
+  await mkdir(INSTINCTS.path, { recursive: true }).catch(() => undefined);
+
   // Initialize engine
   const result = await engine.initialize();
   const info = `Engine loaded: ${result.contextsLoaded} contexts, ${result.instinctsLoaded} instincts`;
@@ -535,7 +572,16 @@ async function main() {
       // Health check
       if (req.method === 'GET' && req.url === '/health') {
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ status: 'ok', ...result }));
+        res.end(
+          JSON.stringify({
+            status: 'ok',
+            version: SERVER_VERSION,
+            contexts_path: CONTEXTS.path,
+            instincts_path: INSTINCTS.path,
+            instincts_path_resolved_from: INSTINCTS.source,
+            ...result,
+          }),
+        );
         return;
       }
 

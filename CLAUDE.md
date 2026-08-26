@@ -29,6 +29,8 @@ src/
   schema/             Zod validation schemas
     instinct.schema.ts
     context.schema.ts
+  config/             Path resolution
+    paths.ts          Store/contexts path resolution (shared by server + CLI)
   engine/             Core engines
     engine.ts         Unified Engine (contexts + instincts + memory bridge)
     context-loader.ts JSON context discovery + validation
@@ -85,7 +87,7 @@ The server exposes 6 tools via MCP protocol:
 | `list_available_contexts` | List all loaded contexts |
 | `apply_auto_corrections` | Apply correction patterns to text |
 | `build_injection` | Combined context + instinct injection payload |
-| `list_instincts` | List all instincts with confidence scores |
+| `list_instincts` | List all instincts with confidence scores + resolved store path |
 
 ### Transport Modes
 
@@ -101,9 +103,12 @@ The server exposes 6 tools via MCP protocol:
 }
 ```
 
-> **Note:** Use absolute paths. Claude Code does not support the `cwd` field in MCP
-> server configs, so relative paths like `./contexts` will resolve from the wrong
-> directory and the server will fail to connect.
+> **Note:** `INSTINCTS_PATH` and `CONTEXTS_PATH` are optional overrides. Without
+> them the store resolves to a user-level directory that does not depend on the
+> launch CWD (see Store Resolution below) — Claude Code does not support the
+> `cwd` field in MCP server configs, so a CWD-relative default would land
+> wherever the host happened to start the process. If you do set them, use
+> absolute paths.
 
 **HTTP** — for remote deployment or multi-client scenarios:
 ```json
@@ -122,11 +127,29 @@ Endpoints: `POST /mcp` (MCP protocol), `GET /health` (status check)
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `CONTEXTS_PATH` | `./contexts` | Path to `*_context.json` files |
-| `INSTINCTS_PATH` | `./instincts` | Path to `*.instincts.yaml` files |
+| `CONTEXTS_PATH` | packaged `contexts/` | Path to `*_context.json` files |
+| `INSTINCTS_PATH` | `~/.local/share/mcp-context-provider/instincts` | Path to `*.instincts.yaml` files |
 | `MEMORY_BRIDGE_URL` | (none) | Memory service base URL (enables bridge) |
 | `MEMORY_BRIDGE_API_KEY` | (none) | API key for memory service |
 | `MCP_SERVER_PORT` | `3100` | HTTP server port (only with `--http`) |
+
+## Store Resolution
+
+`src/config/paths.ts` is the single source of truth, used by both the server and
+the CLI so they can never diverge onto different stores.
+
+Instincts: `INSTINCTS_PATH` → `./instincts` (only when CWD is an
+`mcp-context-provider` checkout) → `$XDG_DATA_HOME/mcp-context-provider/instincts`
+→ `~/.local/share/mcp-context-provider/instincts`.
+
+Contexts: `CONTEXTS_PATH` → `./contexts` (same checkout condition) → the
+`contexts/` directory shipped with the package.
+
+Both resolved paths are logged to stderr at startup (stdout is the JSON-RPC
+channel on stdio transport — never log there). The instincts path is also
+exposed via `list_instincts` (`store.path`, `store.resolved_from`), the `/health`
+payload, and `mcp-cp path`. A store inside a foreign git working tree triggers a
+startup warning.
 
 ## Key Types
 
