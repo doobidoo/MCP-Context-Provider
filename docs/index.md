@@ -106,4 +106,4 @@ See [Installation - The /instill Skill](guides/INSTALLATION.md#the-instill-skill
 
 ## License
 
-MIT License - see [LICENSE](https://codeberg.org/doobidoo/MCP-Context-Provider/src/branch/main/LICENSE)
+Apache License 2.0 - see [LICENSE](https://codeberg.org/doobidoo/MCP-Context-Provider/src/branch/main/LICENSE)

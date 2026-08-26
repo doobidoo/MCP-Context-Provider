@@ -17,7 +17,7 @@
       },
     "homepage": "https://codeberg.org/doobidoo/MCP-Context-Provider",
     "repository": "https://codeberg.org/doobidoo/MCP-Context-Provider",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
         "mcp",
         "context",

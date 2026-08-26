@@ -66,4 +66,4 @@ extra:
     - icon: fontawesome/brands/git-alt
       link: https://codeberg.org/doobidoo/MCP-Context-Provider
 
-copyright: Copyright &copy; 2025-2026 doobidoo – MIT License
+copyright: Copyright &copy; 2025-2026 doobidoo – Apache License 2.0
