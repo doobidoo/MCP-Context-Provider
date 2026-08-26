@@ -1,5 +1,5 @@
 when:
-  event: [push, pull_request, tag]
+  event: [push, pull_request, tag, manual]
 
 steps:
   install:

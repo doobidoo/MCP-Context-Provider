@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **The Woodpecker UI's "Run pipeline" button did nothing**: `manual` was missing from the top-level event filter, so a hand-triggered run was skipped in full — the same class of defect as the missing `tag` event, and just as silent. Added.
+
+### Fixed
 - **License metadata contradicted the LICENSE file**: `package.json`, both `.claude-plugin` manifests, `mkdocs.yml` and the README/docs license sections all said MIT, while `LICENSE` has been Apache-2.0 since the initial commit. The LICENSE file is the operative grant, so the metadata was corrected to Apache-2.0. This is not a relicensing — it aligns the metadata with the licence that was always in effect.
 - **Woodpecker never ran on tags**: the top-level `when: event: [push, pull_request]` gated the whole pipeline, so a tag event started nothing and the `release` step's own `when: event: tag` was unreachable. `tag` is now part of the top-level filter, so a release tag runs the same gates as a push.
 - **The `release` step promised more than it did**: it re-ran `npm ci`, `npm run build` and `npm test` — the same gates as the steps above it — and created no release and published no package. Removed. The Codeberg release is created via the Forgejo API by the release manager, and `npm publish` stays manual until a registry token exists as a Woodpecker secret. `CLAUDE.md` and the release-manager agent described the pipeline as "test to build to release" and have been corrected.
