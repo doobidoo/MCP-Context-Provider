@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Woodpecker never ran on tags**: the top-level `when: event: [push, pull_request]` gated the whole pipeline, so a tag event started nothing and the `release` step's own `when: event: tag` was unreachable. `tag` is now part of the top-level filter, so a release tag runs the same gates as a push.
+- **The `release` step promised more than it did**: it re-ran `npm ci`, `npm run build` and `npm test` — the same gates as the steps above it — and created no release and published no package. Removed. The Codeberg release is created via the Forgejo API by the release manager, and `npm publish` stays manual until a registry token exists as a Woodpecker secret. `CLAUDE.md` and the release-manager agent described the pipeline as "test to build to release" and have been corrected.
+
 ## [2.0.0-beta.2] - 2026-08-26
 
 ### Fixed

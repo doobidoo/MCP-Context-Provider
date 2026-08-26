@@ -95,7 +95,13 @@ git push origin main
 git push origin vX.Y.Z
 ```
 
-The tag push triggers the CI pipeline (`.woodpecker.yml`).
+The tag push runs the CI pipeline (`.woodpecker.yml`): lint, build, test, JSON
+validation. It does not create the release — that is step 7 below.
+
+Note: Woodpecker must be enabled for the repository at `ci.codeberg.org/repos/add`
+for any of this to run. If the commit shows no status checks, it is not wired up
+and the gates only ran wherever you ran them by hand — say so rather than
+reporting the pipeline as triggered.
 
 ### Step 7: Create Codeberg Release (via Forgejo API)
 

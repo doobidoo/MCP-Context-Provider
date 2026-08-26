@@ -238,5 +238,8 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 1. Use the **Release Manager agent** — never bump versions manually
 2. Version lives in two files: `package.json` and `VERSION` (must always match)
 3. Releases happen on `main` branch, tagged `vX.Y.Z[-pre.N]`
-4. Tag push triggers `.woodpecker.yml` (test → build → release pipeline)
+4. Tag push runs `.woodpecker.yml` — lint, build, test, JSON validation. It is a
+   gate, not a publisher: it creates no release object and publishes no package.
+   The Codeberg release is created by the release manager via the Forgejo API,
+   and `npm publish` to `npm.codeberg.org` is manual.
 5. Current phase: **beta** (v2.0.0-beta.2) — see directive for phase progression

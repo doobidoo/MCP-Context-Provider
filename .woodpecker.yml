@@ -1,5 +1,5 @@
 when:
-  event: [push, pull_request]
+  event: [push, pull_request, tag]
 
 steps:
   install:
@@ -27,13 +27,3 @@ steps:
     commands:
       - for f in contexts/*.json; do if [ -f "$f" ]; then echo "Checking: $(basename $f)"; node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))"; fi; done
       - echo "All JSON files valid"
-
-  release:
-    when:
-      event: tag
-      tag: v*
-    image: node:20
-    commands:
-      - npm ci
-      - npm run build
-      - npm test
