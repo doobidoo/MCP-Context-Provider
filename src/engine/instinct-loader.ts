@@ -20,6 +20,7 @@ import type { Instinct, InstinctFile } from '../types/instinct.js';
 
 export type RepairKind =
   | 'shape_array_to_object'
+  | 'version_normalized'
   | 'id_synthesized'
   | 'id_collision_resolved'
   | 'entry_skipped';
@@ -131,16 +132,38 @@ export class InstinctLoader {
    * their rule text. Collisions are resolved with a numeric suffix.
    */
   private normalizeShape(parsed: unknown, repairs: RepairAction[]): unknown {
-    if (!Array.isArray(parsed)) return parsed;
+    // Three shapes seen in the wild:
+    //   1. canonical  { version: "1.0", instincts: { id: {...} } }
+    //   2. legacy     [ {...}, {...} ]                     (issue #10)
+    //   3. hybrid     { instincts: [ {...}, {...} ] }       (issue #1)
+    let entries: unknown[] | null = null;
+    let where = 'top-level array';
+    let version: unknown = '1.0';
+
+    if (Array.isArray(parsed)) {
+      entries = parsed;
+    } else if (parsed && typeof parsed === 'object') {
+      const obj = parsed as Record<string, unknown>;
+      version = obj.version;
+      if (Array.isArray(obj.instincts)) {
+        entries = obj.instincts;
+        where = 'instincts array';
+      }
+    }
+
+    if (entries === null) {
+      // Shape is already canonical — only the version literal may need a nudge.
+      return this.normalizeVersion(parsed, repairs);
+    }
 
     repairs.push({
       kind: 'shape_array_to_object',
-      detail: `converted top-level array (${parsed.length} entries) to object form`,
+      detail: `converted ${where} (${entries.length} entries) to object form`,
     });
 
     const instincts: Record<string, Record<string, unknown>> = {};
-    for (let i = 0; i < parsed.length; i++) {
-      const raw = parsed[i];
+    for (let i = 0; i < entries.length; i++) {
+      const raw = entries[i];
       if (!raw || typeof raw !== 'object') {
         repairs.push({
           kind: 'entry_skipped',
@@ -180,7 +203,30 @@ export class InstinctLoader {
       instincts[id] = entry;
     }
 
+    if (version !== undefined && version !== '1.0') {
+      repairs.push({
+        kind: 'version_normalized',
+        detail: `version ${JSON.stringify(version)} → "1.0"`,
+      });
+    }
+
     return { version: '1.0', instincts };
+  }
+
+  /**
+   * Canonical-shape files whose `version` is missing or unknown get it set to
+   * "1.0" rather than failing the schema literal.
+   */
+  private normalizeVersion(parsed: unknown, repairs: RepairAction[]): unknown {
+    if (!parsed || typeof parsed !== 'object') return parsed;
+    const obj = parsed as Record<string, unknown>;
+    if (obj.version === '1.0') return parsed;
+
+    repairs.push({
+      kind: 'version_normalized',
+      detail: `version ${JSON.stringify(obj.version)} → "1.0"`,
+    });
+    return { ...obj, version: '1.0' };
   }
 
   /**

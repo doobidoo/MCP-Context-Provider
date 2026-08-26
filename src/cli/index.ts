@@ -14,9 +14,12 @@
  *                     [--rule "text"]
  *   mcp-cp outcome <id> <+|-|~> [note]      Record outcome
  *   mcp-cp remove <id>                      Delete instinct
+ *   mcp-cp import <file>                    Merge a YAML file into the store
+ *   mcp-cp path                             Show the resolved store path
  */
 
 import { resolve } from 'node:path';
+import { resolveInstinctsPath, foreignGitTreeWarning } from '../config/paths.js';
 import { Registry } from './registry.js';
 import {
   formatInstinctRow,
@@ -69,7 +72,17 @@ function parseArgs(argv: string[]): ParsedArgs {
 // Commands
 // ---------------------------------------------------------------------------
 
-async function cmdList(registry: Registry, strict = false): Promise<void> {
+async function cmdList(
+  registry: Registry,
+  store: { path: string; source: string },
+  strict = false,
+): Promise<void> {
+  // Always name the store. The failure mode this guards against is silence:
+  // an empty or unexpected registry looks identical to a wrong store path.
+  console.error(`store: ${store.path} (${store.source})`);
+  const gitWarning = foreignGitTreeWarning(store.path);
+  if (gitWarning) console.error(warn(gitWarning));
+
   const { entries, skipped } = await registry.listAll();
 
   if (skipped.length > 0) {
@@ -83,7 +96,9 @@ async function cmdList(registry: Registry, strict = false): Promise<void> {
   }
 
   if (entries.length === 0) {
-    console.log(warn('No instincts found. Use /instill to extract some.'));
+    console.log(
+      warn(`No instincts found in ${store.path}. Use /instill to extract some, or mcp-cp import <file> to merge an existing store.`),
+    );
     return;
   }
 
@@ -202,6 +217,50 @@ async function cmdRemove(registry: Registry, id: string): Promise<void> {
   }
 }
 
+async function cmdImport(
+  registry: Registry,
+  storePath: string,
+  sourcePath: string,
+  flags: Record<string, string>,
+): Promise<void> {
+  try {
+    const result = await registry.importFrom(sourcePath, {
+      filename: flags['into'],
+      dryRun: 'dry-run' in flags,
+    });
+
+    const prefix = result.dryRun ? 'Would import' : 'Imported';
+    console.log(
+      `${prefix} ${result.added.length} instinct(s) from ${result.source}`,
+    );
+    console.log(`  store:  ${storePath}`);
+    console.log(`  target: ${result.target}`);
+
+    if (result.repairs.length > 0) {
+      console.log(warn(`  repaired source shape: ${result.repairs.length} fix(es)`));
+    }
+    for (const id of result.added) console.log(`  + ${id}`);
+    if (result.skipped.length > 0) {
+      console.log(
+        warn(`  ${result.skipped.length} already in store (skipped): ${result.skipped.join(', ')}`),
+      );
+    }
+    if (!result.dryRun && result.added.length > 0) {
+      console.log(success('Merge complete.'));
+    }
+  } catch (e) {
+    console.error(error(e instanceof Error ? e.message : String(e)));
+    process.exitCode = 1;
+  }
+}
+
+function cmdPath(store: { path: string; source: string }): void {
+  console.log(store.path);
+  console.error(`  resolved from: ${store.source}`);
+  const warning = foreignGitTreeWarning(store.path);
+  if (warning) console.error(warn(`  ${warning}`));
+}
+
 function cmdHelp(): void {
   console.log(`
 \x1b[1mmcp-cp\x1b[0m — Instinct Approval Registry
@@ -214,6 +273,9 @@ function cmdHelp(): void {
   mcp-cp tune <id> [options]                  Tune parameters
   mcp-cp outcome <id> <+|-|~> [note]          Record outcome
   mcp-cp remove <id>                          Delete instinct
+  mcp-cp import <file> [--into <name>]        Merge a YAML file into the store
+                       [--dry-run]            (existing ids are never overwritten)
+  mcp-cp path                                 Show the resolved store path
 
 \x1b[1mTune options:\x1b[0m
   --confidence <0.0-1.0>       Set confidence
@@ -224,7 +286,11 @@ function cmdHelp(): void {
   --triggers "p1,p2"           Set trigger patterns
 
 \x1b[1mOptions:\x1b[0m
-  --path <dir>                 Instincts directory (default: ./instincts)
+  --path <dir>                 Instincts directory. Default resolution:
+                               INSTINCTS_PATH, then ./instincts when run from
+                               the mcp-context-provider checkout, then
+                               $XDG_DATA_HOME/mcp-context-provider/instincts,
+                               then ~/.local/share/mcp-context-provider/instincts
   --strict                     (list only) Exit non-zero if any instinct file fails to parse
   --help                       Show this help
 `);
@@ -242,14 +308,21 @@ async function main(): Promise<void> {
     return;
   }
 
-  const instinctsPath = resolve(flags['path'] ?? './instincts');
-  const registry = new Registry(instinctsPath);
+  const store = flags['path']
+    ? { path: resolve(flags['path']), source: '--path' }
+    : resolveInstinctsPath();
+  const registry = new Registry(store.path);
   const id = positional[0] ?? '';
+
+  if (command === 'path' || command === 'where') {
+    cmdPath(store);
+    return;
+  }
 
   switch (command) {
     case 'list':
     case 'ls':
-      await cmdList(registry, 'strict' in flags);
+      await cmdList(registry, store, 'strict' in flags);
       break;
 
     case 'show':
@@ -282,6 +355,12 @@ async function main(): Promise<void> {
     case 'rm':
       if (!id) { console.error(error('Usage: mcp-cp remove <id>')); process.exitCode = 1; break; }
       await cmdRemove(registry, id);
+      break;
+
+    case 'import':
+    case 'merge':
+      if (!id) { console.error(error('Usage: mcp-cp import <file> [--into <name>] [--dry-run]')); process.exitCode = 1; break; }
+      await cmdImport(registry, store.path, id, flags);
       break;
 
     default:

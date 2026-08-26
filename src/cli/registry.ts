@@ -5,8 +5,9 @@
  * against the YAML instinct files on disk.
  */
 
-import { readdir } from 'node:fs/promises';
-import { InstinctLoader } from '../engine/instinct-loader.js';
+import { mkdir, readdir } from 'node:fs/promises';
+import { basename, dirname, resolve } from 'node:path';
+import { InstinctLoader, type RepairAction } from '../engine/instinct-loader.js';
 import type { Instinct, InstinctFile, OutcomeEntry } from '../types/instinct.js';
 
 export interface RegistryEntry {
@@ -17,6 +18,28 @@ export interface RegistryEntry {
 export interface ListResult {
   entries: RegistryEntry[];
   skipped: Array<{ file: string; error: string }>;
+}
+
+export interface ImportOptions {
+  /** Target file inside the store (default "learned.instincts.yaml"). */
+  filename?: string;
+  /** Report what would happen without writing anything. */
+  dryRun?: boolean;
+}
+
+export interface ImportResult {
+  /** Absolute path of the source file. */
+  source: string;
+  /** File inside the store the instincts were written to. */
+  target: string;
+  /** Ids merged into the store. */
+  added: string[];
+  /** Ids skipped because the store already has them. */
+  skipped: string[];
+  /** Shape repairs the loader had to apply to the source file. */
+  repairs: RepairAction[];
+  /** True when nothing was written to disk. */
+  dryRun: boolean;
 }
 
 export class Registry {
@@ -188,6 +211,58 @@ export class Registry {
     await this.loader.save(file, instinctFile);
 
     return instinct;
+  }
+
+  /**
+   * Merge a YAML instinct file into this store, skipping ids the store
+   * already has. Accepts legacy top-level array files: the loader normalizes
+   * them on read and the applied fixes are reported back as `repairs`.
+   *
+   * Existing instincts are never overwritten — a merge only ever adds.
+   */
+  async importFrom(
+    sourcePath: string,
+    options: ImportOptions = {},
+  ): Promise<ImportResult> {
+    const filename = options.filename ?? 'learned.instincts.yaml';
+    const dryRun = options.dryRun === true;
+    const absoluteSource = resolve(sourcePath);
+
+    const sourceLoader = new InstinctLoader(dirname(absoluteSource));
+    const { file: source, repairs } = await sourceLoader.loadWithRepairs(
+      basename(absoluteSource),
+    );
+
+    const existing = new Set(
+      (await this.listAll()).entries.map((e) => e.instinct.id),
+    );
+
+    let target: InstinctFile;
+    try {
+      target = await this.loader.load(filename);
+    } catch {
+      target = { version: '1.0', instincts: {} };
+    }
+
+    const added: string[] = [];
+    const skipped: string[] = [];
+
+    for (const [id, instinct] of Object.entries(source.instincts)) {
+      if (existing.has(id)) {
+        skipped.push(id);
+        continue;
+      }
+      target.instincts[id] = instinct;
+      existing.add(id);
+      added.push(id);
+    }
+
+    if (!dryRun && added.length > 0) {
+      await mkdir(this.instinctsPath, { recursive: true });
+      await this.loader.save(filename, target);
+    }
+
+    return { source: absoluteSource, target: filename, added, skipped, repairs, dryRun };
   }
 
   // -------------------------------------------------------------------------

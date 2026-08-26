@@ -174,6 +174,45 @@ instincts:
   // Content validation still enforced
   // -------------------------------------------------------------------------
 
+  it('normalizes an instincts: array under a top-level key (issue #1)', async () => {
+    // Shape produced by some /instill runs: canonical wrapper key, but the
+    // instincts value is a list instead of a map keyed by id.
+    const yaml = `instincts:
+${legacyArrayEntry('nested-array-entry')
+  .split('\n')
+  .map((l) => (l ? `  ${l}` : l))
+  .join('\n')}
+`;
+    await writeFile(join(dir, 'nested.instincts.yaml'), yaml, 'utf-8');
+
+    const { file, repairs } = await loader.loadWithRepairs('nested.instincts.yaml');
+    expect(file.version).toBe('1.0');
+    expect(Object.keys(file.instincts)).toEqual(['nested-array-entry']);
+    expect(repairs.map((r) => r.kind)).toContain('shape_array_to_object');
+  });
+
+  it('defaults a missing or unknown version to "1.0"', async () => {
+    const yaml = `version: "0.9"
+instincts:
+  named-exports:
+    id: named-exports
+    rule: "${validRule}"
+    domain: typescript
+    tags: [typescript]
+    trigger_patterns: ["export default"]
+    confidence: 0.8
+    min_confidence: 0.5
+    approved_by: human
+    active: true
+    outcome_log: []
+`;
+    await writeFile(join(dir, 'oldver.instincts.yaml'), yaml, 'utf-8');
+
+    const { file, repairs } = await loader.loadWithRepairs('oldver.instincts.yaml');
+    expect(file.version).toBe('1.0');
+    expect(repairs.map((r) => r.kind)).toContain('version_normalized');
+  });
+
   it('still rejects content-invalid instincts after shape repair', async () => {
     // Array form but the rule is too short (Zod: 5–120 token soft range)
     const yaml = `

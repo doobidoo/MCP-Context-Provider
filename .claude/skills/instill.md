@@ -132,15 +132,26 @@ When the user accepts a candidate, **prefer the MCP tool path** over direct file
    ✓ Stored and approved `suggested-id` (confidence: 0.7, domain: X)
    ```
 
-#### Fallback path — direct file edit (only if MCP tools unavailable)
+#### Fallback path — direct file edit (last resort)
 
-Use this path only when `store_instinct` is not reachable (e.g. the skill is running in an environment where mcp-context-provider is not installed).
+`store_instinct` is the normal path: it writes to the store the running server
+actually uses and needs no path guessing. Edit files directly only when
+`store_instinct` is unreachable (e.g. mcp-context-provider is not installed in
+this environment). A direct edit is not an equivalent path — get the directory
+wrong and the instinct is never injected, with no error anywhere.
 
-1. **Resolve the instincts directory** (check in order, use first that exists):
+1. **Resolve the instincts directory.** Use the same order the server uses, so
+   the file you write is the file the server reads. If `mcp-cp` is on PATH, ask
+   it instead of guessing: `mcp-cp path`. Otherwise resolve manually:
    1. `INSTINCTS_PATH` env var (if set)
    2. `./instincts/` relative to CWD — but **only** if CWD contains a `package.json` with `"name": "mcp-context-provider"` (i.e., you're inside the repo)
-   3. `~/.claude/skills/instill/instincts/` (global fallback for when skill runs from any project)
+   3. `$XDG_DATA_HOME/mcp-context-provider/instincts/` (if `XDG_DATA_HOME` is set)
+   4. `~/.local/share/mcp-context-provider/instincts/`
    - Create the resolved directory if it doesn't exist yet
+   - **Do not** write to `~/.claude/skills/instill/instincts/`. Older versions of
+     this skill named that path, but the server has never read it — instincts
+     written there are stranded. If you find a file there, merge it with
+     `mcp-cp import ~/.claude/skills/instill/instincts/learned.instincts.yaml`.
 2. Read `learned.instincts.yaml` inside the resolved dir — create if absent with this skeleton:
    ```yaml
    version: "1.0"
@@ -212,7 +223,8 @@ Paths resolved at runtime (see Step 5 fallback path for resolution order):
 
 - Instinct YAML files: `<resolved-instincts-dir>/*.instincts.yaml`
 - Learned instincts: `<resolved-instincts-dir>/learned.instincts.yaml`
-- Global fallback dir: `~/.claude/skills/instill/instincts/`
+- User-level default store: `~/.local/share/mcp-context-provider/instincts/`
+  (or `$XDG_DATA_HOME/mcp-context-provider/instincts/`)
 - Schema types (repo only): `src/types/instinct.ts`
 - Zod validation (repo only): `src/schema/instinct.schema.ts`
-- CLI for management: `mcp-cp list|show|approve|reject|tune`
+- CLI for management: `mcp-cp list|show|approve|reject|tune|path|import`
