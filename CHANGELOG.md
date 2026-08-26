@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **The whole pipeline failed to compile**: the `validate-json` step's one-liner contained `echo "Checking: $(basename $f)"`, and YAML read the `: ` inside it as a mapping separator, so the command parsed as a map instead of a string. Every run — push and pull request alike — ended as `error` before a single step executed. Rewritten as a block scalar. This had been latent since the step was written; nothing ran it until the repository was enabled at ci.codeberg.org.
 - **The Woodpecker UI's "Run pipeline" button did nothing**: `manual` was missing from the top-level event filter, so a hand-triggered run was skipped in full — the same class of defect as the missing `tag` event, and just as silent. Added.
 
 ### Fixed
