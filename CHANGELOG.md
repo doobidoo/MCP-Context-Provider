@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-beta.2] - 2026-08-26
+
 ### Fixed
 - **Instincts store no longer depends on the launch directory** ([#1](https://codeberg.org/doobidoo/MCP-Context-Provider/issues/1)): the default was `./instincts` resolved against whatever CWD the MCP host started the server from, so the store silently split per launch directory — four disjoint stores had accumulated with zero overlap between them, and instincts had landed in unrelated repositories. Resolution is now `INSTINCTS_PATH` → `./instincts` only when the CWD is an `mcp-context-provider` checkout → `$XDG_DATA_HOME/mcp-context-provider/instincts` → `~/.local/share/mcp-context-provider/instincts`.
 - **Contexts path had the same CWD dependency**: `CONTEXTS_PATH` → `./contexts` when in a checkout → the `contexts/` directory shipped with the package. Contexts are versioned with the code, so the packaged directory is the correct fallback.

@@ -239,4 +239,4 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 2. Version lives in two files: `package.json` and `VERSION` (must always match)
 3. Releases happen on `main` branch, tagged `vX.Y.Z[-pre.N]`
 4. Tag push triggers `.woodpecker.yml` (test → build → release pipeline)
-5. Current phase: **alpha** (v2.0.0-alpha.5) — see directive for phase progression
+5. Current phase: **beta** (v2.0.0-beta.2) — see directive for phase progression
