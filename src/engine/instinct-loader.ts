@@ -9,7 +9,7 @@
  * canonical form back to disk with a `.bak` copy of the original.
  */
 
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, rename, unlink, writeFile } from 'node:fs/promises';
 import { parse, stringify } from 'yaml';
 import { InstinctFileSchema } from '../schema/instinct.schema.js';
 import type { Instinct, InstinctFile } from '../types/instinct.js';
@@ -84,28 +84,61 @@ export class InstinctLoader {
 
   /**
    * Save an instinct file to disk as YAML.
+   *
+   * Written to a temporary file and renamed into place, so an interrupted or
+   * concurrent write can never leave a half-written store on disk for the next
+   * load to choke on. Validation happens before anything touches the disk.
    */
   async save(filename: string, file: InstinctFile): Promise<void> {
     const filepath = `${this.basePath}/${filename}`;
     const validated = InstinctFileSchema.parse(file);
     const yamlStr = stringify(validated, { lineWidth: 100 });
-    await writeFile(filepath, yamlStr, 'utf-8');
+
+    const tmpPath = `${filepath}.tmp-${process.pid}-${Date.now()}`;
+    try {
+      await writeFile(tmpPath, yamlStr, 'utf-8');
+      await rename(tmpPath, filepath);
+    } catch (err) {
+      await unlink(tmpPath).catch(() => undefined);
+      throw err;
+    }
   }
 
   /**
-   * Append a new instinct to an existing file (or create if missing).
+   * Append a new instinct to an existing file, creating the file only if it
+   * does not exist yet.
+   *
+   * A file that exists but cannot be read or parsed is an error, never a
+   * reason to start from an empty one: the save that followed would replace
+   * the whole store. That is not hypothetical — a 232-instinct store was
+   * wiped down to a single entry this way.
    */
   async append(filename: string, instinct: Instinct): Promise<InstinctFile> {
-    let file: InstinctFile;
-    try {
-      file = await this.load(filename);
-    } catch {
-      file = { version: '1.0', instincts: {} };
-    }
-
+    const file = await this.loadOrCreate(filename);
     file.instincts[instinct.id] = instinct;
     await this.save(filename, file);
     return file;
+  }
+
+  /**
+   * Load a file, or return an empty one if — and only if — it does not exist.
+   * Any other failure propagates.
+   */
+  async loadOrCreate(filename: string): Promise<InstinctFile> {
+    try {
+      return await this.load(filename);
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException)?.code === 'ENOENT') {
+        return { version: '1.0', instincts: {} };
+      }
+      throw new Error(
+        `Refusing to write ${filename}: the existing file could not be loaded ` +
+          `(${err instanceof Error ? err.message : String(err)}). ` +
+          'Fix or move the file first — overwriting it would discard every ' +
+          'instinct it holds.',
+        { cause: err },
+      );
+    }
   }
 
   // -------------------------------------------------------------------------

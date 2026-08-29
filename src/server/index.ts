@@ -410,9 +410,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const loader = new InstinctLoader(INSTINCTS.path);
       let instinctFile: InstinctFile;
       try {
-        instinctFile = await loader.load(filename);
-      } catch {
-        instinctFile = { version: '1.0', instincts: {} };
+        // Creates an empty file only when there is none; an existing file that
+        // cannot be loaded throws rather than being silently replaced.
+        instinctFile = await loader.loadOrCreate(filename);
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Error: ${err instanceof Error ? err.message : String(err)}`,
+            },
+          ],
+        };
       }
 
       if (instinctFile.instincts[id]) {

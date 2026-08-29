@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **A store that could not be parsed was silently replaced by an empty one**: `InstinctLoader.append()` and the `store_instinct` handler both fell back to `{version, instincts: {}}` on *any* load failure and then saved that over the existing file. One transient parse failure was enough to discard a whole store — a 232-instinct store was wiped down to a single entry this way. Loading now falls back to an empty file only on `ENOENT`; an existing file that cannot be read or parsed raises an error naming the file instead of overwriting it.
+- **Writes are atomic**: `InstinctLoader.save()` writes to a temporary file and renames it into place, so an interrupted or concurrent write can no longer leave a half-written store on disk for the next load to choke on.
 - **The whole pipeline failed to compile**: the `validate-json` step's one-liner contained `echo "Checking: $(basename $f)"`, and YAML read the `: ` inside it as a mapping separator, so the command parsed as a map instead of a string. Every run — push and pull request alike — ended as `error` before a single step executed. Rewritten as a block scalar. This had been latent since the step was written; nothing ran it until the repository was enabled at ci.codeberg.org.
 - **The Woodpecker UI's "Run pipeline" button did nothing**: `manual` was missing from the top-level event filter, so a hand-triggered run was skipped in full — the same class of defect as the missing `tag` event, and just as silent. Added.
 
