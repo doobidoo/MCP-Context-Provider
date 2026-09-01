@@ -48,7 +48,7 @@ src/
 
 hooks/                Claude Code hooks
   instill-trigger.js  Auto-detect corrections/failures → nudge /instill
-instincts/            YAML instinct files (*.instincts.yaml)
+instincts/            learned.instincts.yaml — the one instinct store
 contexts/             JSON context files (*_context.json)
 .claude/skills/       Claude Code skills
   instill.md          /instill — distill instincts from session
@@ -128,7 +128,7 @@ Endpoints: `POST /mcp` (MCP protocol), `GET /health` (status check)
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `CONTEXTS_PATH` | packaged `contexts/` | Path to `*_context.json` files |
-| `INSTINCTS_PATH` | `~/.local/share/mcp-context-provider/instincts` | Path to `*.instincts.yaml` files |
+| `INSTINCTS_PATH` | `~/.local/share/mcp-context-provider/instincts` | Directory holding `learned.instincts.yaml` |
 | `MEMORY_BRIDGE_URL` | (none) | Memory service base URL (enables bridge) |
 | `MEMORY_BRIDGE_API_KEY` | (none) | API key for memory service |
 | `MCP_SERVER_PORT` | `3100` | HTTP server port (only with `--http`) |
@@ -151,6 +151,14 @@ exposed via `list_instincts` (`store.path`, `store.resolved_from`), the `/health
 payload, and `mcp-cp path`. A store inside a foreign git working tree triggers a
 startup warning.
 
+### One store file
+
+`learned.instincts.yaml` is the single source. `src/config/paths.ts` exports
+`CANONICAL_INSTINCTS_FILE`; `Engine.initialize()` and `Registry.listAll()`
+return `unloadedFiles` naming every other `*.instincts.yaml` in the directory,
+which the server logs at startup and `mcp-cp list` prints. Merge them with
+`mcp-cp import`, which always writes to the canonical file.
+
 ## Key Types
 
 - `Instinct` — Learned rule with confidence scoring + outcome tracking
@@ -163,7 +171,7 @@ startup warning.
 
 - IDs: kebab-case (`git-conventional-commits`)
 - Confidence: 0.0–1.0, default min_confidence: 0.5
-- YAML files: `*.instincts.yaml` extension
+- One store file: `learned.instincts.yaml`; other `*.instincts.yaml` in the directory are reported, never loaded
 - JSON context files: `*_context.json`
 - All instincts require human approval (`approved_by: human`)
 - Rules must be 20–80 tokens (Zod enforced: 5–120 soft range)

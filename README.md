@@ -136,7 +136,7 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `CONTEXTS_PATH` | packaged `contexts/` | Path to `*_context.json` files |
-| `INSTINCTS_PATH` | `~/.local/share/mcp-context-provider/instincts` | Path to `*.instincts.yaml` files — see [Store Location](#store-location) |
+| `INSTINCTS_PATH` | `~/.local/share/mcp-context-provider/instincts` | Directory holding `learned.instincts.yaml` — see [Store Location](#store-location) |
 | `MEMORY_BRIDGE_URL` | — | Memory service base URL (enables bridge) |
 | `MEMORY_BRIDGE_API_KEY` | — | API key for memory service |
 | `MCP_SERVER_PORT` | `3100` | HTTP server port (only with `--http`) |
@@ -178,6 +178,8 @@ mcp-cp import /path/to/learned.instincts.yaml --dry-run   # preview
 mcp-cp import /path/to/learned.instincts.yaml             # merge
 ```
 
+The merge always targets the canonical `learned.instincts.yaml`.
+
 Existing ids are never overwritten — a merge only adds. Legacy file shapes
 (top-level array, or `instincts:` as a list) are normalized on read.
 
@@ -206,9 +208,14 @@ Add a new context by dropping a `*_context.json` file in `contexts/` and restart
 
 ## Instincts
 
-Instincts are YAML files named `*.instincts.yaml` in the resolved store (see
-[Store Location](#store-location)). They are distilled from sessions via
-`/instill` and require human approval.
+Instincts live in exactly one file, `learned.instincts.yaml`, inside the
+resolved store (see [Store Location](#store-location)). They are distilled from
+sessions via `/instill` and require human approval.
+
+Any other `*.instincts.yaml` in that directory is **not** read. It is reported
+by name at startup and by `mcp-cp list`, together with the `mcp-cp import`
+command that merges it — so a second file can never drift into the store
+unnoticed, and no instinct is ever loaded from a file you did not intend.
 
 ```yaml
 version: "1.0"
@@ -239,7 +246,7 @@ mcp-cp reject <id>
 mcp-cp tune <id> --confidence 0.8
 mcp-cp outcome <id> + "worked well"
 mcp-cp path
-mcp-cp import <file> [--into <name>] [--dry-run]
+mcp-cp import <file> [--dry-run]
 ```
 
 ## Development

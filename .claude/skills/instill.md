@@ -221,7 +221,7 @@ Run `mcp-cp list` to see all active instincts.
 
 Paths resolved at runtime (see Step 5 fallback path for resolution order):
 
-- Instinct YAML files: `<resolved-instincts-dir>/*.instincts.yaml`
+- The one instinct store: `<resolved-instincts-dir>/learned.instincts.yaml`
 - Learned instincts: `<resolved-instincts-dir>/learned.instincts.yaml`
 - User-level default store: `~/.local/share/mcp-context-provider/instincts/`
   (or `$XDG_DATA_HOME/mcp-context-provider/instincts/`)
