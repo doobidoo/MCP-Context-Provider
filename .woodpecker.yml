@@ -1,5 +1,5 @@
 when:
-  event: [push, pull_request, tag]
+  event: [push, pull_request, tag, manual]
 
 steps:
   install:
@@ -25,5 +25,13 @@ steps:
   validate-json:
     image: node:20
     commands:
-      - for f in contexts/*.json; do if [ -f "$f" ]; then echo "Checking: $(basename $f)"; node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))"; fi; done
-      - echo "All JSON files valid"
+      # Block scalar, not a one-liner: the inline form contained `Checking: `,
+      # and YAML read the `: ` as a mapping separator, so the whole pipeline
+      # failed to compile.
+      - |
+        for f in contexts/*.json; do
+          [ -f "$f" ] || continue
+          echo "Checking $(basename "$f")"
+          node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))"
+        done
+        echo "All JSON files valid"

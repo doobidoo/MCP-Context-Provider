@@ -83,7 +83,15 @@ async function cmdList(
   const gitWarning = foreignGitTreeWarning(store.path);
   if (gitWarning) console.error(warn(gitWarning));
 
-  const { entries, skipped } = await registry.listAll();
+  const { entries, skipped, unloadedFiles } = await registry.listAll();
+
+  if (unloadedFiles.length > 0) {
+    console.error(
+      warn(`${unloadedFiles.length} further instinct file(s) in this store are NOT loaded:`),
+    );
+    for (const f of unloadedFiles) console.error(`    - ${f}`);
+    console.error(`  Merge them with: mcp-cp import <file>`);
+  }
 
   if (skipped.length > 0) {
     console.error('');
@@ -225,7 +233,6 @@ async function cmdImport(
 ): Promise<void> {
   try {
     const result = await registry.importFrom(sourcePath, {
-      filename: flags['into'],
       dryRun: 'dry-run' in flags,
     });
 
@@ -273,8 +280,8 @@ function cmdHelp(): void {
   mcp-cp tune <id> [options]                  Tune parameters
   mcp-cp outcome <id> <+|-|~> [note]          Record outcome
   mcp-cp remove <id>                          Delete instinct
-  mcp-cp import <file> [--into <name>]        Merge a YAML file into the store
-                       [--dry-run]            (existing ids are never overwritten)
+  mcp-cp import <file> [--dry-run]            Merge a YAML file into the store
+                                              (existing ids are never overwritten)
   mcp-cp path                                 Show the resolved store path
 
 \x1b[1mTune options:\x1b[0m
@@ -359,7 +366,7 @@ async function main(): Promise<void> {
 
     case 'import':
     case 'merge':
-      if (!id) { console.error(error('Usage: mcp-cp import <file> [--into <name>] [--dry-run]')); process.exitCode = 1; break; }
+      if (!id) { console.error(error('Usage: mcp-cp import <file> [--dry-run]')); process.exitCode = 1; break; }
       await cmdImport(registry, store.path, id, flags);
       break;
 

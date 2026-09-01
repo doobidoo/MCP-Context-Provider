@@ -7,6 +7,7 @@
 
 import { mkdir, readdir } from 'node:fs/promises';
 import { basename, dirname, resolve } from 'node:path';
+import { CANONICAL_INSTINCTS_FILE, isStoreSidecar } from '../config/paths.js';
 import { InstinctLoader, type RepairAction } from '../engine/instinct-loader.js';
 import type { Instinct, InstinctFile, OutcomeEntry } from '../types/instinct.js';
 
@@ -18,11 +19,15 @@ export interface RegistryEntry {
 export interface ListResult {
   entries: RegistryEntry[];
   skipped: Array<{ file: string; error: string }>;
+  /**
+   * Other `*.instincts.yaml` files sitting in the store directory. They are
+   * never read — the canonical file is the one source — but they are named so
+   * they can be merged deliberately with `mcp-cp import`.
+   */
+  unloadedFiles: string[];
 }
 
 export interface ImportOptions {
-  /** Target file inside the store (default "learned.instincts.yaml"). */
-  filename?: string;
   /** Report what would happen without writing anything. */
   dryRun?: boolean;
 }
@@ -58,6 +63,7 @@ export class Registry {
     const entries: RegistryEntry[] = [];
     const skipped: Array<{ file: string; error: string }> = [];
     const files = await this.yamlFiles();
+    const unloadedFiles = await this.unloadedFiles();
 
     for (const file of files) {
       try {
@@ -72,7 +78,7 @@ export class Registry {
       }
     }
 
-    return { entries, skipped };
+    return { entries, skipped, unloadedFiles };
   }
 
   /** Find a specific instinct by ID across all files. */
@@ -224,7 +230,9 @@ export class Registry {
     sourcePath: string,
     options: ImportOptions = {},
   ): Promise<ImportResult> {
-    const filename = options.filename ?? 'learned.instincts.yaml';
+    // Always the canonical file: importing into any other name would produce a
+    // file the engine never reads.
+    const filename = CANONICAL_INSTINCTS_FILE;
     const dryRun = options.dryRun === true;
     const absoluteSource = resolve(sourcePath);
 
@@ -269,10 +277,21 @@ export class Registry {
   // Helpers
   // -------------------------------------------------------------------------
 
+  /** The one file instincts are read from. */
   private async yamlFiles(): Promise<string[]> {
     try {
       const files = await readdir(this.instinctsPath);
-      return files.filter((f) => f.endsWith('.instincts.yaml'));
+      return files.filter((f) => f === CANONICAL_INSTINCTS_FILE);
+    } catch {
+      return [];
+    }
+  }
+
+  /** Other instinct files in the store directory — present but never read. */
+  private async unloadedFiles(): Promise<string[]> {
+    try {
+      const files = await readdir(this.instinctsPath);
+      return files.filter((f) => !isStoreSidecar(f)).sort();
     } catch {
       return [];
     }

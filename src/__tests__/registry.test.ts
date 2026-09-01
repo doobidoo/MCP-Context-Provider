@@ -42,7 +42,7 @@ const sampleFile: InstinctFile = {
 beforeEach(async () => {
   tmpDir = await mkdtemp(join(tmpdir(), 'mcp-cp-test-'));
   await writeFile(
-    join(tmpDir, 'test.instincts.yaml'),
+    join(tmpDir, 'learned.instincts.yaml'),
     stringify(sampleFile),
     'utf-8',
   );
@@ -55,7 +55,7 @@ afterEach(async () => {
 
 describe('Registry', () => {
   describe('listAll', () => {
-    it('lists all instincts from YAML files', async () => {
+    it('lists all instincts from the canonical store file', async () => {
       const { entries, skipped } = await registry.listAll();
       expect(entries).toHaveLength(2);
       expect(skipped).toHaveLength(0);
@@ -69,18 +69,29 @@ describe('Registry', () => {
       expect(skipped).toEqual([]);
     });
 
-    it('reports skipped files with parse errors to skipped array', async () => {
-      // Write an invalid YAML file alongside the valid one
+    it('reports a parse error on the canonical file to the skipped array', async () => {
       await writeFile(
-        join(tmpDir, 'broken.instincts.yaml'),
+        join(tmpDir, 'learned.instincts.yaml'),
         'instincts:\n  bad-entry:\n    rule: "\\.eml$"\n',  // invalid YAML escape in double-quoted scalar
         'utf-8',
       );
       const { entries, skipped } = await registry.listAll();
-      expect(entries).toHaveLength(2);   // valid file still loaded
+      expect(entries).toHaveLength(0);
       expect(skipped).toHaveLength(1);
-      expect(skipped[0]!.file).toBe('broken.instincts.yaml');
+      expect(skipped[0]!.file).toBe('learned.instincts.yaml');
       expect(skipped[0]!.error).toBeTruthy();
+    });
+
+    it('never reads a second instinct file, but names it', async () => {
+      await writeFile(
+        join(tmpDir, 'broken.instincts.yaml'),
+        'instincts:\n  bad-entry:\n    rule: "\\.eml$"\n',
+        'utf-8',
+      );
+      const { entries, skipped, unloadedFiles } = await registry.listAll();
+      expect(entries).toHaveLength(2);          // canonical file still loaded
+      expect(skipped).toHaveLength(0);          // the extra file is not even parsed
+      expect(unloadedFiles).toEqual(['broken.instincts.yaml']);
     });
   });
 
