@@ -22,6 +22,7 @@ import { readFileSync } from 'node:fs';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
+  CANONICAL_INSTINCTS_FILE,
   foreignGitTreeWarning,
   packageRoot,
   resolveContextsPath,
@@ -556,6 +557,19 @@ async function main() {
       for (const action of r.repairs) {
         console.error(`      · ${action.kind}: ${action.detail}`);
       }
+    }
+  }
+
+  if (result.unloadedFiles.length > 0) {
+    console.error(
+      `[mcp-cp] warning: ${result.unloadedFiles.length} further instinct file(s) in the store are NOT loaded:`,
+    );
+    for (const f of result.unloadedFiles) console.error(`    - ${f}`);
+    console.error(
+      `  The store has one source: ${CANONICAL_INSTINCTS_FILE}. Merge the rest with:`,
+    );
+    for (const f of result.unloadedFiles) {
+      console.error(`    mcp-cp import ${join(INSTINCTS.path, f)}`);
     }
   }
 

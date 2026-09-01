@@ -19,6 +19,7 @@ import { HttpMemoryBridge } from '../bridge/http-bridge.js';
 import { InstinctSync, type SyncResult } from '../bridge/sync.js';
 import { ContextLoader, type LoadResult } from './context-loader.js';
 import { ContextMatcher } from './context-matcher.js';
+import { CANONICAL_INSTINCTS_FILE, isStoreSidecar } from '../config/paths.js';
 import { InstinctLoader, type RepairAction } from './instinct-loader.js';
 import { InstinctMatcher } from './instinct-matcher.js';
 
@@ -120,12 +121,20 @@ export class Engine {
   // Lifecycle
   // -------------------------------------------------------------------------
 
-  /** Load all contexts and instincts from disk. */
+  /**
+   * Load contexts and the canonical instinct store from disk.
+   *
+   * Only `CANONICAL_INSTINCTS_FILE` is read. Any other `*.instincts.yaml` in
+   * the store directory is returned in `unloadedFiles` so the caller can say
+   * so out loud — silently merging a second file is how a store stops being
+   * answerable.
+   */
   async initialize(): Promise<{
     contextsLoaded: number;
     instinctsLoaded: number;
     errors: LoadResult['errors'];
     repairs: FileRepair[];
+    unloadedFiles: string[];
   }> {
     // Load contexts
     const contextResult = await this.contextLoader.loadAll();
@@ -133,14 +142,21 @@ export class Engine {
     this.loadErrors = contextResult.errors;
     this.fileRepairs = [];
 
-    // Load instincts (try all .instincts.yaml files)
+    // Load instincts from the one canonical file
     let instinctCount = 0;
+    const unloadedFiles: string[] = [];
     try {
       const { readdir } = await import('node:fs/promises');
       const files = await readdir(this.config.instinctsPath);
-      const yamlFiles = files
-        .filter((f) => f.endsWith('.instincts.yaml'))
-        .filter((f) => !f.endsWith('.bak'));
+
+      for (const f of files) {
+        if (f === CANONICAL_INSTINCTS_FILE) continue;
+        if (isStoreSidecar(f)) continue;
+        unloadedFiles.push(f);
+      }
+      unloadedFiles.sort();
+
+      const yamlFiles = files.filter((f) => f === CANONICAL_INSTINCTS_FILE);
 
       for (const file of yamlFiles) {
         try {
@@ -179,6 +195,7 @@ export class Engine {
       instinctsLoaded: instinctCount,
       errors: this.loadErrors,
       repairs: this.fileRepairs,
+      unloadedFiles,
     };
   }
 

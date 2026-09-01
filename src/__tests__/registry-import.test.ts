@@ -101,7 +101,7 @@ describe('Registry.importFrom', () => {
     expect(found!.instinct.rule).toBe(store.instincts['already-here']!.rule);
   });
 
-  it('skips ids present in any file of the store, not just the target file', async () => {
+  it('ignores ids that live in a non-canonical file — those are not in the store', async () => {
     await writeFile(
       join(storeDir, 'other-store-file.instincts.yaml'),
       stringify({
@@ -131,7 +131,8 @@ describe('Registry.importFrom', () => {
     );
 
     const result = await registry.importFrom(src);
-    expect(result.skipped).toEqual(['elsewhere']);
+    expect(result.added).toEqual(['elsewhere']);
+    expect(result.skipped).toEqual([]);
   });
 
   it('imports legacy top-level array files via loader repair', async () => {
@@ -152,7 +153,7 @@ describe('Registry.importFrom', () => {
     expect(result.repairs.length).toBeGreaterThan(0);
   });
 
-  it('writes into the requested target filename', async () => {
+  it('always writes into the canonical store file', async () => {
     const src = join(sourceDir, 'in.instincts.yaml');
     await writeFile(
       src,
@@ -161,17 +162,18 @@ describe('Registry.importFrom', () => {
         instincts: {
           targeted: instinct(
             'targeted',
-            'Should land in the explicitly requested target file of the store',
+            'Should land in the canonical store file regardless of the source name',
           ),
         },
       }),
       'utf-8',
     );
 
-    await registry.importFrom(src, { filename: 'imported.instincts.yaml' });
-    const raw = await readFile(join(storeDir, 'imported.instincts.yaml'), 'utf-8');
+    const result = await registry.importFrom(src);
+    expect(result.target).toBe('learned.instincts.yaml');
+    const raw = await readFile(join(storeDir, 'learned.instincts.yaml'), 'utf-8');
     const parsed = parse(raw) as InstinctFile;
-    expect(Object.keys(parsed.instincts)).toEqual(['targeted']);
+    expect(Object.keys(parsed.instincts).sort()).toEqual(['already-here', 'targeted']);
   });
 
   it('creates the store file when it does not exist yet', async () => {

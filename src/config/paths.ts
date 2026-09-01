@@ -28,6 +28,25 @@ import { fileURLToPath } from 'node:url';
 
 const PACKAGE_NAME = 'mcp-context-provider';
 
+/**
+ * The one file the engine and the CLI read instincts from.
+ *
+ * The store used to be every `*.instincts.yaml` in the directory, merged
+ * together. That made "which file is an instinct in" unanswerable and let a
+ * second file drift in unnoticed. There is exactly one source now; anything
+ * else in the directory is reported by name and merged deliberately with
+ * `mcp-cp import`.
+ */
+export const CANONICAL_INSTINCTS_FILE = 'learned.instincts.yaml';
+
+/** Files in the store directory that are not stores themselves. */
+export function isStoreSidecar(filename: string): boolean {
+  return (
+    !filename.endsWith('.instincts.yaml') ||
+    filename === CANONICAL_INSTINCTS_FILE
+  );
+}
+
 /** Root of the installed package (one level above src/ or dist/). */
 export const packageRoot = resolve(
   dirname(fileURLToPath(import.meta.url)),

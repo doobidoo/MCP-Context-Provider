@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **The instinct store has exactly one source**: the engine and the CLI read `learned.instincts.yaml` and nothing else. Previously every `*.instincts.yaml` in the store directory was merged together, which made "which file is this instinct in" unanswerable and let a second file drift in unnoticed. Any other instinct file in the directory is now reported by name at startup and by `mcp-cp list`, together with the `mcp-cp import` command that merges it — present and visible, never silently mixed in.
+- **`mcp-cp import` always writes to the canonical file**; the `--into <name>` flag is gone, because importing into any other name produced a file the engine would never read.
+
 ### Fixed
 - **A store that could not be parsed was silently replaced by an empty one**: `InstinctLoader.append()` and the `store_instinct` handler both fell back to `{version, instincts: {}}` on *any* load failure and then saved that over the existing file. One transient parse failure was enough to discard a whole store — a 232-instinct store was wiped down to a single entry this way. Loading now falls back to an empty file only on `ENOENT`; an existing file that cannot be read or parsed raises an error naming the file instead of overwriting it.
 - **Writes are atomic**: `InstinctLoader.save()` writes to a temporary file and renames it into place, so an interrupted or concurrent write can no longer leave a half-written store on disk for the next load to choke on.
