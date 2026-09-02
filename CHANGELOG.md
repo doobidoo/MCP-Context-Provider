@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **A test passed locally and failed in CI**: the durability test for an unreadable store used `chmod 000`, which root ignores. Woodpecker runs the suite as root in a `node:20` container, so the read succeeded there, `append()` did not throw, and the test failed — while passing for any normal user. It now puts a directory where the store file belongs, which fails with `EISDIR` for every uid.
+
 ### Changed
 - **The instinct store has exactly one source**: the engine and the CLI read `learned.instincts.yaml` and nothing else. Previously every `*.instincts.yaml` in the store directory was merged together, which made "which file is this instinct in" unanswerable and let a second file drift in unnoticed. Any other instinct file in the directory is now reported by name at startup and by `mcp-cp list`, together with the `mcp-cp import` command that merges it — present and visible, never silently mixed in.
 - **`mcp-cp import` always writes to the canonical file**; the `--into <name>` flag is gone, because importing into any other name produced a file the engine would never read.

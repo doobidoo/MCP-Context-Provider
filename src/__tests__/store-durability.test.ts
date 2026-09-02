@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { mkdtemp, rm, writeFile, readFile, chmod } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm, stat, writeFile, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { stringify } from 'yaml';
@@ -71,19 +71,19 @@ describe('InstinctLoader.append — never destroys an existing store', () => {
     expect(await readFile(path, 'utf-8')).toBe(corrupt);
   });
 
-  it('throws instead of overwriting when the existing file is unreadable', async () => {
-    const path = join(dir, 'learned.instincts.yaml');
-    const original = stringify({ version: '1.0', instincts: { keep: instinct('keep') } });
-    await writeFile(path, original, 'utf-8');
-    await chmod(path, 0o000);
+  it('throws instead of overwriting when the store path cannot be read', async () => {
+    // A directory where the store file should be: the read fails with EISDIR,
+    // which is not ENOENT, so append() must refuse rather than create a fresh
+    // file. Deliberately not a chmod 000 file — root ignores the mode, and CI
+    // runs as root, so that variant passes locally and fails in the container.
+    await mkdir(join(dir, 'learned.instincts.yaml'));
 
-    try {
-      await expect(loader.append('learned.instincts.yaml', instinct('newcomer'))).rejects.toThrow();
-    } finally {
-      await chmod(path, 0o600);
-    }
+    await expect(
+      loader.append('learned.instincts.yaml', instinct('newcomer')),
+    ).rejects.toThrow(/could not be loaded/);
 
-    expect(await readFile(path, 'utf-8')).toBe(original);
+    // Still a directory — nothing was written over it.
+    expect((await stat(join(dir, 'learned.instincts.yaml'))).isDirectory()).toBe(true);
   });
 });
 
