@@ -7,20 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- **A test passed locally and failed in CI**: the durability test for an unreadable store used `chmod 000`, which root ignores. Woodpecker runs the suite as root in a `node:20` container, so the read succeeded there, `append()` did not throw, and the test failed — while passing for any normal user. It now puts a directory where the store file belongs, which fails with `EISDIR` for every uid.
+## [2.0.0-beta.3] - 2026-09-02
 
 ### Changed
 - **The instinct store has exactly one source**: the engine and the CLI read `learned.instincts.yaml` and nothing else. Previously every `*.instincts.yaml` in the store directory was merged together, which made "which file is this instinct in" unanswerable and let a second file drift in unnoticed. Any other instinct file in the directory is now reported by name at startup and by `mcp-cp list`, together with the `mcp-cp import` command that merges it — present and visible, never silently mixed in.
 - **`mcp-cp import` always writes to the canonical file**; the `--into <name>` flag is gone, because importing into any other name produced a file the engine would never read.
 
 ### Fixed
+- **A test passed locally and failed in CI**: the durability test for an unreadable store used `chmod 000`, which root ignores. Woodpecker runs the suite as root in a `node:20` container, so the read succeeded there, `append()` did not throw, and the test failed — while passing for any normal user. It now puts a directory where the store file belongs, which fails with `EISDIR` for every uid.
 - **A store that could not be parsed was silently replaced by an empty one**: `InstinctLoader.append()` and the `store_instinct` handler both fell back to `{version, instincts: {}}` on *any* load failure and then saved that over the existing file. One transient parse failure was enough to discard a whole store — a 232-instinct store was wiped down to a single entry this way. Loading now falls back to an empty file only on `ENOENT`; an existing file that cannot be read or parsed raises an error naming the file instead of overwriting it.
 - **Writes are atomic**: `InstinctLoader.save()` writes to a temporary file and renames it into place, so an interrupted or concurrent write can no longer leave a half-written store on disk for the next load to choke on.
 - **The whole pipeline failed to compile**: the `validate-json` step's one-liner contained `echo "Checking: $(basename $f)"`, and YAML read the `: ` inside it as a mapping separator, so the command parsed as a map instead of a string. Every run — push and pull request alike — ended as `error` before a single step executed. Rewritten as a block scalar. This had been latent since the step was written; nothing ran it until the repository was enabled at ci.codeberg.org.
 - **The Woodpecker UI's "Run pipeline" button did nothing**: `manual` was missing from the top-level event filter, so a hand-triggered run was skipped in full — the same class of defect as the missing `tag` event, and just as silent. Added.
-
-### Fixed
 - **License metadata contradicted the LICENSE file**: `package.json`, both `.claude-plugin` manifests, `mkdocs.yml` and the README/docs license sections all said MIT, while `LICENSE` has been Apache-2.0 since the initial commit. The LICENSE file is the operative grant, so the metadata was corrected to Apache-2.0. This is not a relicensing — it aligns the metadata with the licence that was always in effect.
 - **Woodpecker never ran on tags**: the top-level `when: event: [push, pull_request]` gated the whole pipeline, so a tag event started nothing and the `release` step's own `when: event: tag` was unreachable. `tag` is now part of the top-level filter, so a release tag runs the same gates as a push.
 - **The `release` step promised more than it did**: it re-ran `npm ci`, `npm run build` and `npm test` — the same gates as the steps above it — and created no release and published no package. Removed. The Codeberg release is created via the Forgejo API by the release manager, and `npm publish` stays manual until a registry token exists as a Woodpecker secret. `CLAUDE.md` and the release-manager agent described the pipeline as "test to build to release" and have been corrected.
