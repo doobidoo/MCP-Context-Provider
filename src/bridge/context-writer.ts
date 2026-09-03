@@ -11,12 +11,16 @@
  * file is left alone unless `force` is set, and forcing keeps a `.bak`.
  *
  * The pulled list is attacker-supplied too, not just each item's file name:
- * a repeated `fileName` within one call is rejected after the first
- * occurrence, so a duplicate can never overwrite the `.bak` that holds the
- * original local content. A `fileName` that is not a string at runtime
- * (regex `.test()` coerces via `String()`, so a crafted object could
- * otherwise slip past it) is rejected before anything touches the path
- * resolver, so one bad item cannot abort the whole batch.
+ * a repeated `fileName` within one call is rejected once an earlier
+ * occurrence of that name has actually been written, so a duplicate can
+ * never overwrite the `.bak` that holds the original local content. A name
+ * is claimed only on success — an earlier occurrence that failed validation
+ * or was skipped for existing-without-force leaves the name unclaimed, so a
+ * later, valid occurrence of the same name is still evaluated normally
+ * rather than silently dropped as a "duplicate". A `fileName` that is not a
+ * string at runtime (regex `.test()` coerces via `String()`, so a crafted
+ * object could otherwise slip past it) is rejected before anything touches
+ * the path resolver, so one bad item cannot abort the whole batch.
  */
 
 import { copyFile, readFile, rename, unlink, writeFile } from 'node:fs/promises';
@@ -75,7 +79,6 @@ export class ContextWriter {
         skip('duplicate file name in this batch');
         continue;
       }
-      handled.add(item.fileName);
 
       if (!item.integrityOk) {
         skip('integrity check failed');
@@ -119,6 +122,7 @@ export class ContextWriter {
         continue;
       }
 
+      handled.add(item.fileName);
       result.written.push(item.fileName);
     }
 

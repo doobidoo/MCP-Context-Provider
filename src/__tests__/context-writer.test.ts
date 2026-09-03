@@ -143,6 +143,27 @@ describe('ContextWriter.write', () => {
     expect(await readFile(join(dir, 'git_context.json.bak'), 'utf-8')).toBe(original);
   });
 
+  it('does not let an earlier failed occurrence of a name suppress a later valid one', async () => {
+    // Regression: marking a name "handled" before the write actually
+    // succeeds meant a malformed or integrity-failing entry ahead of a
+    // genuine update in the same batch would claim the name and cause the
+    // genuine update to be refused as a "duplicate" — silently dropping a
+    // legitimate context by ordering alone.
+    const bad = pulled({ payload: '{"nope":true}' });
+    const good = pulled();
+
+    const result = await writer.write([bad, good]);
+
+    expect(result.written).toEqual(['git_context.json']);
+    expect(result.skipped).toEqual([
+      expect.objectContaining({
+        fileName: 'git_context.json',
+        reason: expect.stringContaining('schema'),
+      }),
+    ]);
+    expect(await readFile(join(dir, 'git_context.json'), 'utf-8')).toBe(good.payload);
+  });
+
   it('does not abort the batch when a fileName is not a string at runtime', async () => {
     // RegExp#test coerces via String(), so a crafted toString() could slip
     // past VALID_CONTEXT_FILENAME and reach path.resolve(), which throws on
