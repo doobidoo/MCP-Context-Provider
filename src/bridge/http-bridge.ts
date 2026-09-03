@@ -68,8 +68,7 @@ export class HttpMemoryBridge implements IMemoryBridge {
       throw new Error(`Failed to store instinct: ${res.status} ${text}`);
     }
 
-    const data = (await res.json()) as { content_hash: string };
-    return data.content_hash;
+    return this.parseStoreResponse(await res.json(), 'instinct');
   }
 
   async storeContext(
@@ -99,8 +98,7 @@ export class HttpMemoryBridge implements IMemoryBridge {
       throw new Error(`Failed to store context: ${res.status} ${text}`);
     }
 
-    const data = (await res.json()) as { content_hash: string };
-    return data.content_hash;
+    return this.parseStoreResponse(await res.json(), 'context');
   }
 
   // -------------------------------------------------------------------------
@@ -213,6 +211,23 @@ export class HttpMemoryBridge implements IMemoryBridge {
   // -------------------------------------------------------------------------
   // Internal
   // -------------------------------------------------------------------------
+
+  /**
+   * Extract a content_hash from a /memories POST response, or throw.
+   *
+   * The service answers a rejected store — e.g. its own semantic-duplicate
+   * detection — with HTTP 200 and `{ success: false, content_hash: null }`,
+   * which `res.ok` alone does not catch. Treat that the same as an HTTP
+   * error so the caller's existing error handling sees it.
+   */
+  private parseStoreResponse(data: unknown, kind: 'instinct' | 'context'): string {
+    const body = data as { success?: boolean; content_hash?: unknown; message?: string };
+    if (body.success === false || typeof body.content_hash !== 'string') {
+      const reason = body.message ?? 'no content_hash in response';
+      throw new Error(`Failed to store ${kind}: ${reason}`);
+    }
+    return body.content_hash;
+  }
 
   /** Build the standard tag set for an instinct memory. */
   private instinctTags(instinctId: string, extraTags: string[]): string[] {

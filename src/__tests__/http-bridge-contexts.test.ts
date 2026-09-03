@@ -37,6 +37,29 @@ describe('HttpMemoryBridge — contexts', () => {
     );
   });
 
+  it('rejects a context store the service reports as a duplicate', async () => {
+    // The service can answer HTTP 200 with success:false — e.g. its own
+    // semantic-duplicate detection — which res.ok alone does not catch.
+    vi.stubGlobal('fetch', () =>
+      Promise.resolve(
+        jsonResponse({
+          success: false,
+          message: 'Duplicate content detected (semantically similar to abc123)',
+          content_hash: null,
+          memory: null,
+        }),
+      ),
+    );
+
+    const bridge = new HttpMemoryBridge({ baseUrl: 'https://memory.test/api' });
+    await expect(
+      bridge.storeContext('git', 'Context git: Git workflow rules', ['portable'], {
+        payload: '{}',
+        file_name: 'git_context.json',
+      }),
+    ).rejects.toThrow(/Duplicate content detected/);
+  });
+
   it('lists contexts filtered by the context marker tag', async () => {
     const urls: string[] = [];
     vi.stubGlobal('fetch', (url: string) => {
@@ -64,6 +87,19 @@ describe('HttpMemoryBridge — contexts', () => {
 
     expect(bodies[0]!['tags']).toEqual(['context-json', 'context:git']);
     expect(bodies[0]!['match_all']).toBe(true);
+  });
+
+  it('rejects an instinct store the service reports as a duplicate', async () => {
+    vi.stubGlobal('fetch', () =>
+      Promise.resolve(
+        jsonResponse({ success: false, message: 'Duplicate content detected', content_hash: null }),
+      ),
+    );
+
+    const bridge = new HttpMemoryBridge({ baseUrl: 'https://memory.test/api' });
+    await expect(
+      bridge.storeInstinct('git-conventional-commits', 'rule text', ['git'], {}),
+    ).rejects.toThrow(/Duplicate content detected/);
   });
 
   it('searchByTags still defaults to the instinct marker', async () => {
