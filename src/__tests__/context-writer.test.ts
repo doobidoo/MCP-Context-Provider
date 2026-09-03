@@ -170,6 +170,7 @@ describe('ContextWriter.write', () => {
     // a non-string argument. That must be caught before it aborts write().
     const bogus = { toString: () => 'git_context.json' };
     const other = pulled({
+      category: 'docs',
       fileName: 'docs_context.json',
       payload:
         JSON.stringify({ ...validContext, tool_category: 'docs' }, null, 2) + '\n',
@@ -197,5 +198,30 @@ describe('ContextWriter.write', () => {
     expect(result.written).toEqual([]);
     expect(result.skipped[0]!.reason).toContain('write failed');
     expect(await readFile(join(dir, 'git_context.json'), 'utf-8')).toBe(original);
+  });
+
+  it('refuses a payload whose tool_category is not the recorded category', async () => {
+    // The engine keys a context by tool_category and injects it as
+    // instructions; the no-overwrite guard is keyed on the file name. A
+    // memory that claims one identity and carries another must not be
+    // written just because its file name is fresh and valid.
+    const result = await writer.write([
+      pulled({
+        category: 'docs',
+        fileName: 'docs_context.json',
+        payload: JSON.stringify({ ...validContext, tool_category: 'git' }),
+      }),
+    ]);
+
+    expect(result.written).toEqual([]);
+    expect(result.skipped[0]!.reason).toContain('tool_category "git"');
+    expect(result.skipped[0]!.reason).toContain('"docs"');
+    await expect(readFile(join(dir, 'docs_context.json'), 'utf-8')).rejects.toThrow();
+  });
+
+  it('writes when the payload category and the recorded category agree', async () => {
+    const result = await writer.write([pulled()]);
+
+    expect(result.written).toEqual(['git_context.json']);
   });
 });

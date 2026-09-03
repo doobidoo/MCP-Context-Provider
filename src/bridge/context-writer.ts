@@ -99,6 +99,21 @@ export class ContextWriter {
         continue;
       }
 
+      // The written file is injected into sessions as instructions, and the
+      // engine keys a context by its `tool_category`, not by its file name.
+      // The no-overwrite guard above is keyed on the file name, so without
+      // this a memory carrying any fresh, valid `file_name` would be written
+      // and then injected under whatever category it declares inside. A
+      // context that claims to be one thing and contains another is not
+      // something to write.
+      const declared = validation.data.tool_category;
+      if (declared !== item.category) {
+        skip(
+          `payload declares tool_category "${declared}" but the memory records category "${item.category}"`,
+        );
+        continue;
+      }
+
       const exists = await readFile(target, 'utf-8').then(
         () => true,
         () => false,

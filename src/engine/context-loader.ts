@@ -56,9 +56,23 @@ export class ContextLoader {
       }),
     );
 
+    // Which file last claimed each tool_category. Two files declaring the
+    // same category collide in the Map above, and the winner is decided by
+    // directory order — silently, until someone wonders why an edit had no
+    // effect. Which one wins is left unchanged; the collision is reported.
+    const claimedBy = new Map<string, string>();
+
     for (const result of results) {
       if (result.status === 'fulfilled') {
         const { file, raw, context } = result.value;
+        const previous = claimedBy.get(context.tool_category);
+        if (previous !== undefined) {
+          errors.push({
+            file,
+            error: `tool_category "${context.tool_category}" is already declared by ${previous}; only one of the two is loaded`,
+          });
+        }
+        claimedBy.set(context.tool_category, file);
         contexts.set(context.tool_category, context);
         files.push({ fileName: file, raw, context });
       } else {

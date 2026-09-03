@@ -68,4 +68,26 @@ describe('ContextLoader.loadAll — file provenance', () => {
     expect(files.map((f) => f.fileName)).toEqual(['git_context.json']);
     expect(contexts.has('secret')).toBe(false);
   });
+
+  it('reports two files that declare the same tool_category', async () => {
+    // Both files are loaded; only one of them ends up in the category map,
+    // and which one is decided by directory order. That has to be loud.
+    await writeFile(join(dir, 'git_context.json'), JSON.stringify(gitContext), 'utf-8');
+    await writeFile(
+      join(dir, 'vcs_context.json'),
+      JSON.stringify({ ...gitContext, description: 'A second git context' }),
+      'utf-8',
+    );
+
+    const { contexts, files, errors } = await new ContextLoader(dir).loadAll();
+
+    expect(files).toHaveLength(2);
+    expect(contexts.size).toBe(1);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]!.error).toMatch(/tool_category "git" is already declared by/);
+    // Both file names appear, so the collision can be resolved by hand.
+    const mentioned = `${errors[0]!.file} ${errors[0]!.error}`;
+    expect(mentioned).toContain('git_context.json');
+    expect(mentioned).toContain('vcs_context.json');
+  });
 });
