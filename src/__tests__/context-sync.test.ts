@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createHash } from 'node:crypto';
-import { ContextSync, asciiEscapedByteLength } from '../bridge/context-sync.js';
+import { ContextSync, asciiEscapedByteLength, MAX_PULL_PAGES } from '../bridge/context-sync.js';
 import { FakeMemoryBridge } from './helpers/fake-memory-bridge.js';
 import type { Context, LoadedContextFile } from '../types/context.js';
 
@@ -358,5 +358,31 @@ describe('ContextSync.pullFromMemory', () => {
     const pulled = await sync.pullFromMemory();
 
     expect(pulled).toEqual([]);
+  });
+
+  it('gives up rather than looping when the service never pages', async () => {
+    // A service that answers every request with a full page would otherwise
+    // spin forever inside an MCP tool call, growing an array.
+    let calls = 0;
+    bridge.listContexts = async (_page = 1, pageSize = 50) => {
+      calls += 1;
+      const memories = Array.from({ length: pageSize }, (_, i) => ({
+        content: `Context loop${i}`,
+        content_hash: `hash-${calls}-${i}`,
+        tags: ['context-json'],
+        memory_type: 'context',
+        metadata: {},
+        created_at: 0,
+        created_at_iso: new Date(0).toISOString(),
+        updated_at: null,
+        updated_at_iso: null,
+      }));
+      return { memories, total: Number.MAX_SAFE_INTEGER };
+    };
+
+    await expect(sync.pullFromMemory()).rejects.toThrow(
+      new RegExp(`${MAX_PULL_PAGES} full pages`),
+    );
+    expect(calls).toBe(MAX_PULL_PAGES);
   });
 });

@@ -64,6 +64,17 @@ export function asciiEscapedByteLength(json: string): number {
   return bytes;
 }
 
+/**
+ * Hard cap on pages `pullFromMemory` will fetch before giving up.
+ *
+ * The loop's only other exit is a short page, so a service that ignores
+ * paging and answers every request with a full page would spin forever,
+ * growing an array, inside an MCP tool call that blocks the session. At the
+ * 50-per-page size the pull uses this allows 1000 contexts — a store holds
+ * tens, so the cap can only be reached by a service that is not paging.
+ */
+export const MAX_PULL_PAGES = 20;
+
 export interface ContextPushResult {
   /** Categories stored. */
   pushed: string[];
@@ -234,6 +245,15 @@ export class ContextSync {
       }
 
       if (memories.length < pageSize) break;
+
+      if (page >= MAX_PULL_PAGES) {
+        // Truncating silently would hand the caller a partial set that looks
+        // complete; the caller writes files from it.
+        throw new Error(
+          `Aborted after ${MAX_PULL_PAGES} full pages of ${pageSize} context memories: the service appears not to be paging`,
+        );
+      }
+
       page += 1;
     }
 
