@@ -127,6 +127,9 @@ export interface ContextMetadata {
 
   /** Author identifier. */
   author?: string;
+
+  /** Opt out of memory-service sync. Absent means sync. */
+  sync?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -223,4 +226,20 @@ export interface ContextMatch {
 
   /** Effective priority (for ordering when multiple contexts match). */
   priority: 'high' | 'medium' | 'low';
+}
+
+// ---------------------------------------------------------------------------
+// Loaded Context File — context paired with its on-disk provenance
+// ---------------------------------------------------------------------------
+
+/** A context together with where it came from on disk. */
+export interface LoadedContextFile {
+  /** Basename of the source file, e.g. "git_context.json". */
+  fileName: string;
+
+  /** The file's exact text, as read. Not a re-serialisation. */
+  raw: string;
+
+  /** The parsed, validated context. */
+  context: Context;
 }
