@@ -125,13 +125,14 @@ export class ContextSync {
     let page = 1;
 
     for (;;) {
-      const { memories, total } = await this.bridge.listContexts(page, pageSize);
+      const { memories } = await this.bridge.listContexts(page, pageSize);
       if (memories.length === 0) break;
 
       for (const memory of memories) {
         const payload = memory.metadata['payload'];
         const fileName = memory.metadata['file_name'];
         if (typeof payload !== 'string' || typeof fileName !== 'string') continue;
+        if (payload === '' || fileName === '') continue;
 
         const category =
           typeof memory.metadata['context_category'] === 'string'
@@ -152,7 +153,7 @@ export class ContextSync {
         });
       }
 
-      if (page * pageSize >= total) break;
+      if (memories.length < pageSize) break;
       page += 1;
     }
 

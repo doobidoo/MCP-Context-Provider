@@ -160,4 +160,43 @@ describe('ContextSync.pullFromMemory', () => {
 
     expect(pulled).toHaveLength(120);
   });
+
+  it('returns every context even when the server under-reports total', async () => {
+    const files = Array.from({ length: 80 }, (_, i) => loaded(`under${i}`));
+    await sync.pushToMemory(files);
+
+    const original = bridge.listContexts.bind(bridge);
+    bridge.listContexts = async (page?: number, pageSize?: number) => {
+      const result = await original(page, pageSize);
+      return { ...result, total: 1 };
+    };
+
+    const pulled = await sync.pullFromMemory();
+
+    expect(pulled).toHaveLength(80);
+  });
+
+  it('returns all contexts when the count is an exact multiple of the page size', async () => {
+    const files = Array.from({ length: 100 }, (_, i) => loaded(`multi${i}`));
+    await sync.pushToMemory(files);
+
+    const pulled = await sync.pullFromMemory();
+
+    expect(pulled).toHaveLength(100);
+  });
+
+  it('ignores a memory whose payload or file_name is an empty string', async () => {
+    await bridge.storeContext('empty-payload', 'Context empty-payload', [], {
+      payload: '',
+      file_name: 'empty_context.json',
+    });
+    await bridge.storeContext('empty-name', 'Context empty-name', [], {
+      payload: 'some text',
+      file_name: '',
+    });
+
+    const pulled = await sync.pullFromMemory();
+
+    expect(pulled).toEqual([]);
+  });
 });
