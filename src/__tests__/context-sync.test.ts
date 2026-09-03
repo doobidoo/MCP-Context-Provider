@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createHash } from 'node:crypto';
-import { ContextSync } from '../bridge/context-sync.js';
+import { ContextSync, asciiEscapedByteLength } from '../bridge/context-sync.js';
 import { FakeMemoryBridge } from './helpers/fake-memory-bridge.js';
 import type { Context, LoadedContextFile } from '../types/context.js';
 
@@ -30,20 +30,27 @@ function loaded(category: string, syncFlag?: boolean): LoadedContextFile {
 }
 
 /**
- * Byte size of the metadata object pushToMemory sends, minus the payload.
- * `content_sha256` is always 64 hex chars and `synced_at` an ISO string of
- * fixed length, so this overhead does not depend on the actual payload
- * content — only on the file name and version, which the caller controls.
+ * Byte size of the wire metadata object pushToMemory measures, minus the
+ * payload -- i.e. including the `context_category` and `source` keys
+ * HttpMemoryBridge.storeContext appends, since those count against the
+ * limit too. `content_sha256` is always 64 hex chars and `synced_at` an
+ * ISO string of fixed length, so this overhead does not depend on the
+ * actual payload content -- only on the category, file name and version,
+ * which the caller controls. Uses the same ASCII-escaped measurement as
+ * the production check so a payload built from this overhead lands exactly
+ * where the test intends, whether the payload is ASCII or not.
  */
-function metadataOverheadBytes(fileName: string, version: string): number {
+function metadataOverheadBytes(category: string, fileName: string, version: string): number {
   const placeholder = {
     payload: '',
     file_name: fileName,
     context_version: version,
     content_sha256: createHash('sha256').update('').digest('hex'),
     synced_at: new Date().toISOString(),
+    context_category: category,
+    source: 'mcp-context-provider',
   };
-  return Buffer.byteLength(JSON.stringify(placeholder), 'utf-8');
+  return asciiEscapedByteLength(JSON.stringify(placeholder));
 }
 
 beforeEach(() => {
@@ -136,7 +143,7 @@ describe('ContextSync.pushToMemory', () => {
   });
 
   it('refuses a context whose metadata would exceed the Cloudflare sync limit and reports the size', async () => {
-    const overhead = metadataOverheadBytes('git_context.json', '1.2.0');
+    const overhead = metadataOverheadBytes('git', 'git_context.json', '1.2.0');
     const file = loaded('git');
     // One byte over the default 9500-byte cap.
     file.raw = 'a'.repeat(9500 - overhead + 1);
@@ -154,7 +161,7 @@ describe('ContextSync.pushToMemory', () => {
   });
 
   it('stores a context whose metadata is one byte under the default limit', async () => {
-    const overhead = metadataOverheadBytes('git_context.json', '1.2.0');
+    const overhead = metadataOverheadBytes('git', 'git_context.json', '1.2.0');
     const file = loaded('git');
     file.raw = 'a'.repeat(9500 - overhead - 1);
 
@@ -166,7 +173,7 @@ describe('ContextSync.pushToMemory', () => {
   });
 
   it('allows a larger context through when maxMetadataBytes is raised', async () => {
-    const overhead = metadataOverheadBytes('git_context.json', '1.2.0');
+    const overhead = metadataOverheadBytes('git', 'git_context.json', '1.2.0');
     const file = loaded('git');
     // Well over the default cap, comfortably under a raised one.
     file.raw = 'a'.repeat(20000 - overhead);
@@ -180,6 +187,95 @@ describe('ContextSync.pushToMemory', () => {
 
     expect(allowed.pushed).toEqual(['git']);
     expect(allowed.errors).toEqual([]);
+  });
+
+  it('refuses a context that is under the limit by raw UTF-8 bytes but over it once escaped', async () => {
+    // An em dash is 3 bytes in UTF-8 but the service escapes it to —,
+    // 6 ASCII bytes. Build a payload that fits under 9500 raw UTF-8 bytes
+    // but goes over once every character is charged at the escaped rate.
+    const overhead = metadataOverheadBytes('git', 'git_context.json', '1.2.0');
+    const file = loaded('git');
+    const emDashCount = 1900; // 1900 * 3 = 5700 raw UTF-8 bytes for the payload alone
+    file.raw = '—'.repeat(emDashCount);
+
+    const utf8MetadataBytes = Buffer.byteLength(
+      JSON.stringify({
+        payload: file.raw,
+        file_name: 'git_context.json',
+        context_version: '1.2.0',
+        content_sha256: createHash('sha256').update(file.raw).digest('hex'),
+        synced_at: new Date().toISOString(),
+        context_category: 'git',
+        source: 'mcp-context-provider',
+      }),
+      'utf-8',
+    );
+    // Confirms the test is actually exercising the gap: under the default
+    // limit by raw UTF-8 byte count...
+    expect(utf8MetadataBytes).toBeLessThan(9500);
+
+    const escapedMetadataBytes = emDashCount * 6 + overhead;
+    // ...but over it once ASCII-escaped, the way the service measures.
+    expect(escapedMetadataBytes).toBeGreaterThan(9500);
+
+    const result = await sync.pushToMemory([file]);
+
+    expect(result.pushed).toEqual([]);
+    expect(result.errors).toEqual([
+      {
+        category: 'git',
+        error: `metadata is ${escapedMetadataBytes} bytes, over the 9500-byte Cloudflare sync limit`,
+      },
+    ]);
+    expect(bridge.records.size).toBe(0);
+  });
+
+  it('refuses a CJK-heavy context under the raw byte limit but over it once escaped', async () => {
+    const overhead = metadataOverheadBytes('git', 'git_context.json', '1.2.0');
+    const file = loaded('git');
+    const charCount = 1900; // 1900 * 3 = 5700 raw UTF-8 bytes, well under 9500
+    file.raw = '中'.repeat(charCount); // CJK, also 3 bytes in UTF-8
+
+    const utf8MetadataBytes = Buffer.byteLength(
+      JSON.stringify({
+        payload: file.raw,
+        file_name: 'git_context.json',
+        context_version: '1.2.0',
+        content_sha256: createHash('sha256').update(file.raw).digest('hex'),
+        synced_at: new Date().toISOString(),
+        context_category: 'git',
+        source: 'mcp-context-provider',
+      }),
+      'utf-8',
+    );
+    expect(utf8MetadataBytes).toBeLessThan(9500);
+
+    const escapedMetadataBytes = charCount * 6 + overhead;
+    expect(escapedMetadataBytes).toBeGreaterThan(9500);
+
+    const result = await sync.pushToMemory([file]);
+
+    expect(result.pushed).toEqual([]);
+    expect(result.errors).toEqual([
+      {
+        category: 'git',
+        error: `metadata is ${escapedMetadataBytes} bytes, over the 9500-byte Cloudflare sync limit`,
+      },
+    ]);
+  });
+});
+
+describe('asciiEscapedByteLength', () => {
+  it('counts an ASCII string as its raw byte length', () => {
+    expect(asciiEscapedByteLength('abc')).toBe(3);
+  });
+
+  it('counts a BMP non-ASCII character as a 6-byte \\uXXXX escape', () => {
+    expect(asciiEscapedByteLength('—')).toBe(6); // em dash
+  });
+
+  it('counts a character outside the BMP as two 6-byte escapes (a surrogate pair)', () => {
+    expect(asciiEscapedByteLength('\u{1F600}')).toBe(12); // grinning face emoji
   });
 });
 

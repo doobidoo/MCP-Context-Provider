@@ -18,17 +18,51 @@ import type { IMemoryBridge } from './types.js';
 export const CONTEXT_MARKER_TAG = 'context-json';
 
 /**
- * Default cap on serialized metadata size, in UTF-8 bytes.
+ * Default cap on serialized metadata size, in the byte count the service
+ * itself computes (see `asciiEscapedByteLength` below).
  *
- * mcp-memory-service's Cloudflare tier enforces a 10KB metadata limit
+ * mcp-memory-service's Cloudflare tier enforces a flat 10KB metadata limit
  * (`CLOUDFLARE_MAX_METADATA_SIZE_KB` in its `config/storage.py`) on the
  * background sync from local storage to the durable tier — not on the
  * initial write. A context over that limit is accepted by the first POST,
  * stored locally, and then silently dropped before it ever reaches
- * Cloudflare. 9500 mirrors the 9.5KB safety margin the service applies to
- * its own limit.
+ * Cloudflare. 9500 is a margin under that flat cap, not a value taken from
+ * the service (the service's own 9.5KB constant belongs to a different
+ * code path, its update sync, and is not what this limit is enforcing).
  */
 export const DEFAULT_MAX_METADATA_BYTES = 9500;
+
+/**
+ * Byte length of `JSON.stringify(value)` under Python's `json.dumps(...,
+ * ensure_ascii=True)` semantics — the encoding mcp-memory-service actually
+ * measures its metadata cap against. Every code point above U+007F is
+ * escaped to a `\uXXXX` sequence (6 ASCII bytes); a code point outside the
+ * BMP is representable in JS only as a UTF-16 surrogate pair, and Python
+ * escapes each half of that pair separately, so it costs two `\uXXXX`
+ * escapes (12 bytes).
+ *
+ * Deliberately not `Buffer.byteLength(json, 'utf-8')`: UTF-8 encodes an em
+ * dash as 3 bytes and most CJK characters as 3, where the service's
+ * ASCII-escaped count is 6 for both — a metadata object that fits under the
+ * limit by raw UTF-8 byte count can still be over the service's real cap
+ * once escaped, which is exactly the silent-drop this check exists to catch.
+ */
+export function asciiEscapedByteLength(json: string): number {
+  let bytes = 0;
+  for (const char of json) {
+    // `for...of` walks a string by code point, so a surrogate pair here is
+    // one iteration and `codePointAt(0)` returns the full scalar value.
+    const codePoint = char.codePointAt(0) ?? 0;
+    if (codePoint <= 0x7f) {
+      bytes += 1;
+    } else if (codePoint <= 0xffff) {
+      bytes += 6;
+    } else {
+      bytes += 12;
+    }
+  }
+  return bytes;
+}
 
 export interface ContextPushResult {
   /** Categories stored. */
@@ -98,7 +132,18 @@ export class ContextSync {
         synced_at: new Date().toISOString(),
       };
 
-      const metadataBytes = Buffer.byteLength(JSON.stringify(metadata), 'utf-8');
+      // What actually goes on the wire: HttpMemoryBridge.storeContext spreads
+      // `metadata` and appends `context_category` and `source` before
+      // serializing (see http-bridge.ts). Both count against the service's
+      // cap, so both must be present in what gets measured here — measuring
+      // only the object above would undercount by those two keys.
+      const wireMetadata = {
+        ...metadata,
+        context_category: category,
+        source: 'mcp-context-provider',
+      };
+
+      const metadataBytes = asciiEscapedByteLength(JSON.stringify(wireMetadata));
       if (metadataBytes > this.maxMetadataBytes) {
         result.errors.push({
           category,
