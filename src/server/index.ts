@@ -251,6 +251,26 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       description: 'Push all local YAML instincts to mcp-memory-service. Requires memory bridge to be configured and connected.',
       inputSchema: { type: 'object' as const, properties: {} },
     },
+    {
+      name: 'sync_contexts',
+      description:
+        'Push all loaded contexts to mcp-memory-service. A context with metadata.sync false is skipped. Requires the memory bridge to be configured and connected.',
+      inputSchema: { type: 'object' as const, properties: {} },
+    },
+    {
+      name: 'restore_contexts',
+      description:
+        'Pull contexts from mcp-memory-service and write them into CONTEXTS_PATH. Existing files are left untouched unless force is true, which keeps a .bak of the previous file.',
+      inputSchema: {
+        type: 'object' as const,
+        properties: {
+          force: {
+            type: 'boolean',
+            description: 'Overwrite existing context files, keeping a .bak (default false)',
+          },
+        },
+      },
+    },
   ],
 }));
 
@@ -508,6 +528,51 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           memory_count: result.memoryCount,
           details: result,
         }, null, 2) }],
+      };
+    }
+
+    case 'sync_contexts': {
+      if (!MEMORY_BRIDGE_URL) {
+        return { content: [{ type: 'text', text: 'Error: MEMORY_BRIDGE_URL not configured' }] };
+      }
+      const connected = await engine.connectMemory();
+      if (!connected) {
+        return { content: [{ type: 'text', text: 'Error: memory bridge not reachable' }] };
+      }
+      const result = await engine.syncContextsToMemory();
+      if (!result) {
+        return { content: [{ type: 'text', text: 'Error: sync failed (bridge not initialized)' }] };
+      }
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          pushed: result.pushed.length,
+          skipped: result.skipped.length,
+          errors: result.errors.length,
+          details: result,
+        }) }],
+      };
+    }
+
+    case 'restore_contexts': {
+      if (!MEMORY_BRIDGE_URL) {
+        return { content: [{ type: 'text', text: 'Error: MEMORY_BRIDGE_URL not configured' }] };
+      }
+      const connected = await engine.connectMemory();
+      if (!connected) {
+        return { content: [{ type: 'text', text: 'Error: memory bridge not reachable' }] };
+      }
+      const force = args?.['force'] === true;
+      const result = await engine.pullContextsFromMemory({ force });
+      if (!result) {
+        return { content: [{ type: 'text', text: 'Error: pull failed (bridge not initialized)' }] };
+      }
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          written: result.written.length,
+          skipped: result.skipped.length,
+          force,
+          details: result,
+        }) }],
       };
     }
 

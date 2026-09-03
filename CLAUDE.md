@@ -12,7 +12,7 @@ Two core concepts:
 Four subsystems:
 
 - **Engine** — loads, matches, and merges contexts + instincts into injection payloads
-- **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport, 6 MCP tools
+- **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport, 8 MCP tools
 - **CLI** (`mcp-cp`) — approval registry for instinct lifecycle management
 - **Memory Bridge** — syncs instincts to mcp-memory-service via HTTP API
 
@@ -41,6 +41,8 @@ src/
     types.ts          IMemoryBridge interface, config, response types
     http-bridge.ts    HTTP implementation (fetch-based, zero deps)
     sync.ts           Bidirectional YAML ↔ Memory sync
+    context-sync.ts   Bidirectional context ↔ Memory sync (push/pull)
+    context-writer.ts Validates and writes pulled contexts to CONTEXTS_PATH
   cli/                Approval Registry CLI (mcp-cp)
     index.ts          CLI entry point + argument parser
     registry.ts       approve/reject/tune/outcome/remove operations
@@ -78,7 +80,7 @@ mcp-cp outcome <id> + "note"         # Record positive outcome
 
 ## MCP Server
 
-The server exposes 6 tools via MCP protocol:
+The server exposes 8 tools via MCP protocol:
 
 | Tool | Description |
 |------|-------------|
@@ -88,6 +90,8 @@ The server exposes 6 tools via MCP protocol:
 | `apply_auto_corrections` | Apply correction patterns to text |
 | `build_injection` | Combined context + instinct injection payload |
 | `list_instincts` | List all instincts with confidence scores + resolved store path |
+| `sync_contexts` | Push all loaded contexts to the memory service |
+| `restore_contexts` | Pull contexts from the memory service into `CONTEXTS_PATH` |
 
 ### Transport Modes
 

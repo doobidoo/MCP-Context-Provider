@@ -130,6 +130,8 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 | `apply_auto_corrections` | Apply correction patterns to text |
 | `build_injection` | Combined context + instinct injection payload |
 | `list_instincts` | List all instincts with confidence scores, plus the resolved store path |
+| `sync_contexts` | Push all loaded contexts to the memory service |
+| `restore_contexts` | Pull contexts from the memory service into `CONTEXTS_PATH` |
 
 ## Environment Variables
 
@@ -182,6 +184,22 @@ The merge always targets the canonical `learned.instincts.yaml`.
 
 Existing ids are never overwritten — a merge only adds. Legacy file shapes
 (top-level array, or `instincts:` as a list) are normalized on read.
+
+## Context Sync
+
+Contexts can be pushed to mcp-memory-service and written back on another
+machine. Requires `MEMORY_BRIDGE_URL`.
+
+- `sync_contexts` — push every loaded context. One memory per context: a
+  one-line summary as the searchable content, the exact file text in
+  `metadata.payload`.
+- `restore_contexts` — pull them and write into `CONTEXTS_PATH`. Files that
+  already exist are left untouched and reported; `force: true` overwrites and
+  keeps a `.bak`.
+
+A context is not pushed if its `metadata.sync` is `false`. Contexts in
+subdirectories of `CONTEXTS_PATH` are never loaded and therefore never pushed
+— that is where private, machine-local contexts belong.
 
 ## Context Files
 

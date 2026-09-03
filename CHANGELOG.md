@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Context sync to the memory service** ([#7](https://codeberg.org/doobidoo/MCP-Context-Provider/issues/7)): `sync_contexts` pushes every loaded context into mcp-memory-service, `restore_contexts` pulls them back and writes them into `CONTEXTS_PATH`. This existed in the v1.8 Python line and was dropped in the TypeScript rewrite. One memory per context: a one-line summary as the searchable content, the exact file text in `metadata.payload` — measured to round-trip byte for byte, where storing the file as memory content does not (the service splits it into overlapping chunks and returns one of them). Existing files are never overwritten without `force`, which keeps a `.bak`. A context opts out with `metadata.sync: false`, and contexts in subdirectories of `CONTEXTS_PATH` are never loaded and so never pushed.
+
+### Fixed
+- **A rejected memory store looked like a success**: the memory service can answer a `/memories` POST with HTTP 200 and `{ success: false, content_hash: null }` — for example when its own semantic-duplicate detection rejects the content — and `HttpMemoryBridge.storeContext`/`storeInstinct` checked only the HTTP status, so `sync_contexts` and `sync_instincts` reported the item as pushed while nothing was stored. Found while verifying `sync_contexts` end to end against the live service: two synthetic contexts with near-identical summaries triggered the service's dedup and one push silently vanished. The response body is now checked for `success` and a string `content_hash`; a rejection now surfaces through the existing per-item `errors` list instead of being counted as pushed.
+
 ## [2.0.0-beta.3] - 2026-09-02
 
 ### Changed
