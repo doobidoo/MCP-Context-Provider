@@ -35,6 +35,19 @@ export function sha256(text: string): string {
   return createHash('sha256').update(text).digest('hex');
 }
 
+export interface PulledContext {
+  /** tool_category the memory was stored under. */
+  category: string;
+  /** File name recorded at push time. Validated before any write. */
+  fileName: string;
+  /** metadata.version of the stored context. */
+  version: string;
+  /** The context file's text. */
+  payload: string;
+  /** Whether the payload still hashes to the stored content_sha256. */
+  integrityOk: boolean;
+}
+
 export class ContextSync {
   constructor(private readonly bridge: IMemoryBridge) {}
 
@@ -100,5 +113,49 @@ export class ContextSync {
     }
 
     return result;
+  }
+
+  /**
+   * Read every context memory. Returns payloads with their recorded file
+   * name and an integrity verdict; writing them is the caller's decision.
+   */
+  async pullFromMemory(): Promise<PulledContext[]> {
+    const pulled: PulledContext[] = [];
+    const pageSize = 50;
+    let page = 1;
+
+    for (;;) {
+      const { memories, total } = await this.bridge.listContexts(page, pageSize);
+      if (memories.length === 0) break;
+
+      for (const memory of memories) {
+        const payload = memory.metadata['payload'];
+        const fileName = memory.metadata['file_name'];
+        if (typeof payload !== 'string' || typeof fileName !== 'string') continue;
+
+        const category =
+          typeof memory.metadata['context_category'] === 'string'
+            ? memory.metadata['context_category']
+            : '';
+        const version =
+          typeof memory.metadata['context_version'] === 'string'
+            ? memory.metadata['context_version']
+            : '';
+        const expected = memory.metadata['content_sha256'];
+
+        pulled.push({
+          category,
+          fileName,
+          version,
+          payload,
+          integrityOk: typeof expected === 'string' && sha256(payload) === expected,
+        });
+      }
+
+      if (page * pageSize >= total) break;
+      page += 1;
+    }
+
+    return pulled;
   }
 }

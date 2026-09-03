@@ -118,3 +118,46 @@ describe('ContextSync.pushToMemory', () => {
     expect(result.errors).toEqual([{ category: 'git', error: 'boom' }]);
   });
 });
+
+describe('ContextSync.pullFromMemory', () => {
+  it('returns the payload byte for byte', async () => {
+    const file = loaded('git');
+    await sync.pushToMemory([file]);
+
+    const pulled = await sync.pullFromMemory();
+
+    expect(pulled).toHaveLength(1);
+    expect(pulled[0]!.category).toBe('git');
+    expect(pulled[0]!.fileName).toBe('git_context.json');
+    expect(pulled[0]!.version).toBe('1.2.0');
+    expect(pulled[0]!.payload).toBe(file.raw);
+    expect(pulled[0]!.integrityOk).toBe(true);
+  });
+
+  it('flags a payload whose stored hash does not match', async () => {
+    await sync.pushToMemory([loaded('git')]);
+    const record = [...bridge.records.values()][0]!;
+    record.metadata['content_sha256'] = 'deadbeef';
+
+    const pulled = await sync.pullFromMemory();
+
+    expect(pulled[0]!.integrityOk).toBe(false);
+  });
+
+  it('ignores memories that carry no payload', async () => {
+    await bridge.storeContext('stray', 'Context stray: no payload', [], {});
+
+    const pulled = await sync.pullFromMemory();
+
+    expect(pulled).toEqual([]);
+  });
+
+  it('pages through more contexts than one page holds', async () => {
+    const files = Array.from({ length: 120 }, (_, i) => loaded(`cat${i}`));
+    await sync.pushToMemory(files);
+
+    const pulled = await sync.pullFromMemory();
+
+    expect(pulled).toHaveLength(120);
+  });
+});
