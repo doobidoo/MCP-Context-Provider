@@ -72,6 +72,37 @@ export class HttpMemoryBridge implements IMemoryBridge {
     return data.content_hash;
   }
 
+  async storeContext(
+    category: string,
+    content: string,
+    tags: string[],
+    metadata: Record<string, unknown>,
+  ): Promise<string> {
+    const body = {
+      content,
+      tags: [this.config.contextTag, `context:${category}`, ...tags],
+      memory_type: 'context',
+      metadata: {
+        ...metadata,
+        context_category: category,
+        source: 'mcp-context-provider',
+      },
+    };
+
+    const res = await this.fetch('/memories', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Failed to store context: ${res.status} ${text}`);
+    }
+
+    const data = (await res.json()) as { content_hash: string };
+    return data.content_hash;
+  }
+
   // -------------------------------------------------------------------------
   // Search
   // -------------------------------------------------------------------------
@@ -102,8 +133,9 @@ export class HttpMemoryBridge implements IMemoryBridge {
   async searchByTags(
     tags: string[],
     matchAll = false,
+    marker: string = this.config.instinctTag,
   ): Promise<MemorySearchResult[]> {
-    const allTags = [this.config.instinctTag, ...tags];
+    const allTags = [marker, ...tags];
 
     const res = await this.fetch('/search/by-tag', {
       method: 'POST',
@@ -124,6 +156,13 @@ export class HttpMemoryBridge implements IMemoryBridge {
   // -------------------------------------------------------------------------
 
   async deleteInstinct(contentHash: string): Promise<boolean> {
+    const res = await this.fetch(`/memories/${contentHash}`, {
+      method: 'DELETE',
+    });
+    return res.ok;
+  }
+
+  async deleteContext(contentHash: string): Promise<boolean> {
     const res = await this.fetch(`/memories/${contentHash}`, {
       method: 'DELETE',
     });
@@ -153,6 +192,22 @@ export class HttpMemoryBridge implements IMemoryBridge {
       total: number;
     };
     return data;
+  }
+
+  async listContexts(
+    page = 1,
+    pageSize = 50,
+  ): Promise<{ memories: MemoryRecord[]; total: number }> {
+    const params = new URLSearchParams({
+      page: String(page),
+      page_size: String(pageSize),
+      tag: this.config.contextTag,
+    });
+
+    const res = await this.fetch(`/memories?${params.toString()}`);
+    if (!res.ok) return { memories: [], total: 0 };
+
+    return (await res.json()) as { memories: MemoryRecord[]; total: number };
   }
 
   // -------------------------------------------------------------------------
