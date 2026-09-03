@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { mkdtemp, rm, readFile, writeFile, readdir } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm, readFile, writeFile, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ContextWriter } from '../bridge/context-writer.js';
@@ -112,5 +112,69 @@ describe('ContextWriter.write', () => {
     await writer.write([pulled()]);
 
     expect(await readdir(dir)).toEqual(['git_context.json']);
+  });
+
+  it('keeps the original .bak when the same fileName appears twice in a force batch', async () => {
+    const original = '{"local":"version"}\n';
+    await writeFile(join(dir, 'git_context.json'), original, 'utf-8');
+
+    const first = pulled();
+    const second = pulled({
+      payload:
+        JSON.stringify(
+          { ...validContext, metadata: { ...validContext.metadata, version: '9.9.9' } },
+          null,
+          2,
+        ) + '\n',
+    });
+
+    const result = await writer.write([first, second], { force: true });
+
+    // The first occurrence is the one that gets written; the repeat is
+    // refused before it can touch the target or its .bak.
+    expect(result.written).toEqual(['git_context.json']);
+    expect(result.skipped).toEqual([
+      { fileName: 'git_context.json', reason: 'duplicate file name in this batch' },
+    ]);
+    expect(await readFile(join(dir, 'git_context.json'), 'utf-8')).toBe(first.payload);
+    // The .bak must still hold the ORIGINAL local content, not the first
+    // item's payload — a second write to the same target would otherwise
+    // clobber the .bak that is supposed to preserve it.
+    expect(await readFile(join(dir, 'git_context.json.bak'), 'utf-8')).toBe(original);
+  });
+
+  it('does not abort the batch when a fileName is not a string at runtime', async () => {
+    // RegExp#test coerces via String(), so a crafted toString() could slip
+    // past VALID_CONTEXT_FILENAME and reach path.resolve(), which throws on
+    // a non-string argument. That must be caught before it aborts write().
+    const bogus = { toString: () => 'git_context.json' };
+    const other = pulled({
+      fileName: 'docs_context.json',
+      payload:
+        JSON.stringify({ ...validContext, tool_category: 'docs' }, null, 2) + '\n',
+    });
+
+    const result = await writer.write([
+      pulled({ fileName: bogus as unknown as string }),
+      other,
+    ]);
+
+    expect(result.written).toEqual(['docs_context.json']);
+    expect(result.skipped).toEqual([{ fileName: bogus, reason: 'invalid file name' }]);
+    expect(await readFile(join(dir, 'docs_context.json'), 'utf-8')).toBe(other.payload);
+  });
+
+  it('reports a .bak copy failure as a skipped item rather than throwing', async () => {
+    const original = '{"local":"version"}\n';
+    await writeFile(join(dir, 'git_context.json'), original, 'utf-8');
+    // Make the .bak target unwritable as a plain file: a directory sitting
+    // where the .bak would go makes copyFile() throw EISDIR.
+    await mkdir(join(dir, 'git_context.json.bak'));
+
+    const result = await writer.write([pulled()], { force: true });
+
+    expect(result.written).toEqual([]);
+    expect(result.skipped[0]!.reason).toContain('write failed');
+    expect(await readFile(join(dir, 'git_context.json'), 'utf-8')).toBe(original);
   });
 });

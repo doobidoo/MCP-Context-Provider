@@ -9,6 +9,14 @@
  *
  * Writes are atomic (temp file, then rename) and never silent: an existing
  * file is left alone unless `force` is set, and forcing keeps a `.bak`.
+ *
+ * The pulled list is attacker-supplied too, not just each item's file name:
+ * a repeated `fileName` within one call is rejected after the first
+ * occurrence, so a duplicate can never overwrite the `.bak` that holds the
+ * original local content. A `fileName` that is not a string at runtime
+ * (regex `.test()` coerces via `String()`, so a crafted object could
+ * otherwise slip past it) is rejected before anything touches the path
+ * resolver, so one bad item cannot abort the whole batch.
  */
 
 import { copyFile, readFile, rename, unlink, writeFile } from 'node:fs/promises';
@@ -35,11 +43,21 @@ export class ContextWriter {
   ): Promise<ContextWriteResult> {
     const result: ContextWriteResult = { written: [], skipped: [] };
     const force = options.force === true;
+    const handled = new Set<string>();
 
     for (const item of pulled) {
       const skip = (reason: string): void => {
         result.skipped.push({ fileName: item.fileName, reason });
       };
+
+      if (typeof item.fileName !== 'string') {
+        // RegExp#test coerces its argument via String(), so a crafted
+        // object could otherwise pass the regex below and reach
+        // path.resolve(), which throws on a non-string and would abort the
+        // whole batch instead of just this item.
+        skip('invalid file name');
+        continue;
+      }
 
       if (!VALID_CONTEXT_FILENAME.test(item.fileName)) {
         skip('invalid file name');
@@ -52,6 +70,12 @@ export class ContextWriter {
         skip('invalid file name');
         continue;
       }
+
+      if (handled.has(item.fileName)) {
+        skip('duplicate file name in this batch');
+        continue;
+      }
+      handled.add(item.fileName);
 
       if (!item.integrityOk) {
         skip('integrity check failed');
@@ -82,12 +106,11 @@ export class ContextWriter {
         continue;
       }
 
-      if (exists) {
-        await copyFile(target, `${target}.bak`);
-      }
-
       const tmp = `${target}.tmp-${process.pid}-${Date.now()}`;
       try {
+        if (exists) {
+          await copyFile(target, `${target}.bak`);
+        }
         await writeFile(tmp, item.payload, 'utf-8');
         await rename(tmp, target);
       } catch (e) {
