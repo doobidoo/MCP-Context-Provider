@@ -29,6 +29,23 @@ function loaded(category: string, syncFlag?: boolean): LoadedContextFile {
   };
 }
 
+/**
+ * Byte size of the metadata object pushToMemory sends, minus the payload.
+ * `content_sha256` is always 64 hex chars and `synced_at` an ISO string of
+ * fixed length, so this overhead does not depend on the actual payload
+ * content — only on the file name and version, which the caller controls.
+ */
+function metadataOverheadBytes(fileName: string, version: string): number {
+  const placeholder = {
+    payload: '',
+    file_name: fileName,
+    context_version: version,
+    content_sha256: createHash('sha256').update('').digest('hex'),
+    synced_at: new Date().toISOString(),
+  };
+  return Buffer.byteLength(JSON.stringify(placeholder), 'utf-8');
+}
+
 beforeEach(() => {
   bridge = new FakeMemoryBridge();
   sync = new ContextSync(bridge);
@@ -116,6 +133,53 @@ describe('ContextSync.pushToMemory', () => {
 
     expect(result.pushed).toEqual(['memory']);
     expect(result.errors).toEqual([{ category: 'git', error: 'boom' }]);
+  });
+
+  it('refuses a context whose metadata would exceed the Cloudflare sync limit and reports the size', async () => {
+    const overhead = metadataOverheadBytes('git_context.json', '1.2.0');
+    const file = loaded('git');
+    // One byte over the default 9500-byte cap.
+    file.raw = 'a'.repeat(9500 - overhead + 1);
+
+    const result = await sync.pushToMemory([file]);
+
+    expect(result.pushed).toEqual([]);
+    expect(result.skipped).toEqual([]);
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0]!.category).toBe('git');
+    expect(result.errors[0]!.error).toBe(
+      `metadata is 9501 bytes, over the 9500-byte Cloudflare sync limit`,
+    );
+    expect(bridge.records.size).toBe(0);
+  });
+
+  it('stores a context whose metadata is one byte under the default limit', async () => {
+    const overhead = metadataOverheadBytes('git_context.json', '1.2.0');
+    const file = loaded('git');
+    file.raw = 'a'.repeat(9500 - overhead - 1);
+
+    const result = await sync.pushToMemory([file]);
+
+    expect(result.pushed).toEqual(['git']);
+    expect(result.errors).toEqual([]);
+    expect(bridge.records.size).toBe(1);
+  });
+
+  it('allows a larger context through when maxMetadataBytes is raised', async () => {
+    const overhead = metadataOverheadBytes('git_context.json', '1.2.0');
+    const file = loaded('git');
+    // Well over the default cap, comfortably under a raised one.
+    file.raw = 'a'.repeat(20000 - overhead);
+
+    const restricted = await sync.pushToMemory([file]);
+    expect(restricted.pushed).toEqual([]);
+    expect(restricted.errors).toHaveLength(1);
+
+    const permissive = new ContextSync(bridge, { maxMetadataBytes: 25000 });
+    const allowed = await permissive.pushToMemory([file]);
+
+    expect(allowed.pushed).toEqual(['git']);
+    expect(allowed.errors).toEqual([]);
   });
 });
 

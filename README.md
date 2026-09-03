@@ -201,6 +201,11 @@ A context is not pushed if its `metadata.sync` is `false`. Contexts in
 subdirectories of `CONTEXTS_PATH` are never loaded and therefore never pushed
 — that is where private, machine-local contexts belong.
 
+A context whose serialized metadata exceeds mcp-memory-service's Cloudflare
+sync limit is refused at push time, with the size and limit named in the
+error, rather than being accepted locally and silently dropped before it
+reaches the durable tier.
+
 ## Context Files
 
 Contexts are JSON files in `contexts/*_context.json`. Each file matches one or more tools via glob patterns and injects static rules.

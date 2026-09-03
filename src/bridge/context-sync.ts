@@ -17,6 +17,19 @@ import type { IMemoryBridge } from './types.js';
 
 export const CONTEXT_MARKER_TAG = 'context-json';
 
+/**
+ * Default cap on serialized metadata size, in UTF-8 bytes.
+ *
+ * mcp-memory-service's Cloudflare tier enforces a 10KB metadata limit
+ * (`CLOUDFLARE_MAX_METADATA_SIZE_KB` in its `config/storage.py`) on the
+ * background sync from local storage to the durable tier — not on the
+ * initial write. A context over that limit is accepted by the first POST,
+ * stored locally, and then silently dropped before it ever reaches
+ * Cloudflare. 9500 mirrors the 9.5KB safety margin the service applies to
+ * its own limit.
+ */
+export const DEFAULT_MAX_METADATA_BYTES = 9500;
+
 export interface ContextPushResult {
   /** Categories stored. */
   pushed: string[];
@@ -49,11 +62,22 @@ export interface PulledContext {
 }
 
 export class ContextSync {
-  constructor(private readonly bridge: IMemoryBridge) {}
+  private readonly maxMetadataBytes: number;
+
+  constructor(
+    private readonly bridge: IMemoryBridge,
+    options: { maxMetadataBytes?: number } = {},
+  ) {
+    this.maxMetadataBytes = options.maxMetadataBytes ?? DEFAULT_MAX_METADATA_BYTES;
+  }
 
   /**
    * Push contexts into the memory service, replacing any earlier copy of the
    * same category. Idempotent: a re-push leaves one memory per context.
+   *
+   * A context whose serialized metadata would exceed `maxMetadataBytes` is
+   * refused before anything is sent — see `DEFAULT_MAX_METADATA_BYTES`. This
+   * class does not chunk oversized metadata; that is a follow-up.
    */
   async pushToMemory(files: LoadedContextFile[]): Promise<ContextPushResult> {
     const result: ContextPushResult = { pushed: [], skipped: [], errors: [] };
@@ -63,6 +87,23 @@ export class ContextSync {
 
       if (file.context.metadata.sync === false) {
         result.skipped.push({ category, reason: 'metadata.sync is false' });
+        continue;
+      }
+
+      const metadata = {
+        payload: file.raw,
+        file_name: file.fileName,
+        context_version: file.context.metadata.version,
+        content_sha256: sha256(file.raw),
+        synced_at: new Date().toISOString(),
+      };
+
+      const metadataBytes = Buffer.byteLength(JSON.stringify(metadata), 'utf-8');
+      if (metadataBytes > this.maxMetadataBytes) {
+        result.errors.push({
+          category,
+          error: `metadata is ${metadataBytes} bytes, over the ${this.maxMetadataBytes}-byte Cloudflare sync limit`,
+        });
         continue;
       }
 
@@ -94,13 +135,7 @@ export class ContextSync {
           category,
           contextSummary(file.context),
           ['portable'],
-          {
-            payload: file.raw,
-            file_name: file.fileName,
-            context_version: file.context.metadata.version,
-            content_sha256: sha256(file.raw),
-            synced_at: new Date().toISOString(),
-          },
+          metadata,
         );
 
         result.pushed.push(category);
