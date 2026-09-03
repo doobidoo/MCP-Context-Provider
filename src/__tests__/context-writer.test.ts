@@ -51,10 +51,35 @@ describe('ContextWriter.write', () => {
     const result = await writer.write([pulled()]);
 
     expect(result.written).toEqual([]);
-    expect(result.skipped).toEqual([
-      { fileName: 'git_context.json', reason: 'file exists (use force to overwrite)' },
-    ]);
+    expect(result.skipped).toHaveLength(1);
+    expect(result.skipped[0]!.fileName).toBe('git_context.json');
+    expect(result.skipped[0]!.reason).toContain('use force to overwrite');
     expect(await readFile(join(dir, 'git_context.json'), 'utf-8')).toBe(original);
+  });
+
+  it('reports both the local and the remote version on a conflict', async () => {
+    await writeFile(
+      join(dir, 'git_context.json'),
+      JSON.stringify({ ...validContext, metadata: { ...validContext.metadata, version: '1.0.0' } }),
+      'utf-8',
+    );
+
+    const result = await writer.write([pulled({ version: '3.4.5' })]);
+
+    expect(result.written).toEqual([]);
+    expect(result.skipped[0]!.reason).toContain('local version 1.0.0');
+    expect(result.skipped[0]!.reason).toContain('remote version 3.4.5');
+  });
+
+  it('still reports a conflict when the local file is not parseable', async () => {
+    // A conflict must stay reportable whatever happens to sit at the path.
+    await writeFile(join(dir, 'git_context.json'), 'not json at all', 'utf-8');
+
+    const result = await writer.write([pulled({ version: '' })]);
+
+    expect(result.written).toEqual([]);
+    expect(result.skipped[0]!.reason).toContain('local version unknown');
+    expect(result.skipped[0]!.reason).toContain('remote version unknown');
   });
 
   it('overwrites with force and keeps a .bak of the previous file', async () => {

@@ -31,6 +31,27 @@ import type { PulledContext } from './context-sync.js';
 /** Context file names this writer accepts. Basename only, lowercase. */
 export const VALID_CONTEXT_FILENAME = /^[a-z0-9][a-z0-9_-]*_context\.json$/;
 
+/** What to call a version that is missing or not a string. */
+function displayVersion(version: unknown): string {
+  return typeof version === 'string' && version !== '' ? version : 'unknown';
+}
+
+/**
+ * `metadata.version` of a context file already on disk, for a conflict
+ * report. The local file is whatever happens to sit there — possibly not
+ * JSON at all — so every failure path lands on "unknown" rather than
+ * throwing: a conflict must still be reportable when the local file is
+ * unreadable.
+ */
+function localVersion(text: string): string {
+  try {
+    const parsed = JSON.parse(text) as { metadata?: { version?: unknown } };
+    return displayVersion(parsed?.metadata?.version);
+  } catch {
+    return 'unknown';
+  }
+}
+
 export interface ContextWriteResult {
   /** File names written. */
   written: string[];
@@ -114,13 +135,18 @@ export class ContextWriter {
         continue;
       }
 
-      const exists = await readFile(target, 'utf-8').then(
-        () => true,
-        () => false,
+      // Keep the text: a conflict has to report the local version, and
+      // reading the file twice would be a second chance to disagree.
+      const existingText = await readFile(target, 'utf-8').then(
+        (text) => text,
+        () => null,
       );
+      const exists = existingText !== null;
 
       if (exists && !force) {
-        skip('file exists (use force to overwrite)');
+        skip(
+          `file exists (local version ${localVersion(existingText)}, remote version ${displayVersion(item.version)}; use force to overwrite)`,
+        );
         continue;
       }
 
