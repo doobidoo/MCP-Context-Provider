@@ -75,6 +75,18 @@ describe('HttpMemoryBridge — contexts', () => {
     expect(urls[0]).toContain('page_size=25');
   });
 
+  it('throws instead of returning an empty page when the list call fails', async () => {
+    // An empty page is how the pull loop recognises "no more contexts", so
+    // swallowing a 500 here would report "nothing to restore" -- or, on a
+    // later page, silently return a partial set.
+    vi.stubGlobal('fetch', () =>
+      Promise.resolve(new Response('upstream exploded', { status: 500 })),
+    );
+
+    const bridge = new HttpMemoryBridge({ baseUrl: 'https://memory.test/api' });
+    await expect(bridge.listContexts()).rejects.toThrow(/500/);
+  });
+
   it('searchByTags uses the given marker instead of the instinct tag', async () => {
     const bodies: Array<Record<string, unknown>> = [];
     vi.stubGlobal('fetch', (_url: string, init?: RequestInit) => {

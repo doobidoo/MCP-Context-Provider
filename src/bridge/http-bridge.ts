@@ -203,7 +203,16 @@ export class HttpMemoryBridge implements IMemoryBridge {
     });
 
     const res = await this.fetch(`/memories?${params.toString()}`);
-    if (!res.ok) return { memories: [], total: 0 };
+
+    // Never an empty page on failure: the pull loop reads an empty page as
+    // "no more contexts", so a 500 on page 1 would report "nothing to
+    // restore" and a 500 on page 3 of 5 would silently return a partial set.
+    // A bridge failure fails the whole operation with its status, the same
+    // way storeContext above does.
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Failed to list contexts: ${res.status} ${text}`);
+    }
 
     return (await res.json()) as { memories: MemoryRecord[]; total: number };
   }

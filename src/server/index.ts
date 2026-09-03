@@ -562,18 +562,24 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return { content: [{ type: 'text', text: 'Error: memory bridge not reachable' }] };
       }
       const force = args?.['force'] === true;
-      const result = await engine.pullContextsFromMemory({ force });
-      if (!result) {
-        return { content: [{ type: 'text', text: 'Error: pull failed (bridge not initialized)' }] };
+      try {
+        // The pull now fails loudly on a bridge error or a runaway pager
+        // rather than returning a partial set, so it can throw here.
+        const result = await engine.pullContextsFromMemory({ force });
+        if (!result) {
+          return { content: [{ type: 'text', text: 'Error: pull failed (bridge not initialized)' }] };
+        }
+        return {
+          content: [{ type: 'text', text: JSON.stringify({
+            written: result.written.length,
+            skipped: result.skipped.length,
+            force,
+            details: result,
+          }) }],
+        };
+      } catch (e) {
+        return { content: [{ type: 'text', text: `Error: ${e instanceof Error ? e.message : String(e)}` }] };
       }
-      return {
-        content: [{ type: 'text', text: JSON.stringify({
-          written: result.written.length,
-          skipped: result.skipped.length,
-          force,
-          details: result,
-        }) }],
-      };
     }
 
     default:
