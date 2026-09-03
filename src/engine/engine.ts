@@ -342,7 +342,35 @@ export class Engine {
   ): Promise<ContextWriteResult | null> {
     if (!this.contextSync || !this.memoryConnected) return null;
     const pulled = await this.contextSync.pullFromMemory();
-    return new ContextWriter(this.config.contextsPath).write(pulled, options);
+    const result = await new ContextWriter(this.config.contextsPath).write(
+      pulled,
+      options,
+    );
+
+    // `initialize()` runs once at startup and nothing watches the contexts
+    // directory, so without this the engine would keep serving — and pushing
+    // back — the file text it read before the restore. A `restore_contexts`
+    // followed by a `sync_contexts` in the same session would then overwrite
+    // the newer remote copy with the older local one, which is the inverse of
+    // what the feature promises.
+    if (result.written.length > 0) {
+      await this.reloadContexts();
+    }
+
+    return result;
+  }
+
+  /**
+   * Re-read the contexts directory into `contexts` and `contextFiles`.
+   *
+   * Deliberately does not touch `loadErrors`: `initialize()` appends
+   * instinct-load errors to the same array, and replacing it wholesale would
+   * drop them from `getLoadErrors()`.
+   */
+  private async reloadContexts(): Promise<void> {
+    const contextResult = await this.contextLoader.loadAll();
+    this.contexts = contextResult.contexts;
+    this.contextFiles = contextResult.files;
   }
 
   /** Discover instincts from memory that match a semantic query. */
