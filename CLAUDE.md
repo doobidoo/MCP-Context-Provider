@@ -12,7 +12,7 @@ Two core concepts:
 Four subsystems:
 
 - **Engine** — loads, matches, and merges contexts + instincts into injection payloads
-- **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport, 8 MCP tools
+- **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport
 - **CLI** (`mcp-cp`) — approval registry for instinct lifecycle management
 - **Memory Bridge** — syncs instincts to mcp-memory-service via HTTP API
 
@@ -80,7 +80,7 @@ mcp-cp outcome <id> + "note"         # Record positive outcome
 
 ## MCP Server
 
-The server exposes 8 tools via MCP protocol:
+The server exposes these tools via MCP protocol (not exhaustive — see `src/server/index.ts` for the full list):
 
 | Tool | Description |
 |------|-------------|
