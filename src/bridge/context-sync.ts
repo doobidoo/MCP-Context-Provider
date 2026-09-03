@@ -59,8 +59,22 @@ export class ContextSync {
           true,
           CONTEXT_MARKER_TAG,
         );
+
+        let deleteFailed = false;
         for (const match of existing) {
-          await this.bridge.deleteContext(match.memory.content_hash);
+          const ok = await this.bridge.deleteContext(match.memory.content_hash);
+          if (!ok) {
+            deleteFailed = true;
+            break;
+          }
+        }
+
+        if (deleteFailed) {
+          result.errors.push({
+            category,
+            error: 'failed to delete existing memory before re-push',
+          });
+          continue;
         }
 
         await this.bridge.storeContext(

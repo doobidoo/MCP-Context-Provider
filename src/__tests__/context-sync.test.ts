@@ -74,6 +74,20 @@ describe('ContextSync.pushToMemory', () => {
     expect(bridge.storeCalls).toBe(2);
   });
 
+  it('does not duplicate when deleting the existing memory fails', async () => {
+    await sync.pushToMemory([loaded('git')]);
+    expect(bridge.records.size).toBe(1);
+
+    bridge.deleteContext = async () => false;
+    const result = await sync.pushToMemory([loaded('git')]);
+
+    expect(result.pushed).toEqual([]);
+    expect(result.errors).toEqual([
+      { category: 'git', error: 'failed to delete existing memory before re-push' },
+    ]);
+    expect(bridge.records.size).toBe(1);
+  });
+
   it('skips a context with metadata.sync false', async () => {
     const result = await sync.pushToMemory([loaded('git', false), loaded('memory')]);
 
