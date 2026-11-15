@@ -14,7 +14,7 @@ Four subsystems:
 - **Engine** — loads, matches, and merges contexts + instincts into injection payloads
 - **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport
 - **CLI** (`mcp-cp`) — approval registry for instinct lifecycle management
-- **Memory Bridge** — syncs instincts to mcp-memory-service via HTTP API
+- **Memory Bridge** — syncs instincts and contexts to mcp-memory-service via HTTP API
 
 ## Project Structure
 
