@@ -7,8 +7,10 @@
  * before anything is written. A `file_name` of "../../.ssh/authorized_keys"
  * must not be a way out of that directory, whatever put it there.
  *
- * Writes are atomic (temp file, then rename) and never silent: an existing
- * file is left alone unless `force` is set, and forcing keeps a `.bak`.
+ * Writes are atomic (temp file, then rename or link) and never silent: an
+ * existing file is left alone unless `force` is set, and forcing keeps a
+ * `.bak`. "Existing" includes a file that cannot be read and a file another
+ * restore created a moment ago; neither is replaced without `force`.
  *
  * The pulled list is attacker-supplied too, not just each item's file name:
  * a repeated `fileName` within one call is rejected once an earlier
@@ -23,8 +25,9 @@
  * the path resolver, so one bad item cannot abort the whole batch.
  */
 
-import { copyFile, readFile, rename, unlink, writeFile } from 'node:fs/promises';
-import { resolve, sep } from 'node:path';
+import { randomUUID } from 'node:crypto';
+import { copyFile, link, mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises';
+import { dirname, resolve, sep } from 'node:path';
 import { ContextSchema } from '../schema/context.schema.js';
 import type { PulledContext } from './context-sync.js';
 
@@ -137,29 +140,57 @@ export class ContextWriter {
 
       // Keep the text: a conflict has to report the local version, and
       // reading the file twice would be a second chance to disagree.
-      const existingText = await readFile(target, 'utf-8').then(
-        (text) => text,
-        () => null,
-      );
+      // Only ENOENT means "not there". Anything else — no permission, a
+      // directory, a symlink loop — is a file this writer cannot see into,
+      // and replacing it would skip both the force check and the .bak.
+      let existingText: string | null;
+      try {
+        existingText = await readFile(target, 'utf-8');
+      } catch (e) {
+        if ((e as NodeJS.ErrnoException).code !== 'ENOENT') {
+          skip(`cannot read existing file: ${e instanceof Error ? e.message : String(e)}`);
+          continue;
+        }
+        existingText = null;
+      }
       const exists = existingText !== null;
 
-      if (exists && !force) {
+      if (existingText !== null && !force) {
         skip(
           `file exists (local version ${localVersion(existingText)}, remote version ${displayVersion(item.version)}; use force to overwrite)`,
         );
         continue;
       }
 
-      const tmp = `${target}.tmp-${process.pid}-${Date.now()}`;
+      // pid plus a timestamp is not unique: two restores in one process
+      // within the same millisecond would share a temp file.
+      const tmp = `${target}.tmp-${randomUUID()}`;
       try {
+        // CONTEXTS_PATH on a new machine may not exist yet.
+        await mkdir(dirname(target), { recursive: true });
         if (exists) {
           await copyFile(target, `${target}.bak`);
         }
         await writeFile(tmp, item.payload, 'utf-8');
-        await rename(tmp, target);
+        if (force) {
+          await rename(tmp, target);
+        } else {
+          // rename() replaces whatever is there, so a file another restore
+          // created since the read above would be overwritten without force.
+          // link() fails with EEXIST instead, atomically.
+          // shortcut: needs hard links; on a filesystem without them (FAT,
+          // some network mounts) an unforced restore reports "write failed".
+          // Fall back to an exclusive open if that ever matters.
+          await link(tmp, target);
+          await unlink(tmp);
+        }
       } catch (e) {
         await unlink(tmp).catch(() => undefined);
-        skip(`write failed: ${e instanceof Error ? e.message : String(e)}`);
+        if ((e as NodeJS.ErrnoException).code === 'EEXIST') {
+          skip('file appeared while restoring; use force to overwrite');
+        } else {
+          skip(`write failed: ${e instanceof Error ? e.message : String(e)}`);
+        }
         continue;
       }
 

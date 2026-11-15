@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { mkdtemp, mkdir, rm, readFile, writeFile, readdir } from 'node:fs/promises';
+import { mkdtemp, mkdir, rm, readFile, writeFile, readdir, symlink, lstat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ContextWriter } from '../bridge/context-writer.js';
@@ -248,5 +248,45 @@ describe('ContextWriter.write', () => {
     const result = await writer.write([pulled()]);
 
     expect(result.written).toEqual(['git_context.json']);
+  });
+
+  // A self-referencing symlink fails to read with ELOOP for every user,
+  // root included, which a chmod-based fixture would not.
+  it('does not replace an existing file it cannot read', async () => {
+    const target = join(dir, 'git_context.json');
+    await symlink('git_context.json', target);
+
+    const result = await writer.write([pulled()]);
+
+    expect(result.written).toEqual([]);
+    expect(result.skipped).toHaveLength(1);
+    expect(result.skipped[0]!.reason).toContain('cannot read existing file');
+    expect((await lstat(target)).isSymbolicLink()).toBe(true);
+  });
+
+  it('creates the contexts directory when it does not exist yet', async () => {
+    const fresh = join(dir, 'new-machine', 'contexts');
+    const p = pulled();
+
+    const result = await new ContextWriter(fresh).write([p]);
+
+    expect(result.written).toEqual(['git_context.json']);
+    expect(await readFile(join(fresh, 'git_context.json'), 'utf-8')).toBe(p.payload);
+  });
+
+  it('lets only one of two overlapping restores write a file that did not exist', async () => {
+    const first = pulled({ payload: JSON.stringify({ ...validContext, description: 'first' }) });
+    const second = pulled({ payload: JSON.stringify({ ...validContext, description: 'second' }) });
+
+    const [a, b] = await Promise.all([
+      new ContextWriter(dir).write([first]),
+      new ContextWriter(dir).write([second]),
+    ]);
+
+    expect([...a.written, ...b.written]).toEqual(['git_context.json']);
+    expect([...a.skipped, ...b.skipped]).toHaveLength(1);
+    const winner = a.written.length === 1 ? first : second;
+    expect(await readFile(join(dir, 'git_context.json'), 'utf-8')).toBe(winner.payload);
+    expect(await readdir(dir)).toEqual(['git_context.json']);
   });
 });
