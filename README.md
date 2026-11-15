@@ -20,14 +20,14 @@ Two core concepts:
 Four subsystems:
 
 - **Engine** — loads, matches, and merges contexts + instincts into injection payloads
-- **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport, 10 MCP tools
+- **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport
 - **CLI** (`mcp-cp`) — approval registry for instinct lifecycle management
 - **Memory Bridge** — optional sync of instincts to mcp-memory-service
 
 ## Quick Start
 
 ```bash
-git clone https://codeberg.org/doobidoo/MCP-Context-Provider.git
+git clone https://github.com/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 npm install
 npm run build
@@ -78,8 +78,8 @@ Add to `~/.mcp.json`:
 Install directly from the marketplace:
 
 ```bash
-/plugin marketplace add codeberg/doobidoo/MCP-Context-Provider
-/plugin install context-provider
+/plugin marketplace add doobidoo/MCP-Context-Provider
+/plugin install context-provider@mcp-context-provider
 ```
 
 This auto-configures the MCP server with correct paths — no manual `.mcp.json` editing needed.
@@ -130,6 +130,11 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 | `apply_auto_corrections` | Apply correction patterns to text |
 | `build_injection` | Combined context + instinct injection payload |
 | `list_instincts` | List all instincts with confidence scores, plus the resolved store path |
+| `store_instinct` | Store a new instinct candidate (inactive until approved) |
+| `approve_instinct` | Approve an instinct for active use (sets `approved_by` to `human`) |
+| `reject_instinct` | Deactivate an instinct and lower its confidence |
+| `record_outcome` | Record a positive, negative, or neutral outcome for an instinct |
+| `sync_instincts` | Push all local instincts to the memory service (requires the memory bridge) |
 
 ## Environment Variables
 
@@ -140,6 +145,7 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 | `MEMORY_BRIDGE_URL` | — | Memory service base URL (enables bridge) |
 | `MEMORY_BRIDGE_API_KEY` | — | API key for memory service |
 | `MCP_SERVER_PORT` | `3100` | HTTP server port (only with `--http`) |
+| `MCP_CP_AUTO_REPAIR` | `1` | Write a repaired instinct file back to disk (a `.bak` is kept). Set to `0` to repair in memory only |
 
 ## Store Location
 
@@ -245,6 +251,7 @@ mcp-cp approve <id>
 mcp-cp reject <id>
 mcp-cp tune <id> --confidence 0.8
 mcp-cp outcome <id> + "worked well"
+mcp-cp remove <id>
 mcp-cp path
 mcp-cp import <file> [--dry-run]
 ```
@@ -287,7 +294,7 @@ repository's `.gitignore` and **review its contents before pushing**.
 
 | | Contexts | Instincts |
 |---|---|---|
-| **Format** | JSON (`*_context.json`) | YAML (`*.instincts.yaml`) |
+| **Format** | JSON (`*_context.json`) | YAML (`learned.instincts.yaml`) |
 | **Source** | Manually authored | Distilled from sessions via `/instill` |
 | **Size** | 200-1000 tokens | 20-80 tokens |
 | **Matching** | Tool-pattern globs | Regex trigger patterns |

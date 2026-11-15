@@ -18,7 +18,7 @@ The MCP Context Provider is a **context and instinct engine** for Claude Desktop
 ## Quick Start
 
 ```bash
-git clone https://codeberg.org/doobidoo/MCP-Context-Provider.git
+git clone https://github.com/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 npm install && npm run build
 npm link   # recommended: makes mcp-cp and mcp-context-provider available globally
@@ -45,14 +45,14 @@ Global installation is recommended - the context provider works across all proje
 
 ## Version
 
-Current release: **v2.0.0-alpha.1**
+v2 is in beta. See the [Changelog](CHANGELOG.md) for the latest release.
 
 ## Architecture
 
 ```
 Session Start
   → Engine loads Contexts (JSON) + Instincts (YAML)
-  → MCP Server exposes 6 tools (stdio or HTTP)
+  → MCP Server exposes its tools (stdio or HTTP)
   → Claude queries tools for context injection
 ```
 
@@ -65,7 +65,12 @@ Session Start
 | `list_available_contexts` | List all loaded contexts |
 | `apply_auto_corrections` | Apply correction patterns to text |
 | `build_injection` | Combined context + instinct injection payload |
-| `list_instincts` | List instincts with confidence scores |
+| `list_instincts` | List instincts with confidence scores, plus the resolved store path |
+| `store_instinct` | Store a new instinct candidate (inactive until approved) |
+| `approve_instinct` | Approve an instinct for active use |
+| `reject_instinct` | Deactivate an instinct and lower its confidence |
+| `record_outcome` | Record a positive, negative, or neutral outcome for an instinct |
+| `sync_instincts` | Push all local instincts to the memory service (requires the memory bridge) |
 
 ## Available Contexts (built-in)
 
@@ -78,8 +83,9 @@ Session Start
 | `general_preferences` | Cross-tool preferences and workflow standards |
 | `applescript` | AppleScript patterns and best practices |
 | `memory` | MCP Memory Service auto-store/retrieve triggers |
-| `n8n` | n8n workflow automation patterns |
 | `mkdocs` | MkDocs Material documentation patterns |
+
+This is a selection. The [Contexts Reference](contexts-reference.md) lists every context file shipped in `contexts/`.
 
 ## The `/instill` Skill
 
@@ -87,11 +93,11 @@ Session Start
 
 **Example:** You keep telling Claude "don't use em-dash". After running `/instill`, it captures this as an instinct that automatically triggers whenever Claude writes text.
 
-Install globally (one-time setup):
+Install globally (one-time setup; the symlink stays current with `git pull`):
 
 ```bash
 mkdir -p ~/.claude/skills/instill
-cp .claude/skills/instill.md ~/.claude/skills/instill/SKILL.md
+ln -s /path/to/MCP-Context-Provider/.claude/skills/instill.md ~/.claude/skills/instill/SKILL.md
 ```
 
 Then use `/instill` in any session. Manage saved instincts with the CLI:
@@ -100,10 +106,11 @@ Then use `/instill` in any session. Manage saved instincts with the CLI:
 mcp-cp list                        # List all instincts with confidence scores
 mcp-cp approve <id>                # Human approval (required for activation)
 mcp-cp tune <id> --confidence 0.8  # Adjust confidence
+mcp-cp path                        # Print the resolved store directory
 ```
 
 See [Installation - The /instill Skill](guides/INSTALLATION.md#the-instill-skill) for details.
 
 ## License
 
-Apache License 2.0 - see [LICENSE](https://codeberg.org/doobidoo/MCP-Context-Provider/src/branch/main/LICENSE)
+Apache License 2.0 - see [LICENSE](https://github.com/doobidoo/MCP-Context-Provider/blob/main/LICENSE)
