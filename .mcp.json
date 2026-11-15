@@ -6,7 +6,7 @@
       "env": {
         "CONTEXTS_PATH": "./contexts",
         "INSTINCTS_PATH": "./instincts",
-        "MEMORY_BRIDGE_URL": "http://127.0.0.1:8001/api"
+        "MEMORY_BRIDGE_URL": "${MEMORY_BRIDGE_URL:-http://127.0.0.1:8000/api}"
       }
     }
   }
