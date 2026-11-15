@@ -878,7 +878,7 @@
 <li><strong>Contexts</strong> (static): Tool-specific rules in JSON, always injected at full confidence</li>
 <li><strong>Instincts</strong> (learned): Compact rules distilled from sessions, confidence-scored, human-approved</li>
 <li><strong>Auto-corrections</strong>: Syntax transformations run automatically (e.g. Markdown to DokuWiki)</li>
-<li><strong>Memory Bridge</strong>: Syncs instincts to mcp-memory-service for persistence across machines</li>
+<li><strong>Memory Bridge</strong>: Syncs instincts and contexts to mcp-memory-service for persistence across machines</li>
 </ul>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/doobidoo/MCP-Context-Provider.git
@@ -961,6 +961,14 @@
 <tr>
 <td><code>sync_instincts</code></td>
 <td>Push all local instincts to the memory service (requires the memory bridge)</td>
+</tr>
+<tr>
+<td><code>sync_contexts</code></td>
+<td>Push all loaded contexts to the memory service</td>
+</tr>
+<tr>
+<td><code>restore_contexts</code></td>
+<td>Pull contexts from the memory service into <code>CONTEXTS_PATH</code></td>
 </tr>
 </tbody>
 </table>
