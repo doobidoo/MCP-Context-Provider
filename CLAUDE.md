@@ -233,7 +233,7 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 | Agent | Purpose |
 |-------|---------|
 | `changelog-archival.md` | Archive old changelog entries when rotating major versions |
-| `codeberg-release-manager.md` | Version bump, changelog update, tag, push, Codeberg release |
+| `codeberg-release-manager.md` | Codeberg-era release flow (Forgejo API). Codeberg is a frozen archive; do not use it for new releases |
 
 ### Directives (`.claude/directives/`)
 
@@ -246,8 +246,13 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 1. Use the **Release Manager agent** — never bump versions manually
 2. Version lives in two files: `package.json` and `VERSION` (must always match)
 3. Releases happen on `main` branch, tagged `vX.Y.Z[-pre.N]`
-4. Tag push runs `.woodpecker.yml` — lint, build, test, JSON validation. It is a
-   gate, not a publisher: it creates no release object and publishes no package.
-   The Codeberg release is created by the release manager via the Forgejo API,
-   and `npm publish` to `npm.codeberg.org` is manual.
-5. Current phase: **beta** (v2.0.0-beta.2) — see directive for phase progression
+4. GitHub is primary. A push or PR to `main` runs `.github/workflows/ci.yml`
+   (lint, build, test, JSON validation of `contexts/*.json`, secret scan). A
+   `v*` tag push runs `.github/workflows/release.yml`: lint, build and test
+   again, then `gh release create` with generated notes, marked
+   pre-release for `-alpha`, `-beta` and `-rc` tags. The npm publish job in that
+   workflow is commented out, so no package is published.
+5. Docs deploy to GitHub Pages via `.github/workflows/docs.yml` on changes to
+   `docs/**` or `mkdocs.yml` on `main`.
+6. Current phase: **beta** — see `CHANGELOG.md` for the latest release and the
+   directive for phase progression
