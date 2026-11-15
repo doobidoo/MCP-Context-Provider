@@ -77,6 +77,7 @@ export interface IMemoryBridge {
   /**
    * Search memories by tags. `marker` is the leading tag that scopes the
    * search; it defaults to the instinct tag so existing callers are unchanged.
+   * Throws when the search call fails.
    */
   searchByTags(tags: string[], matchAll?: boolean, marker?: string): Promise<MemorySearchResult[]>;
 
@@ -87,6 +88,14 @@ export interface IMemoryBridge {
     tags: string[],
     metadata: Record<string, unknown>,
   ): Promise<string>;
+
+  /**
+   * Find the stored memories of one context category, under the same tag
+   * storeContext and listContexts use. Throws when the lookup fails: a push
+   * deletes what this returns before it stores, so "no matches" must mean
+   * there are none.
+   */
+  findContexts(category: string): Promise<MemorySearchResult[]>;
 
   /** Get all stored context memories. */
   listContexts(page?: number, pageSize?: number): Promise<{ memories: MemoryRecord[]; total: number }>;

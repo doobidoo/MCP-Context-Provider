@@ -13,9 +13,8 @@
 
 import { createHash } from 'node:crypto';
 import type { Context, LoadedContextFile } from '../types/context.js';
+import { VALID_CONTEXT_FILENAME } from './context-writer.js';
 import type { IMemoryBridge } from './types.js';
-
-export const CONTEXT_MARKER_TAG = 'context-json';
 
 /**
  * Default cap on serialized metadata size, in the byte count the service
@@ -135,6 +134,17 @@ export class ContextSync {
         continue;
       }
 
+      // The loader takes any *_context.json, the writer only what
+      // VALID_CONTEXT_FILENAME allows. Pushing a name the writer refuses
+      // would report a backup that can never be written back.
+      if (!VALID_CONTEXT_FILENAME.test(file.fileName)) {
+        result.errors.push({
+          category,
+          error: `file name "${file.fileName}" could not be restored: use lowercase letters, digits, "_" and "-" before "_context.json"`,
+        });
+        continue;
+      }
+
       const metadata = {
         payload: file.raw,
         file_name: file.fileName,
@@ -164,11 +174,7 @@ export class ContextSync {
       }
 
       try {
-        const existing = await this.bridge.searchByTags(
-          [`context:${category}`],
-          true,
-          CONTEXT_MARKER_TAG,
-        );
+        const existing = await this.bridge.findContexts(category);
 
         let deleteFailed = false;
         for (const match of existing) {

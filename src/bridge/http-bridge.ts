@@ -158,10 +158,20 @@ export class HttpMemoryBridge implements IMemoryBridge {
       }),
     });
 
-    if (!res.ok) return [];
+    // Never an empty list on failure: both push paths delete what this
+    // returns and then store. Read as "nothing to replace", a failed search
+    // lets the store go through and leaves the old copy behind.
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Failed to search by tags: ${res.status} ${text}`);
+    }
 
     const data = (await res.json()) as { results: MemorySearchResult[] };
     return data.results;
+  }
+
+  async findContexts(category: string): Promise<MemorySearchResult[]> {
+    return this.searchByTags([`context:${category}`], true, this.config.contextTag);
   }
 
   // -------------------------------------------------------------------------

@@ -142,6 +142,38 @@ describe('ContextSync.pushToMemory', () => {
     expect(result.errors).toEqual([{ category: 'git', error: 'boom' }]);
   });
 
+  it('stores nothing when the lookup for the copy to replace fails', async () => {
+    bridge.findContexts = async () => {
+      throw new Error('Failed to search by tags: 500');
+    };
+
+    const result = await sync.pushToMemory([loaded('git')]);
+
+    expect(result.pushed).toEqual([]);
+    expect(result.errors).toEqual([
+      { category: 'git', error: 'Failed to search by tags: 500' },
+    ]);
+    expect(bridge.storeCalls).toBe(0);
+  });
+
+  // The loader accepts any *_context.json; restore only writes lowercase
+  // basenames. A pushed copy that can never be written back is not a backup.
+  it('refuses to push a context whose file name a restore would reject', async () => {
+    const file = loaded('git');
+    file.fileName = 'MyProject_context.json';
+
+    const result = await sync.pushToMemory([file]);
+
+    expect(result.pushed).toEqual([]);
+    expect(result.errors).toEqual([
+      {
+        category: 'git',
+        error: 'file name "MyProject_context.json" could not be restored: use lowercase letters, digits, "_" and "-" before "_context.json"',
+      },
+    ]);
+    expect(bridge.storeCalls).toBe(0);
+  });
+
   it('refuses a context whose metadata would exceed the Cloudflare sync limit and reports the size', async () => {
     const overhead = metadataOverheadBytes('git', 'git_context.json', '1.2.0');
     const file = loaded('git');

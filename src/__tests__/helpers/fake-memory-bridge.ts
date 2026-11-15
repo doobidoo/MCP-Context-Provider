@@ -84,6 +84,10 @@ export class FakeMemoryBridge implements IMemoryBridge {
     }));
   }
 
+  async findContexts(category: string): Promise<MemorySearchResult[]> {
+    return this.searchByTags([`context:${category}`], true, 'context-json');
+  }
+
   async deleteInstinct(contentHash: string): Promise<boolean> {
     return this.records.delete(contentHash);
   }

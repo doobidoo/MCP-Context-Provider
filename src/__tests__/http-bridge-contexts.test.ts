@@ -143,4 +143,38 @@ describe('HttpMemoryBridge — contexts', () => {
 
     expect(bodies[0]!['tags']).toEqual(['instinct', 'instinct-id:foo']);
   });
+
+  // A push looks up the copy it is about to replace. An empty answer on a
+  // failed lookup reads as "nothing to replace": the store then goes through
+  // and the old copy stays behind next to the new one.
+  it('searchByTags throws instead of reporting no matches when the search fails', async () => {
+    vi.stubGlobal('fetch', () =>
+      Promise.resolve(new Response('upstream exploded', { status: 500 })),
+    );
+
+    const bridge = new HttpMemoryBridge({ baseUrl: 'https://memory.test/api' });
+
+    await expect(bridge.searchByTags(['instinct-id:foo'], true)).rejects.toThrow(
+      'Failed to search by tags: 500',
+    );
+  });
+
+  // storeContext and listContexts use the configured context tag. A lookup
+  // with any other marker misses what they stored.
+  it('findContexts looks a category up under the configured context tag', async () => {
+    const bodies: Array<Record<string, unknown>> = [];
+    vi.stubGlobal('fetch', (_url: string, init?: RequestInit) => {
+      bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+      return Promise.resolve(jsonResponse({ results: [] }));
+    });
+
+    const bridge = new HttpMemoryBridge({
+      baseUrl: 'https://memory.test/api',
+      contextTag: 'team-contexts',
+    });
+    await bridge.findContexts('git');
+
+    expect(bodies[0]!['tags']).toEqual(['team-contexts', 'context:git']);
+    expect(bodies[0]!['match_all']).toBe(true);
+  });
 });
