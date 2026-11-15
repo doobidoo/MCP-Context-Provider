@@ -13,6 +13,19 @@ import type {
 } from './types.js';
 import { DEFAULT_BRIDGE_CONFIG } from './types.js';
 
+/**
+ * Sent with every store. A push replaces a memory by deleting it and storing
+ * the same content again, and the service hashes content only — so the POST
+ * collides with the delete it just recorded. Since mcp-memory-service 12.4.0
+ * that is refused with 409 unless the client asks for the re-create; without
+ * this flag a second push of unchanged content deletes the remote copy and
+ * then fails to put it back. Older services ignore the field.
+ *
+ * The cost: content deleted on the service side comes back on the next push.
+ * That is what a push means — the local files are the source.
+ */
+const RESTORE_DELETED = true;
+
 export class HttpMemoryBridge implements IMemoryBridge {
   private readonly config: MemoryBridgeConfig;
 
@@ -51,6 +64,7 @@ export class HttpMemoryBridge implements IMemoryBridge {
       content,
       tags: allTags,
       memory_type: 'instinct',
+      restore_deleted: RESTORE_DELETED,
       metadata: {
         ...metadata,
         instinct_id: instinctId,
@@ -81,6 +95,7 @@ export class HttpMemoryBridge implements IMemoryBridge {
       content,
       tags: [this.config.contextTag, `context:${category}`, ...tags],
       memory_type: 'context',
+      restore_deleted: RESTORE_DELETED,
       metadata: {
         ...metadata,
         context_category: category,

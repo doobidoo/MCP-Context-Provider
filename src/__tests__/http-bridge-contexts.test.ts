@@ -101,6 +101,23 @@ describe('HttpMemoryBridge — contexts', () => {
     expect(bodies[0]!['match_all']).toBe(true);
   });
 
+  // A push deletes the old copy and stores the same content again. The service
+  // hashes content only, so that POST matches its own delete record and is
+  // refused with 409 unless the client asks for the re-create (service #1560).
+  it('asks the service to re-create deleted content on every store', async () => {
+    const bodies: Array<Record<string, unknown>> = [];
+    vi.stubGlobal('fetch', (_url: string, init?: RequestInit) => {
+      bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+      return Promise.resolve(jsonResponse({ content_hash: 'abc123' }));
+    });
+
+    const bridge = new HttpMemoryBridge({ baseUrl: 'https://memory.test/api' });
+    await bridge.storeContext('git', 'Context git: Git workflow rules', [], {});
+    await bridge.storeInstinct('git-conventional-commits', 'rule text', ['git'], {});
+
+    expect(bodies.map((b) => b['restore_deleted'])).toEqual([true, true]);
+  });
+
   it('rejects an instinct store the service reports as a duplicate', async () => {
     vi.stubGlobal('fetch', () =>
       Promise.resolve(
