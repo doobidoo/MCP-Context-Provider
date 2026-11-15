@@ -31,9 +31,6 @@
     "claude-code"
   ],
   "author": "doobidoo",
-  "publishConfig": {
-    "registry": "https://npm.codeberg.org"
-  },
   "license": "Apache-2.0",
   "engines": {
     "node": ">=20"

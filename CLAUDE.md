@@ -233,7 +233,6 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 | Agent | Purpose |
 |-------|---------|
 | `changelog-archival.md` | Archive old changelog entries when rotating major versions |
-| `codeberg-release-manager.md` | Codeberg-era release flow (Forgejo API). Codeberg is a frozen archive; do not use it for new releases |
 
 ### Directives (`.claude/directives/`)
 
@@ -243,7 +242,11 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 
 ### Release Workflow
 
-1. Use the **Release Manager agent** — never bump versions manually
+1. Never bump a version outside a release. There is no release agent for this
+   repository on GitHub yet: the Codeberg one is archived under
+   `archive/codeberg-release-manager.md`, and the global `github-release-manager`
+   is written for mcp-memory-service (Python version files, PyPI, Docker). A
+   release follows `.claude/directives/version-management.md` by hand
 2. Version lives in two files: `package.json` and `VERSION` (must always match)
 3. Releases happen on `main` branch, tagged `vX.Y.Z[-pre.N]`
 4. GitHub is primary. A push or PR to `main` runs `.github/workflows/ci.yml`
