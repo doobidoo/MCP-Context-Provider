@@ -3,9 +3,9 @@
   "description": "MCP context & instinct engine — learned rules from sessions with confidence scoring",
   "owner": {
     "name": "doobidoo",
-    "email": "doobidoo@noreply.codeberg.org"
+    "email": "5000709+doobidoo@users.noreply.github.com"
   },
-  "homepage": "https://codeberg.org/doobidoo/MCP-Context-Provider",
+  "homepage": "https://github.com/doobidoo/MCP-Context-Provider",
   "plugins": [
     {
       "name": "context-provider",
@@ -15,8 +15,8 @@
       "author": {
         "name": "doobidoo"
       },
-    "homepage": "https://codeberg.org/doobidoo/MCP-Context-Provider",
-    "repository": "https://codeberg.org/doobidoo/MCP-Context-Provider",
+    "homepage": "https://github.com/doobidoo/MCP-Context-Provider",
+    "repository": "https://github.com/doobidoo/MCP-Context-Provider",
       "license": "Apache-2.0",
       "keywords": [
         "mcp",

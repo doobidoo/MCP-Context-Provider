@@ -8,7 +8,7 @@
 ## Install & Build
 
 ```bash
-git clone https://codeberg.org/doobidoo/MCP-Context-Provider.git
+git clone https://github.com/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 npm install
 npm run build
@@ -17,7 +17,7 @@ npm run build
 Verify:
 
 ```bash
-npm test          # 61 tests should pass
+npm test          # all tests should pass
 npm start         # Should print "Engine loaded: N contexts, N instincts"
 ```
 
@@ -130,7 +130,7 @@ If you only want the context provider in a specific project, add a `.mcp.json` t
 **Reply with:** a (accept all) | 1,2 (accept specific) | e1 (edit) | r (reject all)
 ```
 
-4. **Saves accepted instincts** to `instincts/learned.instincts.yaml`
+4. **Saves accepted instincts** to `learned.instincts.yaml` in the resolved store (`mcp-cp path` prints it)
 5. Instincts are automatically injected in future sessions when their trigger patterns match
 
 ### Install globally
@@ -139,8 +139,10 @@ The skill must be installed as a **global Claude Code skill** to work across all
 
 ```bash
 mkdir -p ~/.claude/skills/instill
-cp .claude/skills/instill.md ~/.claude/skills/instill/SKILL.md
+ln -s /path/to/MCP-Context-Provider/.claude/skills/instill.md ~/.claude/skills/instill/SKILL.md
 ```
+
+The symlink keeps the skill current with `git pull`.
 
 !!! note "Skill directory structure"
     Global skills require the path `~/.claude/skills/<name>/SKILL.md` — a flat file like `~/.claude/skills/instill.md` will **not** be recognized.
@@ -158,6 +160,9 @@ mcp-cp approve <id>                  # Human approval (required for activation)
 mcp-cp reject <id>                   # Deactivate an instinct
 mcp-cp tune <id> --confidence 0.8    # Adjust confidence score
 mcp-cp outcome <id> + "worked well"  # Record positive outcome
+mcp-cp remove <id>                   # Delete an instinct
+mcp-cp path                          # Print the resolved store directory
+mcp-cp import <file> [--dry-run]     # Merge another instinct file into the store
 ```
 
 ## Optional: HTTP Transport
@@ -181,7 +186,7 @@ The HTTP server exposes:
 
 ## Optional: Memory Bridge
 
-Connect to [mcp-memory-service](https://codeberg.org/doobidoo/mcp-memory-service) for instinct persistence across machines:
+Connect to [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) for instinct persistence across machines:
 
 ```json
 {
@@ -196,11 +201,14 @@ Connect to [mcp-memory-service](https://codeberg.org/doobidoo/mcp-memory-service
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `CONTEXTS_PATH` | `./contexts` | Path to `*_context.json` files |
-| `INSTINCTS_PATH` | `./instincts` | Path to `*.instincts.yaml` files |
+| `CONTEXTS_PATH` | packaged `contexts/` | Path to `*_context.json` files |
+| `INSTINCTS_PATH` | `~/.local/share/mcp-context-provider/instincts` | Directory holding `learned.instincts.yaml` |
 | `MEMORY_BRIDGE_URL` | (none) | Memory service base URL (enables bridge) |
 | `MEMORY_BRIDGE_API_KEY` | (none) | API key for memory service |
 | `MCP_SERVER_PORT` | `3100` | HTTP server port (only with `--http`) |
+| `MCP_CP_AUTO_REPAIR` | `1` | Write a repaired instinct file back to disk (a `.bak` is kept). Set to `0` to repair in memory only |
+
+Both paths are optional overrides. Without `INSTINCTS_PATH` the store resolves to `./instincts` only inside an `mcp-context-provider` checkout, then `$XDG_DATA_HOME/mcp-context-provider/instincts`, then the default above. If you set them, use absolute paths.
 
 ## Migration from v1.x
 
@@ -212,7 +220,7 @@ v2.0 is a complete rewrite from Python to TypeScript. Key changes:
 | `CONTEXT_CONFIG_DIR` | `CONTEXTS_PATH` |
 | `AUTO_LOAD_CONTEXTS` | Always auto-loads |
 | DXT packaging | npm install |
-| 4 MCP tools | 6 MCP tools |
+| 4 MCP tools | Context tools plus instinct lifecycle tools |
 | No instincts | Instinct engine with confidence scoring |
 | stdio only | stdio + HTTP transport |
 

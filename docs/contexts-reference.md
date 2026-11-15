@@ -12,12 +12,19 @@ All built-in contexts are stored as JSON files in the `contexts/` directory. Eac
 | `git_context.json` | `git` | Conventional commits and branch naming |
 | `general_preferences_context.json` | `general_preferences` | Cross-tool preferences and standards |
 | `memory_context.json` | `memory` | MCP Memory Service auto-store/retrieve |
-| `python_mcp_memory_context.json` | `python-mcp-memory` | MCP Memory Service development patterns |
+| `python_mcp_memory_context.json` | `python` | MCP Memory Service development patterns |
 | `shodh_memory_context.json` | `memory` | SHODH episodic memory management |
 | `applescript_context.json` | `applescript` | AppleScript patterns |
-| `n8n_context.json` | `n8n` | n8n workflow automation |
-| `ios_shortcuts_context.json` | `ios_shortcuts` | iOS Shortcuts integration |
-| `response_shortcodes_context.json` | `response_shortcodes` | G/I Cycle shortcodes (`/GRADE`, `/I`) |
+| `ios_shortcuts_context.json` | `ios-shortcuts` | iOS Shortcuts integration |
+| `response_shortcodes_context.json` | `communication` | G/I Cycle shortcodes (`/GRADE`, `/I`) |
+| `anti_ai_voice_context.json` | `writing` | Rewrites AI-sounding text into a plain human voice (English and German) |
+| `date_awareness_context.json` | `date_awareness` | Temporal accuracy, prevents date-related errors |
+| `manageengine_solutions_context.json` | `manageengine_solutions` | ManageEngine solutions database queries |
+| `mkdocs_context.json` | `mkdocs` | MkDocs Material documentation patterns |
+| `outlook_assistant_context.json` | `outlook` | Outlook Assistant authentication and workflows |
+| `veritas-kanban_context.json` | `task-management` | Veritas Kanban task management |
+
+The Category column is the `tool_category` each file declares. Two files declare `memory`; the engine keys contexts by category, so only one of them is active at a time.
 
 ---
 
@@ -30,7 +37,7 @@ The Context Provider ships with three memory-related contexts covering different
 ### `memory_context.json` – MCP Memory Auto-Trigger
 
 **Category**: `memory`  
-**Purpose**: Proactive storage and retrieval rules for the [MCP Memory Service](https://codeberg.org/doobidoo/mcp-memory-service). Defines when Claude should automatically store memories and when to proactively retrieve them based on conversation patterns.
+**Purpose**: Proactive storage and retrieval rules for the [MCP Memory Service](https://github.com/doobidoo/mcp-memory-service). Defines when Claude should automatically store memories and when to proactively retrieve them based on conversation patterns.
 
 **Session Initialization**: On startup, loads recent activity (last 24h) and retrieves any open tasks tagged `in-progress`, `active`, or `follow-up`.
 
@@ -58,7 +65,7 @@ The Context Provider ships with three memory-related contexts covering different
 ### `python_mcp_memory_context.json` – MCP Memory Service Development
 
 **Category**: `python-mcp-memory`  
-**Purpose**: Specialized context for **developing and extending the MCP Memory Service itself**. Provides FastAPI patterns, MCP protocol conventions, storage backend configurations, and Cloudflare integration rules. Activate this when working on the [mcp-memory-service](https://codeberg.org/doobidoo/mcp-memory-service) codebase.
+**Purpose**: Specialized context for **developing and extending the MCP Memory Service itself**. Provides FastAPI patterns, MCP protocol conventions, storage backend configurations, and Cloudflare integration rules. Activate this when working on the [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) codebase.
 
 **Session Initialization**: Loads last 7 days of MCP Memory Service development activity, retrieves architecture and backend config context, and surfaces any open `mcp-memory-service` tasks.
 
@@ -124,8 +131,7 @@ async def handle_store_memory(arguments: dict) -> list[TextContent]:
 ## Other Built-in Contexts
 
 ### `dokuwiki_context.json`
-Handles automatic Markdown → DokuWiki syntax conversion. Converts headers (`# Title` → `====== Title ======`), code blocks (`` ``` `` → `<code>`), links, tables, and note blocks. See [Examples](EXAMPLES.md) for detailed conversion examples.
-
+Handles automatic Markdown → DokuWiki syntax conversion. Converts headers (`# Title` → `====== Title ======`), code blocks (`` ``` `` → `<code>`), links, tables, and note blocks.
 ### `azure_context.json`
 Enforces Azure resource naming conventions, required tags (Environment, Owner, CostCenter), security defaults (TLS 1.2, HTTPS-only), and location normalization (`West Europe` → `westeurope`).
 
@@ -172,4 +178,4 @@ Create a new file `contexts/{toolname}_context.json` following the structure bel
 }
 ```
 
-See the [Developer Guide](guides/DEVELOPER_GUIDE.md) for full field documentation.
+The authoritative field list is the Zod schema in `src/schema/context.schema.ts`.

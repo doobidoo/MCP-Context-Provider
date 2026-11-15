@@ -39,10 +39,12 @@ Follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/):
 
 ## Release Process
 
-- Releases happen on the **main branch** (no release branches)
+- Releases are cut from the **main branch** (no long-lived release branches; the short `release/vX.Y.Z` branch only carries the release commit into its pull request)
 - Tag format: `vX.Y.Z` or `vX.Y.Z-pre.N` (e.g., `v2.0.0-alpha.4`)
-- **Always use the Release Manager agent** (`.claude/agents/codeberg-release-manager.md`)
+- **Always use the Release Manager agent** (`.claude/agents/github-release-manager.md`)
 - Never bump versions manually — the agent ensures consistency
+- The release commit goes through a pull request; the tag is set on the merged commit on `main`
+- Pushing the `vX.Y.Z` tag runs `.github/workflows/release.yml`, which creates the GitHub release
 
 ## Version Bump Decision Matrix
 
