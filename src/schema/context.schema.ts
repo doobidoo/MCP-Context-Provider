@@ -73,6 +73,13 @@ export const ContextMetadataSchema = z.object({
     .enum(['fallback_for_unspecified_tools', 'override', 'merge'])
     .optional(),
   author: z.string().optional(),
+
+  /**
+   * Opt out of pushing this context to the memory service. Absent or true
+   * means it syncs. Declared here because Zod strips unknown metadata keys,
+   * so an undeclared flag would vanish on parse and read as "sync me".
+   */
+  sync: z.boolean().optional(),
 });
 
 // ---------------------------------------------------------------------------

@@ -17,6 +17,9 @@ import type {
 import type { IMemoryBridge, MemoryBridgeConfig } from '../bridge/types.js';
 import { HttpMemoryBridge } from '../bridge/http-bridge.js';
 import { InstinctSync, type SyncResult } from '../bridge/sync.js';
+import { ContextSync, type ContextPushResult } from '../bridge/context-sync.js';
+import { ContextWriter, type ContextWriteResult } from '../bridge/context-writer.js';
+import type { LoadedContextFile } from '../types/context.js';
 import { ContextLoader, type LoadResult } from './context-loader.js';
 import { ContextMatcher } from './context-matcher.js';
 import { CANONICAL_INSTINCTS_FILE, isStoreSidecar } from '../config/paths.js';
@@ -94,8 +97,10 @@ export class Engine {
   private readonly instinctMatcher: InstinctMatcher;
   private readonly memoryBridge: IMemoryBridge | null;
   private readonly instinctSync: InstinctSync | null;
+  private contextSync?: ContextSync;
 
   private contexts: Map<string, Context> = new Map();
+  private contextFiles: LoadedContextFile[] = [];
   private instinctFiles: Map<string, InstinctFile> = new Map();
   private loadErrors: LoadResult['errors'] = [];
   private fileRepairs: FileRepair[] = [];
@@ -111,6 +116,7 @@ export class Engine {
     if (config.memoryBridge) {
       this.memoryBridge = new HttpMemoryBridge(config.memoryBridge);
       this.instinctSync = new InstinctSync(this.memoryBridge);
+      this.contextSync = new ContextSync(this.memoryBridge);
     } else {
       this.memoryBridge = null;
       this.instinctSync = null;
@@ -139,6 +145,7 @@ export class Engine {
     // Load contexts
     const contextResult = await this.contextLoader.loadAll();
     this.contexts = contextResult.contexts;
+    this.contextFiles = contextResult.files;
     this.loadErrors = contextResult.errors;
     this.fileRepairs = [];
 
@@ -316,6 +323,54 @@ export class Engine {
   async syncToMemory(): Promise<SyncResult | null> {
     if (!this.instinctSync || !this.memoryConnected) return null;
     return this.instinctSync.pushToMemory(this.getAllInstincts());
+  }
+
+  /** The loaded contexts with their source file name and raw text. */
+  getContextFiles(): LoadedContextFile[] {
+    return this.contextFiles;
+  }
+
+  /** Push all loaded contexts to the memory service. */
+  async syncContextsToMemory(): Promise<ContextPushResult | null> {
+    if (!this.contextSync || !this.memoryConnected) return null;
+    return this.contextSync.pushToMemory(this.contextFiles);
+  }
+
+  /** Pull contexts from the memory service and write them to CONTEXTS_PATH. */
+  async pullContextsFromMemory(
+    options: { force?: boolean } = {},
+  ): Promise<ContextWriteResult | null> {
+    if (!this.contextSync || !this.memoryConnected) return null;
+    const pulled = await this.contextSync.pullFromMemory();
+    const result = await new ContextWriter(this.config.contextsPath).write(
+      pulled,
+      options,
+    );
+
+    // `initialize()` runs once at startup and nothing watches the contexts
+    // directory, so without this the engine would keep serving — and pushing
+    // back — the file text it read before the restore. A `restore_contexts`
+    // followed by a `sync_contexts` in the same session would then overwrite
+    // the newer remote copy with the older local one, which is the inverse of
+    // what the feature promises.
+    if (result.written.length > 0) {
+      await this.reloadContexts();
+    }
+
+    return result;
+  }
+
+  /**
+   * Re-read the contexts directory into `contexts` and `contextFiles`.
+   *
+   * Deliberately does not touch `loadErrors`: `initialize()` appends
+   * instinct-load errors to the same array, and replacing it wholesale would
+   * drop them from `getLoadErrors()`.
+   */
+  private async reloadContexts(): Promise<void> {
+    const contextResult = await this.contextLoader.loadAll();
+    this.contexts = contextResult.contexts;
+    this.contextFiles = contextResult.files;
   }
 
   /** Discover instincts from memory that match a semantic query. */

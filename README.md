@@ -22,7 +22,7 @@ Four subsystems:
 - **Engine** — loads, matches, and merges contexts + instincts into injection payloads
 - **MCP Server** (`src/server/index.ts`) — stdio + HTTP transport
 - **CLI** (`mcp-cp`) — approval registry for instinct lifecycle management
-- **Memory Bridge** — optional sync of instincts to mcp-memory-service
+- **Memory Bridge** — optional sync of instincts and contexts to mcp-memory-service
 
 ## Quick Start
 
@@ -135,6 +135,8 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 | `reject_instinct` | Deactivate an instinct and lower its confidence |
 | `record_outcome` | Record a positive, negative, or neutral outcome for an instinct |
 | `sync_instincts` | Push all local instincts to the memory service (requires the memory bridge) |
+| `sync_contexts` | Push all loaded contexts to the memory service |
+| `restore_contexts` | Pull contexts from the memory service into `CONTEXTS_PATH` |
 
 ## Environment Variables
 
@@ -188,6 +190,38 @@ The merge always targets the canonical `learned.instincts.yaml`.
 
 Existing ids are never overwritten — a merge only adds. Legacy file shapes
 (top-level array, or `instincts:` as a list) are normalized on read.
+
+## Context Sync
+
+Contexts can be pushed to mcp-memory-service and written back on another
+machine. Requires `MEMORY_BRIDGE_URL`.
+
+- `sync_contexts` — push every loaded context. One memory per context: a
+  one-line summary as the searchable content, the exact file text in
+  `metadata.payload`.
+- `restore_contexts` — pull them and write into `CONTEXTS_PATH`. Files that
+  already exist are left untouched and reported; `force: true` overwrites and
+  keeps a `.bak`.
+
+A context is not pushed if its `metadata.sync` is `false`. Contexts in
+subdirectories of `CONTEXTS_PATH` are never loaded and therefore never pushed
+— that is where private, machine-local contexts belong.
+
+A push replaces the remote copy by deleting it and storing the same content
+again. From 12.4.0 on, mcp-memory-service refuses to re-create content it has a
+delete on record for unless the client asks for it; the bridge sends
+`restore_deleted: true` with every store, so repeated syncs of unchanged
+content keep exactly one memory per context. Verified against
+mcp-memory-service 12.10.0.
+
+If the service runs on HTTPS with a certificate from a private CA (mkcert, for
+example), point Node at the CA file with `NODE_EXTRA_CA_CERTS`, and set
+`MEMORY_BRIDGE_API_KEY` when the service requires a key.
+
+A context whose serialized metadata exceeds mcp-memory-service's Cloudflare
+sync limit is refused at push time, with the size and limit named in the
+error, rather than being accepted locally and silently dropped before it
+reaches the durable tier.
 
 ## Context Files
 

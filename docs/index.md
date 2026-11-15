@@ -13,7 +13,7 @@ The MCP Context Provider is a **context and instinct engine** for Claude Desktop
 - **Contexts** (static): Tool-specific rules in JSON, always injected at full confidence
 - **Instincts** (learned): Compact rules distilled from sessions, confidence-scored, human-approved
 - **Auto-corrections**: Syntax transformations run automatically (e.g. Markdown to DokuWiki)
-- **Memory Bridge**: Syncs instincts to mcp-memory-service for persistence across machines
+- **Memory Bridge**: Syncs instincts and contexts to mcp-memory-service for persistence across machines
 
 ## Quick Start
 
@@ -71,6 +71,8 @@ Session Start
 | `reject_instinct` | Deactivate an instinct and lower its confidence |
 | `record_outcome` | Record a positive, negative, or neutral outcome for an instinct |
 | `sync_instincts` | Push all local instincts to the memory service (requires the memory bridge) |
+| `sync_contexts` | Push all loaded contexts to the memory service |
+| `restore_contexts` | Pull contexts from the memory service into `CONTEXTS_PATH` |
 
 ## Available Contexts (built-in)
 

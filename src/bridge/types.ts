@@ -32,7 +32,7 @@ export interface MemorySearchResult {
 // ---------------------------------------------------------------------------
 
 export interface MemoryBridgeConfig {
-  /** Base URL of the memory service HTTP API. @default "http://127.0.0.1:8001/api" */
+  /** Base URL of the memory service HTTP API. @default "http://127.0.0.1:8000/api" */
   baseUrl: string;
 
   /** API key for authentication (sent as X-API-Key header). */
@@ -46,6 +46,9 @@ export interface MemoryBridgeConfig {
 
   /** Tag prefix used to identify instinct memories. @default "instinct" */
   instinctTag: string;
+
+  /** Tag prefix used to identify context memories. @default "context-json" */
+  contextTag: string;
 }
 
 export const DEFAULT_BRIDGE_CONFIG: MemoryBridgeConfig = {
@@ -53,6 +56,7 @@ export const DEFAULT_BRIDGE_CONFIG: MemoryBridgeConfig = {
   enabled: true,
   timeout: 5000,
   instinctTag: 'instinct',
+  contextTag: 'context-json',
 };
 
 // ---------------------------------------------------------------------------
@@ -70,8 +74,34 @@ export interface IMemoryBridge {
   /** Search for instinct-related memories by semantic query. */
   searchInstincts(query: string, limit?: number): Promise<MemorySearchResult[]>;
 
-  /** Search for instinct memories by tags. */
-  searchByTags(tags: string[], matchAll?: boolean): Promise<MemorySearchResult[]>;
+  /**
+   * Search memories by tags. `marker` is the leading tag that scopes the
+   * search; it defaults to the instinct tag so existing callers are unchanged.
+   * Throws when the search call fails.
+   */
+  searchByTags(tags: string[], matchAll?: boolean, marker?: string): Promise<MemorySearchResult[]>;
+
+  /** Store a context as a memory. Returns content_hash. */
+  storeContext(
+    category: string,
+    content: string,
+    tags: string[],
+    metadata: Record<string, unknown>,
+  ): Promise<string>;
+
+  /**
+   * Find the stored memories of one context category, under the same tag
+   * storeContext and listContexts use. Throws when the lookup fails: a push
+   * deletes what this returns before it stores, so "no matches" must mean
+   * there are none.
+   */
+  findContexts(category: string): Promise<MemorySearchResult[]>;
+
+  /** Get all stored context memories. */
+  listContexts(page?: number, pageSize?: number): Promise<{ memories: MemoryRecord[]; total: number }>;
+
+  /** Delete a context memory by content hash. */
+  deleteContext(contentHash: string): Promise<boolean>;
 
   /** Delete an instinct memory by content hash. */
   deleteInstinct(contentHash: string): Promise<boolean>;

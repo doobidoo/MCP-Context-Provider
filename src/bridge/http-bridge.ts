@@ -13,6 +13,19 @@ import type {
 } from './types.js';
 import { DEFAULT_BRIDGE_CONFIG } from './types.js';
 
+/**
+ * Sent with every store. A push replaces a memory by deleting it and storing
+ * the same content again, and the service hashes content only — so the POST
+ * collides with the delete it just recorded. Since mcp-memory-service 12.4.0
+ * that is refused with 409 unless the client asks for the re-create; without
+ * this flag a second push of unchanged content deletes the remote copy and
+ * then fails to put it back. Older services ignore the field.
+ *
+ * The cost: content deleted on the service side comes back on the next push.
+ * That is what a push means — the local files are the source.
+ */
+const RESTORE_DELETED = true;
+
 export class HttpMemoryBridge implements IMemoryBridge {
   private readonly config: MemoryBridgeConfig;
 
@@ -51,6 +64,7 @@ export class HttpMemoryBridge implements IMemoryBridge {
       content,
       tags: allTags,
       memory_type: 'instinct',
+      restore_deleted: RESTORE_DELETED,
       metadata: {
         ...metadata,
         instinct_id: instinctId,
@@ -68,8 +82,38 @@ export class HttpMemoryBridge implements IMemoryBridge {
       throw new Error(`Failed to store instinct: ${res.status} ${text}`);
     }
 
-    const data = (await res.json()) as { content_hash: string };
-    return data.content_hash;
+    return this.parseStoreResponse(await res.json(), 'instinct');
+  }
+
+  async storeContext(
+    category: string,
+    content: string,
+    tags: string[],
+    metadata: Record<string, unknown>,
+  ): Promise<string> {
+    const body = {
+      content,
+      tags: [this.config.contextTag, `context:${category}`, ...tags],
+      memory_type: 'context',
+      restore_deleted: RESTORE_DELETED,
+      metadata: {
+        ...metadata,
+        context_category: category,
+        source: 'mcp-context-provider',
+      },
+    };
+
+    const res = await this.fetch('/memories', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Failed to store context: ${res.status} ${text}`);
+    }
+
+    return this.parseStoreResponse(await res.json(), 'context');
   }
 
   // -------------------------------------------------------------------------
@@ -102,8 +146,9 @@ export class HttpMemoryBridge implements IMemoryBridge {
   async searchByTags(
     tags: string[],
     matchAll = false,
+    marker: string = this.config.instinctTag,
   ): Promise<MemorySearchResult[]> {
-    const allTags = [this.config.instinctTag, ...tags];
+    const allTags = [marker, ...tags];
 
     const res = await this.fetch('/search/by-tag', {
       method: 'POST',
@@ -113,10 +158,20 @@ export class HttpMemoryBridge implements IMemoryBridge {
       }),
     });
 
-    if (!res.ok) return [];
+    // Never an empty list on failure: both push paths delete what this
+    // returns and then store. Read as "nothing to replace", a failed search
+    // lets the store go through and leaves the old copy behind.
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Failed to search by tags: ${res.status} ${text}`);
+    }
 
     const data = (await res.json()) as { results: MemorySearchResult[] };
     return data.results;
+  }
+
+  async findContexts(category: string): Promise<MemorySearchResult[]> {
+    return this.searchByTags([`context:${category}`], true, this.config.contextTag);
   }
 
   // -------------------------------------------------------------------------
@@ -124,6 +179,13 @@ export class HttpMemoryBridge implements IMemoryBridge {
   // -------------------------------------------------------------------------
 
   async deleteInstinct(contentHash: string): Promise<boolean> {
+    const res = await this.fetch(`/memories/${contentHash}`, {
+      method: 'DELETE',
+    });
+    return res.ok;
+  }
+
+  async deleteContext(contentHash: string): Promise<boolean> {
     const res = await this.fetch(`/memories/${contentHash}`, {
       method: 'DELETE',
     });
@@ -155,9 +217,51 @@ export class HttpMemoryBridge implements IMemoryBridge {
     return data;
   }
 
+  async listContexts(
+    page = 1,
+    pageSize = 50,
+  ): Promise<{ memories: MemoryRecord[]; total: number }> {
+    const params = new URLSearchParams({
+      page: String(page),
+      page_size: String(pageSize),
+      tag: this.config.contextTag,
+    });
+
+    const res = await this.fetch(`/memories?${params.toString()}`);
+
+    // Never an empty page on failure: the pull loop reads an empty page as
+    // "no more contexts", so a 500 on page 1 would report "nothing to
+    // restore" and a 500 on page 3 of 5 would silently return a partial set.
+    // A bridge failure fails the whole operation with its status, the same
+    // way storeContext above does.
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Failed to list contexts: ${res.status} ${text}`);
+    }
+
+    return (await res.json()) as { memories: MemoryRecord[]; total: number };
+  }
+
   // -------------------------------------------------------------------------
   // Internal
   // -------------------------------------------------------------------------
+
+  /**
+   * Extract a content_hash from a /memories POST response, or throw.
+   *
+   * The service answers a rejected store — e.g. its own semantic-duplicate
+   * detection — with HTTP 200 and `{ success: false, content_hash: null }`,
+   * which `res.ok` alone does not catch. Treat that the same as an HTTP
+   * error so the caller's existing error handling sees it.
+   */
+  private parseStoreResponse(data: unknown, kind: 'instinct' | 'context'): string {
+    const body = data as { success?: boolean; content_hash?: unknown; message?: string };
+    if (body.success === false || typeof body.content_hash !== 'string') {
+      const reason = body.message ?? 'no content_hash in response';
+      throw new Error(`Failed to store ${kind}: ${reason}`);
+    }
+    return body.content_hash;
+  }
 
   /** Build the standard tag set for an instinct memory. */
   private instinctTags(instinctId: string, extraTags: string[]): string[] {

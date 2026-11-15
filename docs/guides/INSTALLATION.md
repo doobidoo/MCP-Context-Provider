@@ -186,7 +186,7 @@ The HTTP server exposes:
 
 ## Optional: Memory Bridge
 
-Connect to [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) for instinct persistence across machines:
+Connect to [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) to keep instincts and contexts across machines:
 
 ```json
 {
@@ -196,6 +196,18 @@ Connect to [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) 
   }
 }
 ```
+
+With the bridge configured:
+
+- `sync_instincts` pushes the local instincts.
+- `sync_contexts` pushes every loaded context, one memory per context. A context with `metadata.sync: false` is skipped, and contexts in subdirectories of `CONTEXTS_PATH` are never loaded and so never pushed.
+- `restore_contexts` pulls contexts back and writes them into `CONTEXTS_PATH`. Existing files are left untouched and reported; `force: true` overwrites and keeps a `.bak`.
+
+A context whose metadata is over the 9500-byte sync limit is refused at push time, with the size named in the error.
+
+From mcp-memory-service 12.4.0 on, the service refuses to re-create content it has a delete on record for unless asked. The bridge sends `restore_deleted: true` with every store, so syncing unchanged content twice keeps one memory per item. Verified for contexts against 12.10.0.
+
+If the service runs on HTTPS with a certificate from a private CA (mkcert, for example), set `NODE_EXTRA_CA_CERTS` to the CA file in the same `env` block.
 
 ## Environment Variables
 

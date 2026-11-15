@@ -8,13 +8,16 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { ContextSchema } from '../schema/context.schema.js';
-import type { Context } from '../types/context.js';
+import type { Context, LoadedContextFile } from '../types/context.js';
 
 const CONTEXT_FILE_PATTERN = /_context\.json$/;
 
 export interface LoadResult {
   /** Successfully loaded contexts keyed by tool_category. */
   contexts: Map<string, Context>;
+
+  /** The same contexts with their source file name and raw text. */
+  files: LoadedContextFile[];
 
   /** Files that failed to load, with error details. */
   errors: Array<{ file: string; error: string }>;
@@ -29,29 +32,49 @@ export class ContextLoader {
    */
   async loadAll(): Promise<LoadResult> {
     const contexts = new Map<string, Context>();
+    const files: LoadedContextFile[] = [];
     const errors: LoadResult['errors'] = [];
 
-    let files: string[];
+    let dirEntries: string[];
     try {
-      files = await readdir(this.basePath);
+      dirEntries = await readdir(this.basePath);
     } catch {
-      return { contexts, errors: [{ file: this.basePath, error: 'Directory not found' }] };
+      return {
+        contexts,
+        files,
+        errors: [{ file: this.basePath, error: 'Directory not found' }],
+      };
     }
 
-    const contextFiles = files.filter((f) => CONTEXT_FILE_PATTERN.test(f));
+    const contextFiles = dirEntries.filter((f) => CONTEXT_FILE_PATTERN.test(f));
 
     // Load in parallel — individual failures don't block others
     const results = await Promise.allSettled(
       contextFiles.map(async (file) => {
-        const context = await this.loadFile(file);
-        return { file, context };
+        const { raw, context } = await this.loadFileWithSource(file);
+        return { file, raw, context };
       }),
     );
 
+    // Which file last claimed each tool_category. Two files declaring the
+    // same category collide in the Map above, and the winner is decided by
+    // directory order — silently, until someone wonders why an edit had no
+    // effect. Which one wins is left unchanged; the collision is reported.
+    const claimedBy = new Map<string, string>();
+
     for (const result of results) {
       if (result.status === 'fulfilled') {
-        const { context } = result.value;
+        const { file, raw, context } = result.value;
+        const previous = claimedBy.get(context.tool_category);
+        if (previous !== undefined) {
+          errors.push({
+            file,
+            error: `tool_category "${context.tool_category}" is already declared by ${previous}; only one of the two is loaded`,
+          });
+        }
+        claimedBy.set(context.tool_category, file);
         contexts.set(context.tool_category, context);
+        files.push({ fileName: file, raw, context });
       } else {
         const errorMsg =
           result.reason instanceof Error
@@ -62,13 +85,26 @@ export class ContextLoader {
       }
     }
 
-    return { contexts, errors };
+    return { contexts, files, errors };
   }
 
   /**
    * Load and validate a single context JSON file.
    */
   async loadFile(filename: string): Promise<Context> {
+    const { context } = await this.loadFileWithSource(filename);
+    return context;
+  }
+
+  /**
+   * Load, parse, and validate a single context JSON file, returning both
+   * the exact raw text and the parsed context. The raw text is what the
+   * memory-service sync payload needs — a re-serialisation of the parsed
+   * object could differ in key order or whitespace.
+   */
+  async loadFileWithSource(
+    filename: string,
+  ): Promise<{ raw: string; context: Context }> {
     const filepath = join(this.basePath, filename);
     const raw = await readFile(filepath, 'utf-8');
 
@@ -81,7 +117,8 @@ export class ContextLoader {
     }
 
     try {
-      return ContextSchema.parse(parsed) as Context;
+      const context = ContextSchema.parse(parsed) as Context;
+      return { raw, context };
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Validation failed';
       throw new Error(`${filename}: ${msg}`);
