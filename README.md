@@ -350,8 +350,9 @@ the resolved store sits inside an unrelated git working tree. If you do point
 `INSTINCTS_PATH` at a checkout, add `instincts/learned.instincts.yaml` to that
 repository's `.gitignore` and **review its contents before pushing**. The Quick
 Start examples point it at this repository's `instincts/` folder, where the
-file is already ignored; leave `INSTINCTS_PATH` out to use the user-level
-default.
+file is already ignored. Leaving `INSTINCTS_PATH` out selects the user-level
+default, unless the server is started from inside this checkout, where
+`./instincts` still wins (see [Store Location](#store-location)).
 
 The same applies to the Memory Bridge: `sync_instincts` sends the rule text,
 trigger patterns and tags of every instinct to the configured
