@@ -102,6 +102,26 @@ If you only want the context provider in a specific project, add a `.mcp.json` t
 }
 ```
 
+## Claude Code Plugin (Alternative)
+
+The repository is also a Claude Code plugin marketplace:
+
+```bash
+/plugin marketplace add doobidoo/MCP-Context-Provider
+/plugin install context-provider@mcp-context-provider
+```
+
+The plugin registers the MCP server with paths inside the plugin directory, so
+there is no config file to edit. Two things to know:
+
+- **Build it once.** The repository does not ship the compiled server (`dist/`
+  is not checked in), and the plugin starts `dist/server/index.js`. Run
+  `npm install && npm run build` in the installed plugin directory, below
+  `~/.claude/plugins/`, then restart Claude Code. Repeat after a plugin update.
+- **The store is in the plugin directory.** The plugin sets `INSTINCTS_PATH` to
+  its own `instincts/` folder instead of the user-level default.
+  `list_instincts` reports the path in use.
+
 ## The `/instill` Skill
 
 `/instill` is a Claude Code skill that **extracts learned rules (instincts) from your current session**. When you notice Claude making the same mistakes, or you keep correcting the same patterns, `/instill` captures those as reusable instincts.
@@ -132,6 +152,9 @@ If you only want the context provider in a specific project, add a `.mcp.json` t
 
 4. **Saves accepted instincts** to `learned.instincts.yaml` in the resolved store (`mcp-cp path` prints it)
 5. Instincts are automatically injected in future sessions when their trigger patterns match
+
+!!! note "What decides whether an instinct is injected"
+    A candidate stored through `store_instinct` starts inactive; `approve_instinct` or `mcp-cp approve` activates it. At injection time the server checks `active` and the confidence against `min_confidence`. `approved_by` records who approved an entry and is not checked. `active` defaults to `true`, so an entry added to the YAML by hand without `active: false` is live immediately.
 
 ### Install globally
 
@@ -205,7 +228,10 @@ With the bridge configured:
 
 A context whose metadata is over the 9500-byte sync limit is refused at push time, with the size named in the error.
 
-From mcp-memory-service 12.4.0 on, the service refuses to re-create content it has a delete on record for unless asked. The bridge sends `restore_deleted: true` with every store, so syncing unchanged content twice keeps one memory per item. Verified for contexts against 12.10.0.
+From mcp-memory-service 12.4.0 on, the service refuses to re-create content it has a delete on record for unless asked. The bridge sends `restore_deleted: true` with every store, so syncing unchanged content twice keeps one memory per item. Verified for contexts and instincts against 12.10.0.
+
+!!! warning "Synced content leaves the machine"
+    `sync_instincts` sends the rule text, trigger patterns and tags of every instinct to the configured service, and `sync_contexts` sends the full context files. Instincts distilled from work sessions can contain internal hostnames, customer names or infrastructure details. Only sync to a service you trust with that content.
 
 If the service runs on HTTPS with a certificate from a private CA (mkcert, for example), set `NODE_EXTRA_CA_CERTS` to the CA file in the same `env` block.
 

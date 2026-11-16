@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - 'docs/**'
+      # docs/CHANGELOG.md is a symlink to this file; a release changes only
+      # the target, which 'docs/**' does not match.
+      - 'CHANGELOG.md'
       - 'mkdocs.yml'
       - '.github/workflows/docs.yml'
   workflow_dispatch:

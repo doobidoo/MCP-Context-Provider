@@ -5,6 +5,10 @@ repo_url: https://github.com/doobidoo/MCP-Context-Provider
 repo_name: doobidoo/MCP-Context-Provider
 edit_uri: edit/main/docs/
 
+# Working plans and design specs live in docs/ but are not part of the site.
+exclude_docs: |
+  superpowers/
+
 theme:
   name: material
   logo: assets/logo.svg
