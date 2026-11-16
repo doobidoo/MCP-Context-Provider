@@ -10,7 +10,7 @@
     {
       "name": "context-provider",
       "source": ".",
-      "description": "MCP server that provides tool-aware context injection and learned instincts with confidence scoring. Includes 6 MCP tools: get_tool_context, get_syntax_rules, list_available_contexts, apply_auto_corrections, build_injection, and list_instincts.",
+      "description": "MCP server that provides tool-aware context injection and learned instincts with confidence scoring. Its MCP tools cover context lookup, auto-corrections, instinct storage and approval, and sync to mcp-memory-service.",
       "version": "2.0.0-beta.4",
       "author": {
         "name": "doobidoo"
