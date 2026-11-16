@@ -129,8 +129,9 @@ Push the tag to `origin` only. Mirrors receive fast-forwards of `main`, never ta
 ### Step 8: Let the Workflow Create the Release
 
 The tag push runs `.github/workflows/release.yml`: lint, build and test, then
-`gh release create` with generated notes. Tags containing `-alpha`, `-beta` or
-`-rc` are marked pre-release by the workflow. Do not create the release by hand
+`gh release create` with generated notes. Tags containing `-alpha` are marked
+pre-release; every other tag, beta and rc included, is set as the "Latest"
+release so the repository page shows it. Do not create the release by hand
 as well, the second attempt fails on the existing tag.
 
 ```bash
@@ -155,6 +156,7 @@ cat VERSION
 
 # Verify GitHub release
 gh release view vX.Y.Z --json tagName,isPrerelease,url
+gh api repos/doobidoo/MCP-Context-Provider/releases/latest --jq .tag_name
 ```
 
 ## Rules
@@ -164,5 +166,5 @@ gh release view vX.Y.Z --json tagName,isPrerelease,url
 - **Two-file sync** — package.json and VERSION must always match
 - **No direct commits to main** — the release commit goes through a pull request; there are no long-lived release branches
 - **Tag after merge** — the tag points at the commit on `main`
-- **Tag triggers the release** — the `v*` tag push runs `release.yml`, which creates the GitHub release and sets the pre-release flag
+- **Tag triggers the release** — the `v*` tag push runs `release.yml`, which creates the GitHub release, as pre-release for alphas and as "Latest" otherwise
 - **Clean working directory** — commit or stash all changes before starting
