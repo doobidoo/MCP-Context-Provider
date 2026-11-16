@@ -2,70 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/CHANGELOG/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/contexts-reference/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/CHANGELOG-v1/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/CONTEXT_GUIDE/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/DEVELOPER_GUIDE/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/EXAMPLES/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/QUICKSTART/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/TROUBLESHOOTING/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/WORKFLOW_TROUBLESHOOTING/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/phase3/API_REFERENCE/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/phase3/EXAMPLES/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/phase3/LEARNING_GUIDE/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/archive/v1/phase3/SESSION_SUMMARY/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
     <url>
          <loc>https://doobidoo.github.io/MCP-Context-Provider/guides/INSTALLATION/</loc>
-         <lastmod>2026-11-15</lastmod>
-    </url>
-    <url>
-         <loc>https://doobidoo.github.io/MCP-Context-Provider/superpowers/plans/2026-09-02-context-sync/</loc>
-         <lastmod>2026-11-15</lastmod>
-    </url>
-    <url>
-         <loc>https://doobidoo.github.io/MCP-Context-Provider/superpowers/specs/2026-09-02-context-sync-design/</loc>
-         <lastmod>2026-11-15</lastmod>
+         <lastmod>2026-11-16</lastmod>
     </url>
 </urlset>

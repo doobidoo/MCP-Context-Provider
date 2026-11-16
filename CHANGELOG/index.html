@@ -621,7 +621,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[Unreleased]">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#200-beta4-2026-11-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.0.0-beta.4] - 2026-11-15
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.0.0-beta.4] - 2026-11-15">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1253,7 +1264,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[Unreleased]">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#200-beta4-2026-11-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.0.0-beta.4] - 2026-11-15
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.0.0-beta.4] - 2026-11-15">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1864,6 +1886,7 @@
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h2 id="unreleased">[Unreleased]<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h2 id="200-beta4-2026-11-15">[2.0.0-beta.4] - 2026-11-15<a class="headerlink" href="#200-beta4-2026-11-15" title="Permanent link">&para;</a></h2>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Context sync to the memory service</strong> (<a href="https://codeberg.org/doobidoo/MCP-Context-Provider/issues/7">#7</a>): <code>sync_contexts</code> pushes every loaded context into mcp-memory-service, <code>restore_contexts</code> pulls them back and writes them into <code>CONTEXTS_PATH</code>. This existed in the v1.8 Python line and was dropped in the TypeScript rewrite. One memory per context: a one-line summary as the searchable content, the exact file text in <code>metadata.payload</code> — measured to round-trip byte for byte, where storing the file as memory content does not (the service splits it into overlapping chunks and returns one of them). Existing files are never overwritten without <code>force</code>, which keeps a <code>.bak</code>. A context opts out with <code>metadata.sync: false</code>, and contexts in subdirectories of <code>CONTEXTS_PATH</code> are never loaded and so never pushed. The round trip holds for contexts within the memory service's Cloudflare metadata limit; a context over that limit is refused at push time rather than silently dropped (see Fixed, below).</li>
