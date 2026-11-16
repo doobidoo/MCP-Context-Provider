@@ -15,7 +15,7 @@ Two core concepts:
 | Concept | Description | Size | Lifetime |
 |---------|-------------|------|----------|
 | **Context** | Static tool rules, syntax preferences, auto-corrections | 200–1000 tokens | Permanent, manually authored |
-| **Instinct** | Learned rule extracted from sessions, confidence-scored | 20–80 tokens | Human-approved, evolves over time |
+| **Instinct** | Learned rule extracted from sessions, confidence-scored | 20–80 tokens | Inactive until approved, evolves over time |
 
 Four subsystems:
 
@@ -31,7 +31,11 @@ git clone https://github.com/doobidoo/MCP-Context-Provider.git
 cd MCP-Context-Provider
 npm install
 npm run build
+npm link   # optional: puts mcp-cp and mcp-context-provider on your PATH
 ```
+
+Without `npm link`, run the CLI as `node dist/cli/index.js` wherever this
+README says `mcp-cp`.
 
 ### Claude Desktop
 
@@ -54,7 +58,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 
 ### Claude Code (global)
 
-Add to `~/.mcp.json`:
+Add to `~/.claude.json` under `mcpServers`:
 
 ```json
 {
@@ -82,7 +86,17 @@ Install directly from the marketplace:
 /plugin install context-provider@mcp-context-provider
 ```
 
-This auto-configures the MCP server with correct paths — no manual `.mcp.json` editing needed.
+The plugin registers the MCP server with paths inside the plugin directory, so
+there is no config file to edit. Two things to know:
+
+- **Build it once.** The repository does not ship the compiled server
+  (`dist/` is not checked in), and the plugin starts
+  `dist/server/index.js`. Run `npm install && npm run build` in the installed
+  plugin directory, below `~/.claude/plugins/`, then restart Claude Code.
+  Repeat after a plugin update.
+- **The store is in the plugin directory.** The plugin sets `INSTINCTS_PATH` to
+  its own `instincts/` folder instead of the user-level default described under
+  [Store Location](#store-location). `list_instincts` reports the path in use.
 
 ### `/instill` Skill (Claude Code)
 
@@ -250,7 +264,8 @@ Add a new context by dropping a `*_context.json` file in `contexts/` and restart
 
 Instincts live in exactly one file, `learned.instincts.yaml`, inside the
 resolved store (see [Store Location](#store-location)). They are distilled from
-sessions via `/instill` and require human approval.
+sessions via `/instill`. A candidate stored through `store_instinct` starts
+inactive and is injected only after `approve_instinct` or `mcp-cp approve`.
 
 Any other `*.instincts.yaml` in that directory is **not** read. It is reported
 by name at startup and by `mcp-cp list`, together with the `mcp-cp import`
@@ -305,14 +320,25 @@ npm run start:http  # HTTP transport on port 3100
 
 ### Can I use `/instill` in Claude Desktop?
 
-No. `/instill` is a **Claude Code skill** (`.claude/skills/instill.md`) and only works in the Claude Code CLI. Claude Desktop does not have a skill system.
+Not as a slash command: `/instill` ships as a **Claude Code skill**
+(`.claude/skills/instill.md`). The instinct lifecycle itself is available in
+Claude Desktop, because it runs through the MCP server:
 
-However, you can achieve the same result in Claude Desktop:
+1. **All MCP tools work in both clients.** `store_instinct` saves a candidate
+   as inactive, `approve_instinct` activates it, `reject_instinct` and
+   `record_outcome` maintain it. No file editing is involved, and the server
+   validates every entry.
+2. **For the analysis step**, create a Claude Desktop **Project** and paste the
+   instructions from `instill.md` as Custom Instructions. Claude then proposes
+   candidates from the conversation and stores the ones you accept with
+   `store_instinct`.
 
-1. **MCP tools work in both** - The `list_instincts` and `build_injection` tools are available in Claude Desktop via the MCP server.
-2. **For the instill workflow**, create a Claude Desktop **Project** and paste the instill instructions as Custom Instructions. Claude Desktop can then use `desktop-commander` or similar MCP servers to write YAML files.
+Do not let a client write `learned.instincts.yaml` directly when the MCP tools
+are reachable. Hand-written YAML is where malformed store files have come from.
 
-The reason `/instill` is not exposed as an MCP tool: it is an **interactive, multi-step workflow** (analyze conversation, present candidates, await user decision, write YAML). MCP tools return a single response and cannot drive multi-turn interactions.
+The analysis is a skill and not an MCP tool because it is an **interactive,
+multi-step workflow** (read the conversation, present candidates, wait for your
+decision). An MCP tool returns one response and cannot drive that exchange.
 
 ### Do `learned.instincts.yaml` files contain sensitive data?
 
@@ -322,7 +348,14 @@ This is why the default store is a user-level directory outside any repository
 (`~/.local/share/mcp-context-provider/instincts`) and why the server warns when
 the resolved store sits inside an unrelated git working tree. If you do point
 `INSTINCTS_PATH` at a checkout, add `instincts/learned.instincts.yaml` to that
-repository's `.gitignore` and **review its contents before pushing**.
+repository's `.gitignore` and **review its contents before pushing**. The Quick
+Start examples point it at this repository's `instincts/` folder, where the
+file is already ignored; leave `INSTINCTS_PATH` out to use the user-level
+default.
+
+The same applies to the Memory Bridge: `sync_instincts` sends the rule text,
+trigger patterns and tags of every instinct to the configured
+mcp-memory-service. Only sync to a service you trust with that content.
 
 ### What is the difference between Contexts and Instincts?
 
@@ -330,10 +363,16 @@ repository's `.gitignore` and **review its contents before pushing**.
 |---|---|---|
 | **Format** | JSON (`*_context.json`) | YAML (`learned.instincts.yaml`) |
 | **Source** | Manually authored | Distilled from sessions via `/instill` |
-| **Size** | 200-1000 tokens | 20-80 tokens |
+| **Size** | 200-1000 tokens | 20-80 tokens (target; 5-120 accepted) |
 | **Matching** | Tool-pattern globs | Regex trigger patterns |
 | **Lifecycle** | Static, versioned | Confidence-scored, evolves over time |
-| **Approval** | None needed | Requires `approved_by: human` |
+| **Approval** | None needed | Candidates start inactive until approved |
+
+What decides whether an instinct is injected is `active` and its confidence
+against `min_confidence`. `approved_by` records who approved it (`human` or
+`auto`) and is not checked at injection time. An entry added to the YAML by
+hand without `active: false` is therefore live immediately; `active` defaults
+to `true`.
 
 ## Changelog
 

@@ -1,6 +1,6 @@
 {
   "name": "context-provider",
-  "description": "MCP context & instinct engine — learned rules from sessions with confidence scoring. Provides tool-aware context injection and 6 MCP tools.",
+  "description": "MCP context & instinct engine — learned rules from sessions with confidence scoring. Provides tool-aware context injection, instinct management and memory sync as MCP tools.",
   "version": "2.0.0-beta.4",
   "author": {
     "name": "doobidoo"

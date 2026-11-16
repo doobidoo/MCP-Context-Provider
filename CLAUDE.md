@@ -177,7 +177,7 @@ which the server logs at startup and `mcp-cp list` prints. Merge them with
 - Confidence: 0.0–1.0, default min_confidence: 0.5
 - One store file: `learned.instincts.yaml`; other `*.instincts.yaml` in the directory are reported, never loaded
 - JSON context files: `*_context.json`
-- All instincts require human approval (`approved_by: human`)
+- Instincts stored via `store_instinct` start inactive; approval sets `approved_by: human` and `active: true`. Injection checks `active` and confidence, not `approved_by`
 - Rules must be 20–80 tokens (Zod enforced: 5–120 soft range)
 - Memory Bridge uses `X-API-Key` header for auth
 
