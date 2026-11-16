@@ -256,8 +256,9 @@ Register in `~/.claude/settings.json` under both `UserPromptSubmit` and `PostToo
 4. GitHub is primary. A push or PR to `main` runs `.github/workflows/ci.yml`
    (lint, build, test, JSON validation of `contexts/*.json`, secret scan). A
    `v*` tag push runs `.github/workflows/release.yml`: lint, build and test
-   again, then `gh release create` with generated notes, marked
-   pre-release for `-alpha`, `-beta` and `-rc` tags. The npm publish job in that
+   again, then `gh release create` with generated notes. `-alpha` tags are
+   marked pre-release; every other tag, beta and rc included, becomes the
+   "Latest" release shown on the repository page. The npm publish job in that
    workflow is commented out, so no package is published.
 5. Docs deploy to GitHub Pages via `.github/workflows/docs.yml` on changes to
    `docs/**` or `mkdocs.yml` on `main`.

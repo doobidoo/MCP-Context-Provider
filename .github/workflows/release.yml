@@ -31,10 +31,15 @@ jobs:
         id: prerelease
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
-          if [[ "$TAG" == *-alpha* ]] || [[ "$TAG" == *-beta* ]] || [[ "$TAG" == *-rc* ]]; then
+          # GitHub shows only the "Latest" release on the repository page, and
+          # a pre-release can never be Latest. While v2 is in beta, beta and rc
+          # releases are the current ones, so only alphas stay pre-releases.
+          # --latest is explicit: left alone, GitHub does not pick the highest
+          # version.
+          if [[ "$TAG" == *-alpha* ]]; then
             echo "flag=--prerelease" >> "$GITHUB_OUTPUT"
           else
-            echo "flag=" >> "$GITHUB_OUTPUT"
+            echo "flag=--latest" >> "$GITHUB_OUTPUT"
           fi
       - name: Create GitHub Release
         env:
