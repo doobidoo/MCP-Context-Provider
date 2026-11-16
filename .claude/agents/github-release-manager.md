@@ -64,6 +64,10 @@ npm version <new-version> --no-git-tag-version
 echo -n "<new-version>" > VERSION
 ```
 
+**Plugin manifests** — `.claude-plugin/plugin.json` and
+`.claude-plugin/marketplace.json` each carry one `"version"` field. Set both to
+the new version; they are what the Claude Code plugin marketplace shows.
+
 ### Step 5: Update CHANGELOG.md
 
 1. Rename `[Unreleased]` to `[<new-version>] - <YYYY-MM-DD>`
@@ -89,7 +93,7 @@ CHANGELOG entry format:
 ### Step 6: Commit, Push, Open the Pull Request
 
 ```bash
-git add package.json package-lock.json VERSION CHANGELOG.md
+git add package.json package-lock.json VERSION CHANGELOG.md .claude-plugin/plugin.json .claude-plugin/marketplace.json
 git commit -m "release: vX.Y.Z — <one-line summary>"
 git push -u origin release/vX.Y.Z
 gh pr create --base main --title "release: vX.Y.Z — <one-line summary>"

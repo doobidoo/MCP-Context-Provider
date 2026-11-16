@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-beta.4] - 2026-11-15
+
 ### Added
 - **Context sync to the memory service** ([#7](https://codeberg.org/doobidoo/MCP-Context-Provider/issues/7)): `sync_contexts` pushes every loaded context into mcp-memory-service, `restore_contexts` pulls them back and writes them into `CONTEXTS_PATH`. This existed in the v1.8 Python line and was dropped in the TypeScript rewrite. One memory per context: a one-line summary as the searchable content, the exact file text in `metadata.payload` — measured to round-trip byte for byte, where storing the file as memory content does not (the service splits it into overlapping chunks and returns one of them). Existing files are never overwritten without `force`, which keeps a `.bak`. A context opts out with `metadata.sync: false`, and contexts in subdirectories of `CONTEXTS_PATH` are never loaded and so never pushed. The round trip holds for contexts within the memory service's Cloudflare metadata limit; a context over that limit is refused at push time rather than silently dropped (see Fixed, below).
 

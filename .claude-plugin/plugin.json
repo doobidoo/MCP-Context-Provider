@@ -1,7 +1,7 @@
 {
   "name": "context-provider",
   "description": "MCP context & instinct engine — learned rules from sessions with confidence scoring. Provides tool-aware context injection and 6 MCP tools.",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-beta.4",
   "author": {
     "name": "doobidoo"
   },
