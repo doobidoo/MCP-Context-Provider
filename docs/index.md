@@ -11,7 +11,7 @@ The MCP Context Provider is a **context and instinct engine** for Claude Desktop
 ## What it does
 
 - **Contexts** (static): Tool-specific rules in JSON, always injected at full confidence
-- **Instincts** (learned): Compact rules distilled from sessions, confidence-scored, human-approved
+- **Instincts** (learned): Compact rules distilled from sessions, confidence-scored, inactive until you approve them
 - **Auto-corrections**: Syntax transformations run automatically (e.g. Markdown to DokuWiki)
 - **Memory Bridge**: Syncs instincts and contexts to mcp-memory-service for persistence across machines
 
